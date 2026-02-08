@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import { AuthProvider } from "@/providers/AuthProvider";
-import { coursesService } from "@/services/courses.service";
 import { ExamProvider } from "@/providers/ExamsProvider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,12 +30,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const entrances = await coursesService.getCoursesByExam();
   return (
     <html lang="en">
       <body className={`${roboto.variable} ${geistMono.variable} bg-white  no-scrollbar lg:overflow-y-auto`}>
         <AuthProvider>
-          <ExamProvider entrances={entrances}>
+          <ExamProvider>
             <div className="pt-16">{children}</div>
           </ExamProvider>
         </AuthProvider>

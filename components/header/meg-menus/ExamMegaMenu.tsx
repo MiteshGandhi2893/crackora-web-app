@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useExams } from "@/providers/ExamsProvider";
 
 export function MegaExamInfoMenu({ onClose }: any) {
-  const entrances = useExams();
+  const data = useExams();
   const router = useRouter();
   
   // Handle click: set cookie and navigate
@@ -30,7 +30,7 @@ export function MegaExamInfoMenu({ onClose }: any) {
 
       {/* ================= COLUMNS ================= */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 px-8 pb-5">
-        {entrances.map((entrance, idx) => (
+        {data.entrances.map((entrance, idx) => (
           <div key={idx} className="flex flex-col">
             {/* Entrance Title */}
             <div className="px-3 bg-white border-b border-b-cyan-950/30">

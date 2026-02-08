@@ -17,7 +17,7 @@ export function MobileMenu({
   open: boolean;
   onClose: () => void;
 }) {
-  const entrances = useExams();
+  const data = useExams();
 
   // Handle click: set cookie and navigate
   // ✅ Separate accordion state per level
@@ -34,6 +34,7 @@ export function MobileMenu({
   }, [open]);
 
   const _menu: Menu[] = useMemo(() => {
+    const entrances = data.entrances;
     const clonedMenu: Menu[] = JSON.parse(JSON.stringify(menu));
 
     const examsMenu = clonedMenu.find((item) => item.label === "Exams");
@@ -55,7 +56,7 @@ export function MobileMenu({
     }
 
     return clonedMenu;
-  }, [entrances]);
+  }, [data.entrances]);
 
   const renderMenu = (items: Menu[]) =>
     items.map((item) => {

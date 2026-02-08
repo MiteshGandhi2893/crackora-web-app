@@ -26,18 +26,27 @@ const apiRequest = async <T>(
         "Content-Type": "application/json",
         ...headers,
       },
-      credentials: 'include',
+      credentials: "include",
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    // Parse JSON response
-    const responseData = await response.json();
+    // Always read text first
+    const text = await response.text();
 
-    // Handle different HTTP response statuses
+    let responseData: any = null;
+    try {
+      responseData = text ? JSON.parse(text) : null;
+    } catch {
+      // 👇 This is where HTML responses land
+      console.error("Non-JSON response from API:", text);
+    }
+
     if (!response.ok) {
       return {
         success: false,
-        error: responseData?.message || `HTTP Error: ${response.status}`,
+        error:
+          responseData?.message ||
+          `HTTP Error ${response.status}: ${response.statusText}`,
       };
     }
 
@@ -47,6 +56,7 @@ const apiRequest = async <T>(
     return { success: false, error: "Network error. Please try again later." };
   }
 };
+
 
 // Exported CRUD operations
 export const apiService = {

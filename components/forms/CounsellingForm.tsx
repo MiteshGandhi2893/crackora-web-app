@@ -7,7 +7,8 @@ import { useExams } from "@/providers/ExamsProvider";
 import { Exam } from "@/interfaces/entrance-interface";
 
 export function CounsellingForm() {
-  const entrances = useExams();
+  const data = useExams();
+  
   const [states, setStates] = useState<IState[]>([]);
   const [cities, setCities] = useState<ICity[]>([]);
   const [exams, setExams] = useState<Exam[]>();
@@ -52,7 +53,7 @@ export function CounsellingForm() {
   };
 
   const handleEntranceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const entrance = entrances.find((v) => v.id === e.target.value);
+    const entrance = data.entrances.find((v) => v.id === e.target.value);
     setFormData({ ...formData, entrance: entrance?.title || "" });
     setExams(entrance?.exams);  
   };
@@ -192,7 +193,7 @@ export function CounsellingForm() {
             onChange={handleEntranceChange}
           >
             <option value="">Select Entrance</option>
-            {entrances.map((entrance, index) => (
+            {data.entrances.map((entrance, index) => (
               <option key={index} value={entrance.id}>
                 {entrance.title}
               </option>
