@@ -1,8 +1,14 @@
 @import "tailwindcss";
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+@import "swiper/css/effect-fade";
+
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  font-family: var(--font-roboto), system-ui, sans-serif;
 }
 
 @theme inline {
@@ -20,7 +26,138 @@
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  /* YOUR existing CSS preserved */
+
+  .exam-content {
+    color: rgba(0, 0, 0, 0.65);
+    line-height: 1.6rem;
+    font-size: 0.95rem;
+  }
+
+  .exam-content h2 {
+    font-size: 1.55rem;
+    color: #d97005;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0;
+  }
+
+  .exam-content table {
+    font-size: 0.9rem;
+  }
+
+  .exam-content table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .exam-content table td,
+  .exam-content table th {
+    border: solid thin rgba(0, 0, 0, 0.1);
+    padding: 0.4rem;
+  }
+
+  /* 1) If the table has th, style only th */
+  .exam-content table:has(th) th {
+    background-color: #164e61 !important;
+    color: white;
+  }
+
+  /* 2) If the table has NO th, style the first row (td header) */
+  .exam-content table:not(:has(th)) tr:first-child td {
+    background-color: #164e61 !important;
+    color: white;
+  }
+
+  /* ----------------------------- */
+  /* ✅ NEW: ZEBRA STRIPING (DATA ROWS ONLY) */
+  /* ----------------------------- */
+
+  /* Exclude header rows */
+  .exam-content table tr:not(:first-child):nth-child(odd) td {
+    background-color: #ffffff;
+  }
+
+  .exam-content table tr:not(:first-child):nth-child(even) td {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  /* keep your existing list style */
+  .exam-content ul {
+    list-style: inside;
+    padding: 0.5rem 0;
+    padding-left: 2rem;
+  }
+
+ .exam-content h2,
+.exam-content h3 {
+  scroll-margin-top: 140px;
+}
+
+}
+
+
+
+.custom-select .stdropdown-container {
+  width: 100%;
+}
+
+.custom-select .stdropdown-input {
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.custom-select .stdropdown-input:focus {
+  border-color: #f59e0b; /* amber */
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+.custom-select .stdropdown-menu {
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.custom-select .stdropdown-item:hover {
+  background-color: #fef3c7;
+}
+
+
+
+
+/* Hide scrollbar but allow scroll */
+.no-scrollbar {
+  -ms-overflow-style: none;     /* IE & Edge */
+  scrollbar-width: none;        /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari */
+}
+
+
+
+
+
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari, and Opera (mobile default) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge, and Firefox (mobile default) */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
 }
