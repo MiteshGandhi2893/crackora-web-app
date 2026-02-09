@@ -6,8 +6,8 @@ import { BiSolidQuoteAltLeft } from "react-icons/bi";
 export function Testimonials() {
   return (
     <>
-      <div className="relative lg:px-18 sm:px-5 mb-20 bg-white">
-        <h2 className="text-4xl py-5 ml-5 text-cyan-900">Testimonials</h2>
+      <div className="relative lg:px-18 sm:px-5 sm:mb-20 mb-10 bg-white">
+        <h2 className="text-4xl py-5 ml-5 text-cyan-900 font-semibold">Testimonials</h2>
         <button
           className="swiper-prev absolute left-10 top-1/2 -translate-y-1/2 
                            hidden lg:flex items-center justify-center 

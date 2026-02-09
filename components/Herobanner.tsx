@@ -104,7 +104,7 @@ export function HeroBanner() {
                 className="
       absolute
       lg:w-30 lg:h-30
-      w-30 h-30
+      w-24 h-24
       rounded-full
       border-10 border-amber-700/50
       blur-[5px]
@@ -116,7 +116,7 @@ export function HeroBanner() {
               <div
                 className="
       lg:w-28 lg:h-28
-      w-20 h-20
+      w-22 h-22
       rounded-full
       bg-amber-200
       flex items-center justify-center

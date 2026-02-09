@@ -7,13 +7,13 @@ export function StudyPlanSection() {
         <div className="flex gap-10 ">
           <div className="flex flex-col gap-5 lg:w-4/5 sm:w-1/2 z-100">
             <h2
-              className={`text-3xl font-semibold text-white ${sectionHeading}`}
+              className={`text-4xl font-semibold text-white ${sectionHeading}`}
             >
               Study Planner
             </h2>
 
             <p
-              className={`text-justify tracking-tight  leading-snug  text-neutral-300  ${para} `}
+              className={` tracking-tight  leading-6  text-neutral-300  ${para} `}
             >
               Crackora’s Study Planner creates a structured preparation plan
               based on your exam date and available study hours. It breaks your

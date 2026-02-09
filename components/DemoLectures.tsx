@@ -37,7 +37,7 @@ export function DemoLectures() {
   const activeVideo = videos[activeIndex];
 
   return (
-    <section className="bg-white py-20 px-8 sm:px-8 lg:px-28 z-20">
+    <section className="bg-white sm:py-20 py-10 px-6 sm:px-8 lg:px-28 z-20">
       <div className="w-full">
         {/* Header */}
         <div className="mb-5">
@@ -104,7 +104,7 @@ export function DemoLectures() {
           <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black">
             <iframe
               key={activeVideo.videoId}
-              className="w-full aspect-video h-full"
+              className="w-full aspect-video sm:h-full h-60"
               src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1&rel=0`}
               title={activeVideo.title}
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

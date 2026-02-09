@@ -53,7 +53,7 @@ export function TopPackages() {
         </div> */}
 
         {/* Slider w=82%*/}
-        <div className="relative w-full lg:w-full">
+        <div className="relative w-full lg:w-full sm:px-6">
           {/* Desktop arrows */}
           <button className="swiper-prev absolute -left-5 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-cyan-800 text-white shadow z-30 text-2xl">
             {" "}
@@ -73,13 +73,13 @@ export function TopPackages() {
             slidesPerView={1.15}
             spaceBetween={10}
             breakpoints={{
-              0: { slidesPerView: 1, centeredSlides: true },
+              0: { slidesPerView: 1.25, centeredSlides: true },
               480: { slidesPerView: 1.15, spaceBetween: 20 },
-              640: { slidesPerView: 2.5, spaceBetween: 20 },
+              640: { slidesPerView: 2.5, spaceBetween: 25 },
               1280: { slidesPerView: 4, spaceBetween: 20 },
               1536: { slidesPerView: 4 },
             }}
-            className="px-4 lg:px-0 pb-10 h-110"
+            className="px-14  pb-10 h-110"
           >
             {[1, 2, 3, 4, 5].map((_, i) => (
               <SwiperSlide key={i}>

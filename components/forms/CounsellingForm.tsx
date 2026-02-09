@@ -88,11 +88,11 @@ export function CounsellingForm() {
   return (
     <div className="w-full border border-gray-200 bg-white/70 shadow-lg p-4 rounded-xl text-cyan-950">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-4">
-        <div className="relative w-32 h-12">
+      <div className="flex items-center justify-between lg:gap-4 gap-2 mb-4">
+        <div className="relative sm:w-32 w-30 h-12">
           <Image src="/crackora-logo.svg" alt="crackora counselling" fill />
         </div>
-        <h3 className="text-xl font-semibold text-amber-700">
+        <h3 className="sm:text-xl text-[18px] font-semibold text-amber-700">
           Free Counselling
         </h3>
       </div>
@@ -106,7 +106,7 @@ export function CounsellingForm() {
             onChange={handleChange}
             value={formData.fullname}
             type="text"
-            className="outline-0 border p-2 border-gray-200 rounded shadow bg-gray-50 text-sm h-8 text-gray-800"
+            className="outline-0 border p-2 border-gray-200 rounded shadow bg-gray-50 text-[13px] h-7 text-gray-800"
             placeholder="Enter your First and Last name"
           />{" "}
           {errors.fullname && (
@@ -123,7 +123,7 @@ export function CounsellingForm() {
             value={formData.email}
             type="text"
             onChange={handleChange}
-            className="outline-0 border p-2 border-gray-200 rounded shadow bg-gray-50 text-sm h-8 text-gray-800"
+            className="outline-0 border p-2 border-gray-200 rounded shadow text-[13px] bg-gray-50 text-sm h-7 text-gray-800"
             placeholder="Enter your Email ID"
           />{" "}
           {errors.email && (
@@ -146,7 +146,7 @@ export function CounsellingForm() {
               value={formData.phone}
               onChange={handleChange}
               type="text"
-              className="outline-0 w-full border p-2 border-gray-200 rounded shadow bg-gray-50 text-sm h-8 text-gray-800"
+              className="outline-0 w-full border p-2 border-gray-200 rounded shadow bg-gray-50 text-[13px] h-7 text-gray-800"
               placeholder="Enter your phone number"
             />{" "}
           </div>{" "}
@@ -160,7 +160,7 @@ export function CounsellingForm() {
         {/* State + City */}
         <div className="grid grid-cols-2 gap-3">
           <select
-            className="select border text-sm border-gray-300 p-2 bg-white rounded"
+            className="select border text-sm border-gray-300 p-2 h-8 text-[13px] bg-white rounded"
             value={selectedStateIso}
             onChange={handleStateChange}
           >
@@ -173,7 +173,7 @@ export function CounsellingForm() {
           </select>
 
           <select
-            className="select border text-sm border-gray-300 p-2 bg-white rounded"
+            className="select border text-sm border-gray-300 p-2 h-8 text-[13px] bg-white rounded"
             value={formData.city}
             onChange={handleCityChange}
             disabled={!cities.length}
@@ -188,7 +188,7 @@ export function CounsellingForm() {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <select
-            className="select border border-gray-300 text-sm p-2 bg-white rounded"
+            className="select border border-gray-300 text-sm p-2 h-8 text-[13px] bg-white rounded"
             value={selectedStateIso}
             onChange={handleEntranceChange}
           >
@@ -201,7 +201,7 @@ export function CounsellingForm() {
           </select>
 
           <select
-            className="select border border-gray-300 p-2 text-sm bg-white rounded"
+            className="select border border-gray-300 p-2 text-[13px] h-8 bg-white rounded"
             value={formData.exam}
             disabled={!exams?.length}
           >
@@ -216,7 +216,7 @@ export function CounsellingForm() {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-amber-700 text-white rounded py-2 hover:bg-amber-800 transition"
+          className="w-full bg-amber-700 text-white rounded py-1 hover:bg-amber-800 transition"
         >
           Submit
         </button>
