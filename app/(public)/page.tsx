@@ -15,8 +15,8 @@ export default function Home() {
       <WhyCrackora/>
       <StudyPlanSection/>
       <DemoLectures/>
-      <Testimonials/>
       <CounsellingSection/>
+      <Testimonials/>
       <Footer/>
     </>
   );
