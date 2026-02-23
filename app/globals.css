@@ -46,20 +46,12 @@ body {
 
   /* ✅ Card-style table */
   .exam-content table {
-    width: fit-content;
+    width: 100%;
     display: block;
     overflow-x: auto;
-    white-space: nowrap;
     font-size: 0.9rem;
 
-    background: white;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-    margin: 1rem 0;
 
-    border-collapse: separate;   /* IMPORTANT */
-    border-spacing: 0;           /* IMPORTANT */
   }
 
   .exam-content table td,
@@ -88,15 +80,7 @@ body {
 
   /* ✅ Rounded header corners */
 
-  .exam-content table tr:first-child th:first-child,
-  .exam-content table tr:first-child td:first-child {
-    border-top-left-radius: 0.75rem;
-  }
-
-  .exam-content table tr:first-child th:last-child,
-  .exam-content table tr:first-child td:last-child {
-    border-top-right-radius: 0.75rem;
-  }
+ 
 
   /* ✅ Smooth hover effect */
 
