@@ -84,7 +84,7 @@ useEffect(() => {
         {/* Content */}
         <div
           className="relative z-10 flex sm:flex-row flex-col
-          justify-between w-full px-6 lg:px-40 py-10 gap-10"
+          justify-between w-full px-6 lg:px-40 py-25 gap-10"
         >
           {/* Left content */}
           <div className="lg:w-[60%] sm:w-[40%] w-full flex flex-col gap-6 text-white justify-center">

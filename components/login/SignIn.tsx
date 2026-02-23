@@ -4,12 +4,13 @@ import { useState } from "react";
 import { authService } from "@/services/Authentication.service";
 import { useAuth, User } from "@/providers/AuthProvider";
 import Image from "next/image";
+import { Severity } from "@/interfaces/authentication-interface";
 
 interface SignInProps {
   handleIsLogin: (val: boolean) => void;
   sendMessage: (msg: {
     text: string;
-    messageType: "Success" | "Error";
+    severity: Severity;
   }) => void;
   onSuccess: (user: User) => void;
 }
@@ -17,7 +18,11 @@ interface SignInProps {
 export function SignIn({ handleIsLogin, sendMessage, onSuccess }: SignInProps) {
   const { setUser } = useAuth();
   const [formData, setFormData] = useState({ username: "", password: "" });
-  const [errors, setErrors] = useState({ username: "", password: "" });
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+    submit: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +42,7 @@ export function SignIn({ handleIsLogin, sendMessage, onSuccess }: SignInProps) {
   };
 
   const validateForm = () => {
-    const newErrors = { username: "", password: "" };
+    const newErrors = { username: "", password: "", submit:"" };
     if (!formData.username.trim()) newErrors.username = "Email is required.";
     else if (!/\S+@\S+\.\S+/.test(formData.username))
       newErrors.username = "Enter a valid email address.";
@@ -56,16 +61,21 @@ export function SignIn({ handleIsLogin, sendMessage, onSuccess }: SignInProps) {
       username: formData.username,
       password: formData.password,
     });
+
     setLoading(false);
+    if (result.error) {
+      setErrors({ ...errors, submit: result?.error?.split(":")[1].trim() });
+      return;
+    }
 
     if (result?.error) {
-      sendMessage({ text: result.error, messageType: "Error" });
+      sendMessage({ text: result.error, severity: "error" });
       return;
     }
 
     setUser(result.user as User);
     onSuccess(result.user as User);
-    sendMessage({ text: "Signed in successfully", messageType: "Success" });
+    sendMessage({ text: "Signed in successfully", severity: "success" });
   };
 
   return (
@@ -112,16 +122,16 @@ export function SignIn({ handleIsLogin, sendMessage, onSuccess }: SignInProps) {
           className="bg-cyan-800 text-white p-2 rounded mt-2 hover:scale-105 disabled:opacity-50"
         >
           {loading ? "Signing in..." : "Sign In"}
+        
         </button>
+          {errors.submit && (
+            <span className="text-red-700 text-sm">**{errors.submit}</span>
+          )}
 
         <div className="flex items-center justify-center text-sm relative mt-2">
           Not a{" "}
           <div className="relative w-25 h-15 flex items-center">
-            <Image
-              src="/crackora-logo.svg"
-              alt="Crackora"
-              fill
-            />
+            <Image src="/crackora-logo.svg" alt="Crackora" fill />
           </div>
           user?
           <span

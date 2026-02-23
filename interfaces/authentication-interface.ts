@@ -10,3 +10,6 @@ export interface SignUpPayload {
     password: string;
     phoneNumber: string;
 }
+
+
+export type Severity = "success" | "error" | "warning" | "info";

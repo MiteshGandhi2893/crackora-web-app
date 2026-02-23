@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const API_BASE_URL = "https://api.crackora.com";
-// const API_BASE_URL = "http://localhost:5000";
+// const API_BASE_URL = "https://api.crackora.com";
+const API_BASE_URL = "http://localhost:5000";
 
 
 interface RequestOptions {
@@ -11,7 +11,7 @@ interface RequestOptions {
 
 interface ApiResponse<T> {
   success: boolean;
-  data?: T;
+  data?: T | any;
   error?: string;
 }
 

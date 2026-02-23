@@ -4,20 +4,23 @@
 import { useState } from "react";
 import { Dialog } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { SignIn } from "@/components/login/SignIn";
 import { SignUp } from "@/components/login/SignUp";
+import {useSnackbar} from "@/providers/SnackbarProvider";
 
 export function AuthModal() {
-  const router = useRouter();
-  const { closeAuth, setUser } = useAuth();
+  const { closeAuth, setUser, postAuthAction, setPostAuthAction } = useAuth();
   const [isLogin, setIsLogin] = useState(true); // toggle forms
+  const {showMessage} = useSnackbar();
 
   const handleSuccess = (user: any) => {
     setUser(user); // save user globally
     closeAuth(); // close modal
-    router.push("/dashboard"); // redirect
+    if (postAuthAction) {
+      postAuthAction();
+      setPostAuthAction(null);
+    }
   };
 
   return (
@@ -51,13 +54,13 @@ export function AuthModal() {
           {isLogin ? (
             <SignIn
               handleIsLogin={setIsLogin}
-              sendMessage={(msg) => console.log(msg)}
+              sendMessage={(msg) => showMessage(msg.text, msg.severity)}
               onSuccess={handleSuccess}
             />
           ) : (
             <SignUp
               handleIsLogin={setIsLogin}
-              sendMessage={(msg: any) => console.log(msg)}
+              sendMessage={(msg: any) => showMessage(msg.text, msg.severity)}
               onSuccess={handleSuccess}
             />
           )}

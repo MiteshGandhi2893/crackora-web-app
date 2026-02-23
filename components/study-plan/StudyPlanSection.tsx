@@ -1,6 +1,10 @@
+"use client";
 import { para, sectionHeading } from "../../styles/typography";
 import Image from "next/image";
+import { CreatePlanButton } from "../app-buttons/create-plan";
+
 export function StudyPlanSection() {
+
   return (
     <>
       <section className="bg-linear-to-r from-cyan-950 via-cyan-950 to-green-900 w-full z-30 lg:px-30 sm:px-10 px-5 flex flex-col py-20 gap-5 relative justify-center">
@@ -11,7 +15,6 @@ export function StudyPlanSection() {
             >
               Study Planner
             </h2>
-
             <p
               className={` tracking-tight  leading-6  text-neutral-300  ${para} `}
             >
@@ -23,9 +26,7 @@ export function StudyPlanSection() {
               confusion and help you prepare in a steady, manageable way.
             </p>
             <div>
-              <button className="bg-amber-600 px-4 py-2 text-white rounded cursor-pointer hover:scale-105">
-                Create Plan
-              </button>
+              <CreatePlanButton addonClass={"px-4 py-2 bg-amber-600"}/>
             </div>
           </div>
           <div className="sm:flex lg:w-1/5 sm:w-1/2 hidden items-center relative">

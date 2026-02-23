@@ -4,6 +4,10 @@ import "./globals.css";
 import { Roboto } from "next/font/google";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { ExamProvider } from "@/providers/ExamsProvider";
+import { StudyPlannerProvider } from "@/providers/StudyPlanProvider";
+import { SnackbarProvider } from "@/providers/SnackbarProvider";
+import { LoadingProvider } from "@/providers/LoadingProvider";
+import { TopPackagesProvider } from "@/providers/TopPackagesProvide";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,7 +26,8 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: "Crackora - Clarity before Confidence",
-  description: "Crackora is an exam preparation platform built on the principle of Clarity before Confidence. We offer concept-driven learning, structured resources, expert guidance, and practical strategies to help students prepare smarter and succeed faster.",
+  description:
+    "Crackora is an exam preparation platform built on the principle of Clarity before Confidence. We offer concept-driven learning, structured resources, expert guidance, and practical strategies to help students prepare smarter and succeed faster.",
 };
 
 export default async function RootLayout({
@@ -32,12 +37,21 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} ${geistMono.variable} bg-white  no-scrollbar lg:overflow-y-auto`}>
-        <AuthProvider>
-          <ExamProvider>
-            <div className="pt-16">{children}</div>
-          </ExamProvider>
-        </AuthProvider>
+      <body
+        className={`${roboto.variable} ${geistMono.variable} bg-white  lg:overflow-y-auto`}
+      >
+        <SnackbarProvider>
+          <LoadingProvider>
+            <AuthProvider>
+              <ExamProvider>
+                <TopPackagesProvider>
+
+                <StudyPlannerProvider>{children}</StudyPlannerProvider>
+                </TopPackagesProvider>
+              </ExamProvider>
+            </AuthProvider>
+          </LoadingProvider>
+        </SnackbarProvider>
       </body>
     </html>
   );

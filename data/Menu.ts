@@ -1,8 +1,8 @@
 import { Menu } from "@/interfaces/menu.interface";
 import {
-  BiWindowAlt,
-  BiSpreadsheet,
+  BiSolidNews ,
   BiSolidFileBlank,
+  BiSolidSpreadsheet, 
   BiSolidDashboard,
 } from "react-icons/bi";
 
@@ -12,14 +12,14 @@ export const menu: Menu[] = [
     id: "1",
     label: "Mock Tests",
     href: "/mock-tests",
-    icon: BiWindowAlt,
+    icon: BiSolidNews ,
     isActive: false,
   },
   {
     id: "exams",
     label: "Exams",
     href: "#",
-    icon: BiSpreadsheet,
+    icon: BiSolidSpreadsheet,
     isActive: false,
   },
   {

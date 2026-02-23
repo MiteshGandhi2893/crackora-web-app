@@ -1,57 +1,67 @@
-"use client"
+"use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { authService } from "@/services/Authentication.service";
 import Image from "next/image";
+import { useLoader } from "@/providers/LoadingProvider";
+import { useAuth, User } from "@/providers/AuthProvider";
 
 export function SignUp(props: any) {
-  const { handleIsLogin, sendMessage } = props;
+  const { handleIsLogin, sendMessage, onSuccess } = props;
+  const { showLoader, hideLoader } = useLoader();
+  const { setUser } = useAuth();
 
-const handleSingUp = async () => {
-  // Run validation for all fields
-  const newErrors: any = {};
+  const handleSingUp = async () => {
+    // Run validation for all fields
+    const newErrors: any = {};
 
-  if (!formData.fullname.trim()) newErrors.fullname = "Full Name is required.";
-  if (!formData.email.trim()) newErrors.email = "Email is required.";
-  else if (!/\S+@\S+\.\S+/.test(formData.email))
-    newErrors.email = "Enter a valid email address.";
+    if (!formData.fullname.trim())
+      newErrors.fullname = "Full Name is required.";
+    if (!formData.email.trim()) newErrors.email = "Email is required.";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Enter a valid email address.";
 
-  if (!formData.phone.trim()) newErrors.phone = "Phone number is required.";
-  else if (!/^\d{10}$/.test(formData.phone))
-    newErrors.phone = "Enter a valid 10-digit phone number.";
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required.";
+    else if (!/^\d{10}$/.test(formData.phone))
+      newErrors.phone = "Enter a valid 10-digit phone number.";
 
-  if (!formData.password) newErrors.password = "Password is required.";
-  else if (formData.password.length < 6)
-    newErrors.password = "Password must be at least 6 characters.";
+    if (!formData.password) newErrors.password = "Password is required.";
+    else if (formData.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters.";
 
-  if (!formData.confirmPassword) newErrors.confirmPassword = "Confirm your password.";
-  else if (formData.password !== formData.confirmPassword)
-    newErrors.confirmPassword = "Passwords do not match.";
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Confirm your password.";
+    else if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match.";
 
-  setErrors(newErrors);
+    setErrors(newErrors);
 
-  if (Object.keys(newErrors).length > 0) {
-    // There are validation errors, so don't submit
-    return;
-  }
+    if (Object.keys(newErrors).length > 0) {
+      // There are validation errors, so don't submit
+      return;
+    }
 
-  // No validation errors, proceed to send data
-  const signUpPayload = JSON.parse(JSON.stringify(formData));
-  delete signUpPayload.confirmPassword;
+    // No validation errors, proceed to send data
+    const signUpPayload = JSON.parse(JSON.stringify(formData));
+    delete signUpPayload.confirmPassword;
 
-  const result = await authService.signUp(signUpPayload);
-  let message = "Sign Up Successful";
+    showLoader();
+    const result = await authService.signUp(signUpPayload);
+    let message = "Sign Up Successful";
 
-  if (result.error) {
-    message = result.error;
-  }
+    if (result.error) {
+      message = result.error;
+    }
 
-  sendMessage({
-    text: message,
-    messageType: `${result.error ? "Error" : "Success"}`,
-  });
-};
+    hideLoader();
+    setUser(result.user as User);
+    onSuccess(result.user as User);
+    sendMessage({
+      text: message,
+      severity: `${result.error ? "error" : "success"}`,
+    });
+  };
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -138,7 +148,9 @@ const handleSingUp = async () => {
             placeholder="Enter your first and last name"
           />
           {errors.fullname && (
-            <span className="text-red-700 text-xs ml-1 mt-1">{errors.fullname}</span>
+            <span className="text-red-700 text-xs ml-1 mt-1">
+              {errors.fullname}
+            </span>
           )}
         </div>
 
@@ -155,13 +167,17 @@ const handleSingUp = async () => {
             placeholder="Enter your email"
           />
           {errors.email && (
-            <span className="text-red-700 text-xs ml-1 mt-1">{errors.email}</span>
+            <span className="text-red-700 text-xs ml-1 mt-1">
+              {errors.email}
+            </span>
           )}
         </div>
 
         {/* Phone */}
         <div className="flex flex-col">
-          <label className="text-cyan-950 text-sm opacity-80">Phone Number</label>
+          <label className="text-cyan-950 text-sm opacity-80">
+            Phone Number
+          </label>
           <div className="flex w-full gap-2 items-center">
             <span className="text-sm text-amber-600">+91</span>
             <input
@@ -170,12 +186,14 @@ const handleSingUp = async () => {
               onChange={handleChange}
               onBlur={handleBlur}
               type="text"
-            className="outline-0 border p-2 border-gray-200 rounded text-sm h-8 text-gray-600 w-full"
+              className="outline-0 border p-2 border-gray-200 rounded text-sm h-8 text-gray-600 w-full"
               placeholder="Enter your phone number"
             />
           </div>
           {errors.phone && (
-            <span className="text-red-700 text-xs ml-1 mt-1">{errors.phone}</span>
+            <span className="text-red-700 text-xs ml-1 mt-1">
+              {errors.phone}
+            </span>
           )}
         </div>
 
@@ -192,13 +210,17 @@ const handleSingUp = async () => {
             placeholder="Enter password"
           />
           {errors.password && (
-            <span className="text-red-700 text-xs ml-1 mt-1">{errors.password}</span>
+            <span className="text-red-700 text-xs ml-1 mt-1">
+              {errors.password}
+            </span>
           )}
         </div>
 
         {/* Confirm Password */}
         <div className="flex flex-col">
-          <label className="text-cyan-950 text-sm opacity-70">Confirm Password</label>
+          <label className="text-cyan-950 text-sm opacity-70">
+            Confirm Password
+          </label>
           <input
             name="confirmPassword"
             value={formData.confirmPassword}
@@ -228,12 +250,8 @@ const handleSingUp = async () => {
         <div className="flex items-center text-md justify-center">
           Already a{" "}
           <div className="relative w-25 h-15 flex items-center">
-                     <Image
-                       src="/crackora-logo.svg"
-                       alt="Crackora"
-                       fill
-                     />
-                   </div>
+            <Image src="/crackora-logo.svg" alt="Crackora" fill />
+          </div>
           user?
           <a
             className="ml-2 text-amber-600 cursor-pointer underline text-sm"

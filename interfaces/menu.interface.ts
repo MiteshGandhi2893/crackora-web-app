@@ -1,7 +1,7 @@
 export interface SubMenu {
   id: string;
   label: string;
-  isActive: boolean;
+  isActive?: boolean;
   subMenu?: Menu[];
 }
 
@@ -11,7 +11,7 @@ export interface Menu {
   href?: string;
   icon?: React.ElementType
   imageIcon?: string;
-  isActive: boolean;
+  isActive?: boolean;
   subMenu?: SubMenu[];
   slug?: string;
 }

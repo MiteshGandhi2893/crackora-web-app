@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { Logo } from "./header/Logo";
 
 export function Footer() {
   return (
@@ -8,19 +9,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-12">
         
         {/* Grid */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           
           {/* Logo + Address */}
-          <div className="flex flex-col gap-4 lg:col-span-2">
-            <div className="relative h-14 w-44 bg-white">
-              <Image
-                src="/crackora-logo.svg"
-                alt="Crackora logo"
-                fill
-                className="object-contain"
-              />
-            </div>
-
+          <div className="flex flex-col gap-4 lg:col-span-2 justify-start">
+            <Logo/>
             <p className="text-sm text-white/60 leading-relaxed">
               <span className="font-semibold text-amber-400">Address:</span>{" "}
               Shop 7, Vaibhav Horizon, Bhayander West, Mumbai – 401101
@@ -35,24 +28,24 @@ export function Footer() {
           <FooterColumn
             title="Company"
             links={[
-              { label: "About Us", href: "/about" },
-              { label: "Contact Us", href: "/contact" },
+              { label: "About Us", href: "/about-us" },
+              { label: "Disclaimer", href: "/disclaimer" },
               { label: "Privacy Policy", href: "/privacy-policy" },
-              { label: "Results", href: "/results" },
+              { label: "Refund & Cancellation Policy", href: "/refund-policy" },
             ]}
           />
 
           <FooterColumn
             title="Exams"
             links={[
-              { label: "JEE", href: "/exams/jee" },
-              { label: "NEET", href: "/exams/neet" },
-              { label: "MHT-CET", href: "/exams/mht-cet" },
-              { label: "Boards", href: "/exams/boards" },
+              { label: "CAT", href: "/exam-info/cat-exam" },
+              { label: "MAH MCA CET", href: "/exam-info/mah-mba-cet-2026-exam" },
+              { label: "SLAT", href: "/exam-info/slat-exam" },
+              { label: "NPAT", href: "/exam-info/npat" },
             ]}
           />
 
-          <FooterColumn
+          {/* <FooterColumn
             title="Quick Links"
             links={[
               { label: "Demo Lectures", href: "/demo" },
@@ -69,7 +62,7 @@ export function Footer() {
               { label: "Blogs", href: "/blogs" },
               { label: "FAQs", href: "/faqs" },
             ]}
-          />
+          /> */}
         </div>
       </div>
     </footer>

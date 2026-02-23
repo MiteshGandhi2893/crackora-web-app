@@ -1,7 +1,7 @@
 import Image from "next/image";
 export function HeroBanner() {
   return (
-    <div className="relative w-full lg:min-h-150 min-h-200 overflow-hidden bg-cyan-950 lg:hero  bg-opacity-10">
+    <div className="relative w-full lg:min-h-150 min-h-200 overflow-hidden bg-cyan-950 lg:hero  bg-opacity-10 mt-16" >
       <div
         className="absolute inset-0 z-10   top-0 left-0  bg-[url(/hero-banner.jpg)] bg-cover
     bg-center
@@ -9,7 +9,7 @@ export function HeroBanner() {
       ></div>
       <div className="absolute top-0 left-0 w-screen h-full bg-[rgba(0,0,0,0.2)] z-10"></div>
 
-      <div className="absolute top-0 left-0  lg:py-20 py-10 pb-20 flex flex-col lg:flex-row items-center gap-14 z-10 w-full justify-center items-center">
+      <div className="absolute top-0 left-0  lg:py-20 py-10 pb-20 flex flex-col lg:flex-row  gap-14 z-10 w-full justify-center items-center">
         {/* ================= LEFT CONTENT ================= */}
         <div className="lg:w-[60%] w-full text-white/90 z-10 flex flex-col justify-center  lg:px-30 md:px-15 px-6">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight lg:text-left text-center">

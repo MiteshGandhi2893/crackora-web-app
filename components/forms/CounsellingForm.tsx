@@ -5,6 +5,7 @@ import Image from "next/image";
 import { State, City, IState, ICity } from "country-state-city";
 import { useExams } from "@/providers/ExamsProvider";
 import { Exam } from "@/interfaces/entrance-interface";
+import { Logo } from "../header/Logo";
 
 export function CounsellingForm() {
   const data = useExams();
@@ -89,9 +90,7 @@ export function CounsellingForm() {
     <div className="w-full border border-gray-200 bg-white/70 shadow-lg p-4 rounded-xl text-cyan-950">
       {/* Header */}
       <div className="flex items-center justify-between lg:gap-4 gap-2 mb-4">
-        <div className="relative sm:w-32 w-30 h-12">
-          <Image src="/crackora-logo.svg" alt="crackora counselling" fill />
-        </div>
+       <Logo/>
         <h3 className="sm:text-xl text-[18px] font-semibold text-amber-700">
           Free Counselling
         </h3>
