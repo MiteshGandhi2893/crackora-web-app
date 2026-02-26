@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
-import { apiService } from "@/services/api.service";
+import { API_BASE_URL, apiService } from "@/services/api.service";
 import { useRouter } from "next/navigation";
 import { useExams } from "@/providers/ExamsProvider";
 
@@ -50,7 +50,7 @@ export function MegaExamInfoMenu({ onClose }: any) {
                   <div className="flex items-center gap-2">
                     <div className="relative w-10 h-10">
                       <Image
-                        src={apiService.getPublicAsset(exam?.icon || "")}
+                        src={`${API_BASE_URL}/public/${exam?.icon || ""}`}
                         alt={exam.title || ""}
                         fill
                         unoptimized

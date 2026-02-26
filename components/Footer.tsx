@@ -7,13 +7,13 @@ export function Footer() {
   return (
     <footer className="bg-gray-900/95 text-white">
       <div className="mx-auto max-w-7xl px-6 py-12">
-        
         {/* Grid */}
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          
           {/* Logo + Address */}
           <div className="flex flex-col gap-4 lg:col-span-2 justify-start">
-            <Logo/>
+            <div className=" w-fit bg-amber-50/80 px-2">
+              <Logo />
+            </div>
             <p className="text-sm text-white/60 leading-relaxed">
               <span className="font-semibold text-amber-400">Address:</span>{" "}
               Shop 7, Vaibhav Horizon, Bhayander West, Mumbai – 401101
@@ -39,7 +39,10 @@ export function Footer() {
             title="Exams"
             links={[
               { label: "CAT", href: "/exam-info/cat-exam" },
-              { label: "MAH MCA CET", href: "/exam-info/mah-mba-cet-2026-exam" },
+              {
+                label: "MAH MCA CET",
+                href: "/exam-info/mah-mba-cet-2026-exam",
+              },
               { label: "SLAT", href: "/exam-info/slat-exam" },
               { label: "NPAT", href: "/exam-info/npat" },
             ]}

@@ -5,23 +5,23 @@ export function Logo() {
         <>
          <div className="flex items-center">
             <Link href={"/"}>
-              <div className="flex items-center  ">
-                <div className="relative w-10 h-10 flex justify-end">
+              <div className="flex  items-center justify-center">
+                <div className="relative w-10 h-10  justify-end">
                   <Image
                     src="/monogram.svg"
                     alt="Crackora logo"
                     fill
                     priority
-                    className="object-contain object-left absolute left-0"
                   />
                 </div>
-                <div className="relative w-30 h-18 left-0 ">
+                <div className="relative w-36 h-15 ">
                   <Image
-                    src="/text-only.svg"
+                    src="/brand-name-slogan.svg"
                     alt="Crackora logo"
                     fill
                     priority
-                    className="object-cover object-left absolute left-0"
+                    className="object-contain object-left absolute left-0
+                    "
                   />
                 </div>
               </div>

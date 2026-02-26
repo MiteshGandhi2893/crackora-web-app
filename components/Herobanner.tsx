@@ -2,11 +2,27 @@ import Image from "next/image";
 export function HeroBanner() {
   return (
     <div className="relative w-full lg:min-h-150 min-h-200 overflow-hidden bg-cyan-950 lg:hero  bg-opacity-10 mt-16" >
-      <div
-        className="absolute inset-0 z-10   top-0 left-0  bg-[url(/hero-banner.jpg)] bg-cover
-    bg-center
-    bg-no-repeat r w-screen h-full opacity-40"
-      ></div>
+     <div className="absolute inset-0 z-10">
+
+        {/* Deep space base */}
+        <div className="absolute inset-0 bg-[#020617]" />
+
+        {/* Cyan nebula */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(6,182,212,0.18),transparent_60%)]" />
+
+        {/* Green nebula */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
+
+        {/* Soft atmospheric diffusion */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.04),transparent_120%)]" />
+
+        {/* CSS star texture (no image → faster) */}
+        <div
+          className="absolute inset-0 opacity-[0.15]
+          bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)]
+          bg-[size:26px_26px]"
+        />
+      </div>
       <div className="absolute top-0 left-0 w-screen h-full bg-[rgba(0,0,0,0.2)] z-10"></div>
 
       <div className="absolute top-0 left-0  lg:py-20 py-10 pb-20 flex flex-col lg:flex-row  gap-14 z-10 w-full justify-center items-center">
@@ -38,43 +54,43 @@ export function HeroBanner() {
           {/* Soft radial glow */}
 
           <div className="absolute -top-10 left-20 sm:left-30  flex items-end rotate-0">
-            <span className=" text-white sm:text-lg text-sm drop-shadow-[0px_10px_8px_rgba(255,255,255,0.8)] ">
+            <span className=" text-white sm:text-lg text-sm drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)] ">
               NIMCET
             </span>
           </div>
 
           <div className="absolute lg:bottom-50 lg:-left-30 sm:bottom-25  -bottom-8 left-10 flex items-end rotate-0">
-            <span className=" text-white sm:text-lg  text-xs drop-shadow-[0px_10px_8px_rgba(255,255,255,0.8)]">
+            <span className=" text-white sm:text-lg  text-xs drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               MH CET LAW
             </span>
           </div>
 
           <div className="absolute top-0 right-10 sm:right-30 flex items-end rotate-0">
-            <span className=" text-white sm:text-lg text-sm drop-shadow-[0px_10px_8px_rgba(255,255,255,0.9)]">
+            <span className=" text-white sm:text-lg text-sm drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               CAT
             </span>
           </div>
 
           <div className="absolute sm:bottom-0 lg:right-8 lg:w-fit -bottom-10 right-20 flex items-end rotate-0">
-            <span className=" text-white sm:text-lg text-[13px] drop-shadow-[0px_10px_8px_rgba(255,255,255,0.9)]">
+            <span className=" text-white sm:text-lg text-[13px] drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               MBA CET
             </span>
           </div>
 
           <div className="absolute lg:top-110 lg:left-50  sm:top-15 sm:left-20 top-3  left-6 flex items-end rotate-0">
-            <span className=" text-white sm:text-lg text-sm drop-shadow-[0px_10px_8px_rgba(255,255,255,0.9)]">
+            <span className=" text-white sm:text-lg text-sm drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               CLAT{" "}
             </span>
           </div>
 
           <div className="absolute lg:top-10 lg:-left-20 sm:-top-20 sm:left-1/2  sm:flex hidden items-end rotate-0">
-            <span className=" text-white sm:text-lg drop-shadow-[0px_10px_8px_rgba(255,255,255,0.9)]">
+            <span className=" text-white sm:text-lg drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               MAH MCA CET{" "}
             </span>
           </div>
 
           <div className="absolute lg:bottom-10 lg:-left-12 sm:left-140 md:left-150 sm:flex hidden items-end">
-            <span className=" text-white text-lg drop-shadow-[0px_10px_8px_rgba(255,255,255,0.9)]">
+            <span className=" text-white text-lg drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               IPMAT{" "}
             </span>
           </div>
@@ -120,14 +136,17 @@ export function HeroBanner() {
       rounded-full
       bg-amber-200
       flex items-center justify-center
+      
       relative
     "
               >
+
                 <Image
-                  src="/crackora-logo.svg"
+                  src="/vertical-logo.svg"
                   alt="Crackora"
-                  fill
-                  className="w-full h-full  object-contain"
+                  width={10}
+                  height={10}
+                  className="w-20 h-20 -mt-3  object-cover object-center"
                 />
               </div>
             </div>
@@ -136,14 +155,14 @@ export function HeroBanner() {
               <OrbitItem
                 label="Live Classes"
                 size="lg:w-20 lg:h-20 w-13 h-13"
-                bg="text-[10px] bg-white text-cyan-900"
+                bg="text-[11px] bg-amber-100 text-cyan-900"
               />
             </div>
             <div className="absolute lg:top-30 lg:right-15 top-20 right-3">
               <OrbitItem
                 label="Analytics"
                 size="lg:w-20 lg:h-20 w-13 h-13"
-                bg="text-[10px] bg-white text-cyan-900"
+                bg="text-[11px] bg-amber-100 text-cyan-900"
               />
             </div>
 
@@ -151,7 +170,7 @@ export function HeroBanner() {
               <OrbitItem
                 label="Resources"
                 size="lg:w-20 lg:h-20 w-14 h-14"
-                bg="text-[10px] bg-white text-cyan-900"
+                bg="text-[11px] bg-amber-100 text-cyan-900"
               />
             </div>
 
@@ -198,10 +217,7 @@ function OrbitItem({
   return (
     <div
       className={`${bg || "bg-cyan-900/95 text-xs text-cyan-50"}  
-      
-      
       font-sans font-semibold
-      
       px-4 py-1 rounded-full shadow-xl
       ${size} flex items-center justify-center text-center
       hover:scale-105 transition`}

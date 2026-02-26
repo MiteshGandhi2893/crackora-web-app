@@ -119,7 +119,7 @@ export function CounsellingForm() {
   };
 
   return (
-    <div className="w-full border border-gray-200 bg-white/70 shadow-lg p-4 rounded-xl text-cyan-950">
+    <div className="w-full border border-gray-200 border border-gray-200-gray-200 bg-white/70 shadow-lg p-4 rounded-xl text-cyan-950">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-4">
         <Logo />
@@ -135,7 +135,7 @@ export function CounsellingForm() {
           onChange={handleChange}
           value={formData.fullname}
           type="text"
-          className="border p-2 rounded bg-gray-50 text-[13px] h-8"
+          className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
           placeholder="Enter your First and Last name"
         />
         {errors.fullname && (
@@ -150,7 +150,7 @@ export function CounsellingForm() {
           value={formData.email}
           type="text"
           onChange={handleChange}
-          className="border p-2 rounded bg-gray-50 text-[13px] h-8"
+          className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
           placeholder="Enter your Email ID"
         />
         {errors.email && (
@@ -167,7 +167,7 @@ export function CounsellingForm() {
             value={formData.phone}
             onChange={handleChange}
             type="text"
-            className="w-full border p-2 rounded bg-gray-50 text-[13px] h-8"
+            className="w-full border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
             placeholder="Enter your phone number"
           />
         </div>
@@ -180,7 +180,7 @@ export function CounsellingForm() {
         {/* State + City */}
         <div className="grid grid-cols-2 gap-3">
           <select
-            className="border p-2 h-8 text-[13px] rounded"
+            className="border border-gray-200 p-2 h-8 text-[13px] rounded bg-white"
             value={selectedStateIso}
             onChange={handleStateChange}
           >
@@ -193,7 +193,7 @@ export function CounsellingForm() {
           </select>
 
           <select
-            className="border p-2 h-8 text-[13px] rounded"
+            className="border border-gray-200 p-2 h-8 text-[13px] rounded bg-white"
             value={formData.city}
             onChange={handleCityChange}
             disabled={!cities.length}
@@ -210,7 +210,7 @@ export function CounsellingForm() {
         {/* Entrance + Exam */}
         <div className="grid grid-cols-2 gap-3">
           <select
-            className="border p-2 h-8 text-[13px] rounded"
+            className="border border-gray-200 p-2 h-8 text-[13px] rounded bg-white"
             value={formData.entrance}
             onChange={handleEntranceChange}
           >
@@ -223,7 +223,7 @@ export function CounsellingForm() {
           </select>
 
           <select
-            className="border p-2 h-8 text-[13px] rounded"
+            className="border border-gray-200 p-2 h-8 text-[13px] rounded bg-white"
             value={formData.exam}
             onChange={handleExamChange}
             disabled={!exams?.length}
