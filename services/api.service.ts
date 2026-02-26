@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const API_BASE_URL = "https://api.crackora.com";
+export const API_BASE_URL = "https://api.crackora.com";
 // export const API_BASE_URL = "http://localhost:5000";
 
 
