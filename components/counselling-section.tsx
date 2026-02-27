@@ -2,12 +2,11 @@
 import { CounsellingForm } from "./forms/CounsellingForm";
 
 export function CounsellingSection() {
-
   return (
     <>
-      <section className="bg-linear-to-l from-cyan-950 via-cyan-900 to-green-950 sm:py-16 py-10 flex flex-col-reverse sm:flex-row items-center gap-10 lg:px-25 px-6">
+      <section className="bg-linear-to-r from-cyan-950 via-cyan-950 to-green-900  py-10 flex flex-col-reverse sm:flex-row-reverse justify-center items-center gap-10 lg:px-25 px-6">
         {/* Left image */}
-        <div className="sm:w-1/2 w-full relative h-96 justify-center flex">
+        <div className="sm:w-1/2 w-full relative h-96 justify-center items-center flex">
           <div className="w-100">
             <CounsellingForm />
           </div>
@@ -16,10 +15,14 @@ export function CounsellingSection() {
         {/* Right content */}
         <div className="lg:w-1/2 w-full flex justify-end">
           <div className=" flex flex-col gap-6">
-            <h2 className="text-3xl font-bold text-amber-300">
-              1-on-1 Mentorship & Doubt Solving
-            </h2>
-            <p className="text-white/90 sm:text-lg text-sm">
+            
+            <div className="flex flex-col  gap-2">
+              <h2 className=" text-amber-100 font-semibold text-2xl lg:text-4xl ">
+              Mentorship & Doubt Solving
+              </h2>
+              <div className="bg-amber-600 h-0.5 sm:w-60 w-30"></div>
+            </div>
+            <p className="text-amber-50/90 sm:text-lg text-sm">
               Get personalized guidance from expert mentors. Solve your doubts
               and accelerate your exam preparation.
             </p>

@@ -22,6 +22,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useLoader } from "@/providers/LoadingProvider";
 import { useSnackbar } from "@/providers/SnackbarProvider";
 import { useRouter } from "next/navigation";
+import { para } from "@/styles/typography";
 /**
  * Chat-style Study Planner Modal
  *
@@ -317,12 +318,12 @@ export function StudyPlannerModal(props: any) {
       );
     }
     return (
-      <div className="flex gap-3 flex-wrap ml-10">
+      <div className={`flex gap-3 ${para} flex-wrap sm:ml-10 ml-1`}>
         {entrances.map((entrance, idx) => (
           <button
             key={idx}
             onClick={() => handleSelectEntrance(entrance)}
-            className={`px-3 py-2 rounded-md shadow-sm text-sm border ${
+            className={`px-3 py-2 rounded-md shadow-sm border ${
               entrance.isActive
                 ? "bg-amber-600 text-white border-amber-600"
                 : "bg-white text-cyan-900 border-neutral-200"
@@ -345,12 +346,12 @@ export function StudyPlannerModal(props: any) {
       );
     }
     return (
-      <div className="flex gap-3 flex-wrap ml-10">
+      <div className="flex gap-3 flex-wrap sm:ml-10 ml-1">
         {exams.map((ex, i) => (
           <button
             key={i}
             onClick={() => handleSelectExam(ex)}
-            className={`px-3 py-2 rounded-md shadow-sm text-sm border ${
+            className={`px-3 py-2 rounded-md shadow-sm ${para} border  ${
               ex.isActive
                 ? "bg-amber-600 text-white border-amber-600"
                 : "bg-white text-cyan-900 border-neutral-200"
@@ -378,7 +379,7 @@ export function StudyPlannerModal(props: any) {
             />
           </div>
 
-          <div className="text-gray-100 bg-cyan-800  p-3 rounded-2xl max-w-[78%]">
+          <div className={`text-gray-100 bg-cyan-800 ${para}  p-3 rounded-2xl max-w-[78%]`}>
             {m.text}
           </div>
         </div>
@@ -386,7 +387,7 @@ export function StudyPlannerModal(props: any) {
     }
     return (
       <div className="flex justify-end">
-        <div className="bg-amber-600 text-white p-3 rounded-2xl max-w-[78%]">
+        <div className={`bg-amber-600 text-white p-3 ${para} rounded-2xl max-w-[78%]`}>
           {m.text}
         </div>
       </div>
@@ -471,7 +472,7 @@ export function StudyPlannerModal(props: any) {
               {/* Chat container */}
               <div
                 ref={chatRef}
-                className="flex-1 p-3 bg-white rounded shadow-inner"
+                className="flex-1 p-3 px-0 bg-white rounded shadow-inner"
                 style={{ display: "flex", flexDirection: "column", gap: 12 }}
               >
                 {messages.map((m, i) => (
@@ -496,7 +497,7 @@ export function StudyPlannerModal(props: any) {
                         <div className="mt-3">
                           <div className="flex items-center gap-2">
                             <div className="relative">
-                              <div className="absolute top-5.5 left-12 z-50">
+                              <div className="absolute top-5.5 sm:left-12 left-5 z-50">
                                 <BiCalendar className="w-5 h-5 text-cyan-900" />
                               </div>
                               <DatePicker
@@ -506,7 +507,7 @@ export function StudyPlannerModal(props: any) {
                                 }
                                 placeholderText="Select date"
                                 minDate={addDays(new Date(), 1)}
-                                className="bg-white ml-10 mt-3 border h-10 border-gray-300 text-gray-900 text-md rounded-lg ps-10 p-2.5 shadow"
+                                className="bg-white sm:ml-10 ml-3 mt-3 border h-10 border-gray-300 text-gray-900 text-md rounded-lg ps-10 p-2.5 shadow"
                               />
                             </div>
                           </div>
@@ -518,7 +519,7 @@ export function StudyPlannerModal(props: any) {
                       step === 4 && (
                         <div className="mt-3">
                           <div className="relative">
-                            <div className="absolute top-5.5 left-12 z-50">
+                            <div className="absolute top-5.5 sm:left-12 left-5 z-50">
                               <BiCalendar className="w-5 h-5 text-cyan-900" />
                             </div>
                             <DatePicker
@@ -530,7 +531,7 @@ export function StudyPlannerModal(props: any) {
                                   ? addDays(studyPlan.prepStartDate, 7)
                                   : addDays(new Date(), 7)
                               }
-                              className="bg-white ml-10 mt-3 border h-10 border-gray-300 text-gray-900 text-md rounded-lg ps-10 p-2.5 shadow"
+                              className="bg-white sm:ml-10 ml-2 mt-3 border h-10 border-gray-300 text-gray-900 text-md rounded-lg ps-10 p-2.5 shadow"
                             />
                           </div>
                         </div>

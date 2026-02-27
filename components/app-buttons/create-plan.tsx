@@ -11,7 +11,7 @@ export function CreatePlanButton(props: any) {
   return (
     <>
       <button
-        className={` ${addonClass}  flex gap-1 justify-center items-center text-white rounded cursor-pointer hover:scale-105`}
+        className={` ${addonClass}  flex gap-1 text-sm justify-center items-center text-white rounded cursor-pointer hover:scale-105`}
         onClick={openPlanner}
       >
         <BiCalendar className="w-4 h-4"/>

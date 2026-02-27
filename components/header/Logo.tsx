@@ -14,7 +14,7 @@ export function Logo() {
                     priority
                   />
                 </div>
-                <div className="relative w-36 h-15 ">
+                <div className="relative sm:w-38 sm:h-15 w-35 h-15">
                   <Image
                     src="/brand-name-slogan.svg"
                     alt="Crackora logo"

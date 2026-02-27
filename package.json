@@ -12,7 +12,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.7",
-    "country-state-city": "^3.2.1",
+    "india-state-city": "^1.0.3",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-country-state-city": "^1.1.12",

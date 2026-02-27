@@ -1,5 +1,9 @@
+"use client"
+import { useExamMenu } from "@/providers/ExamMenuUIProvider";
 import Image from "next/image";
+
 export function HeroBanner() {
+   const { setOpen } = useExamMenu();
   return (
     <div className="relative w-full lg:min-h-150 min-h-200 overflow-hidden bg-cyan-950 lg:hero  bg-opacity-10 mt-16" >
      <div className="absolute inset-0 z-10">
@@ -20,7 +24,7 @@ export function HeroBanner() {
         <div
           className="absolute inset-0 opacity-[0.15]
           bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)]
-          bg-[size:26px_26px]"
+          bg-size-[26px_26px]"
         />
       </div>
       <div className="absolute top-0 left-0 w-screen h-full bg-[rgba(0,0,0,0.2)] z-10"></div>
@@ -39,13 +43,13 @@ export function HeroBanner() {
           </p>
 
           <div className="lg:mt-8 mt-5 flex flex-wrap gap-4 lg:justify-start justify-center">
-            <button className="bg-amber-600 cursor-pointer text-white px-3 py-3 lg:text-[15px] text-xs rounded-xl font-medium hover:scale-105 transition">
+            <button onClick={() => setOpen(true)} className="bg-amber-600 cursor-pointer text-white px-3 py-3 lg:text-[15px] text-xs rounded-xl font-medium hover:scale-105 transition">
               Explore Exams
             </button>
 
-            <button className="border border-white/40 cursor-pointer px-6 py-3  lg:text-[16px] text-xs  rounded-xl text-white hover:bg-amber-400/30 transition">
+            {/* <button className="border border-white/40 cursor-pointer px-6 py-3  lg:text-[16px] text-xs  rounded-xl text-white hover:bg-amber-400/30 transition">
               Talk to Mentor
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -146,7 +150,7 @@ export function HeroBanner() {
                   alt="Crackora"
                   width={10}
                   height={10}
-                  className="w-20 h-20 -mt-3  object-cover object-center"
+                  className="sm:w-20 sm:h-20 w-18 h-18 -mt-3  object-cover object-center"
                 />
               </div>
             </div>
@@ -155,14 +159,14 @@ export function HeroBanner() {
               <OrbitItem
                 label="Live Classes"
                 size="lg:w-20 lg:h-20 w-13 h-13"
-                bg="text-[11px] bg-amber-100 text-cyan-900"
+                bg="sm:text-[11px] text-[10px] bg-amber-100 text-cyan-900"
               />
             </div>
             <div className="absolute lg:top-30 lg:right-15 top-20 right-3">
               <OrbitItem
                 label="Analytics"
                 size="lg:w-20 lg:h-20 w-13 h-13"
-                bg="text-[11px] bg-amber-100 text-cyan-900"
+                bg="sm:text-[11px] text-[10px] bg-amber-100 text-cyan-900"
               />
             </div>
 
@@ -170,7 +174,7 @@ export function HeroBanner() {
               <OrbitItem
                 label="Resources"
                 size="lg:w-20 lg:h-20 w-14 h-14"
-                bg="text-[11px] bg-amber-100 text-cyan-900"
+                bg="sm:text-[11px] text-[10px] bg-amber-100 text-cyan-900"
               />
             </div>
 

@@ -17,9 +17,12 @@ export function TopPackages() {
   return (
     <section className="w-full bg-white py-8 lg:py-14 sm:px-10 z-30 isolate lg:px-30 px-8">
       {/* Heading */}
-      <h2 className=" text-cyan-950 font-semibold text-2xl lg:text-4xl mb-5">
-        Popular Mock Tests
-      </h2>
+      <div className="flex flex-col mb-8 gap-2">
+        <h2 className=" text-cyan-950 font-semibold text-2xl lg:text-4xl ">
+          Popular Mock Tests
+        </h2>
+        <div className="bg-amber-600 h-0.5 sm:w-50 w-30"></div>
+      </div>
 
       <div className="flex px-0">
         {/* Slider w=82%*/}
@@ -53,7 +56,7 @@ export function TopPackages() {
           >
             {pkgContext.topPackages.map((item, index) => (
               <SwiperSlide key={index}>
-                <CoursePackageCard topPackage={item}/>
+                <CoursePackageCard topPackage={item} />
               </SwiperSlide>
             ))}
           </Swiper>

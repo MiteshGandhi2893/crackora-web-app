@@ -9,6 +9,7 @@ import { BiX, BiCaretRight, BiCaretDown } from "react-icons/bi";
 import { Menu } from "@/interfaces/menu.interface";
 import { useExams } from "@/providers/ExamsProvider";
 import { apiService } from "@/services/api.service";
+import { Logo } from "./Logo";
 
 export function MobileMenu({
   open,
@@ -147,18 +148,7 @@ export function MobileMenu({
     >
       {/* HEADER */}
       <div className="w-full flex items-center h-14 font-semibold justify-between px-5 py-1 border-b border-b-gray-100 shadow">
-        <Link href="/" onClick={onClose}>
-          <div className="relative w-50 h-15 flex justify-start">
-            <Image
-              src="/crackora-logo.svg"
-              alt="Crackora logo"
-              fill
-              priority
-              className="object-contain object-left"
-            />
-          </div>
-        </Link>
-
+        <Logo/>
         <button
           className="border bg-red-700 rounded-full text-white cursor-pointer"
           onClick={onClose}

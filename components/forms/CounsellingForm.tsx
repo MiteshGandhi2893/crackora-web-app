@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useExams } from "@/providers/ExamsProvider";
 import { Exam } from "@/interfaces/entrance-interface";
 import { Logo } from "../header/Logo";
+import { emailService } from "@/services/email.service";
 
 export function CounsellingForm() {
   const data = useExams();
@@ -29,8 +30,8 @@ export function CounsellingForm() {
   /* ------------------ Load states (LAZY IMPORT) ------------------ */
   useEffect(() => {
     const loadStates = async () => {
-      const { State } = await import("country-state-city");
-      setStates(State.getStatesOfCountry("IN"));
+      const { State } = await import("india-state-city");
+      setStates(State.getAllStates());
     };
 
     loadStates();
@@ -43,16 +44,14 @@ export function CounsellingForm() {
   };
 
   /* ------------------ State change (LAZY IMPORT) ------------------ */
-  const handleStateChange = async (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleStateChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const isoCode = e.target.value;
     const stateObj = states.find((s) => s.isoCode === isoCode);
 
     setSelectedStateIso(isoCode);
 
-    const { City } = await import("country-state-city");
-    setCities(City.getCitiesOfState("IN", isoCode));
+    const { City } = await import("india-state-city");
+    setCities(City.getCitiesOfState(isoCode));
 
     setFormData((prev) => ({
       ...prev,
@@ -62,12 +61,8 @@ export function CounsellingForm() {
   };
 
   /* ------------------ Entrance change ------------------ */
-  const handleEntranceChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const entrance = data.entrances.find(
-      (v) => v.id === e.target.value
-    );
+  const handleEntranceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const entrance = data.entrances.find((v) => v.id === e.target.value);
 
     setFormData((prev) => ({
       ...prev,
@@ -91,91 +86,84 @@ export function CounsellingForm() {
   };
 
   /* ------------------ Submit ------------------ */
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors: any = {};
 
     if (!formData.fullname.trim())
       newErrors.fullname = "Full Name is required.";
-    if (!formData.email.trim())
-      newErrors.email = "Email is required.";
-    if (!formData.phone.trim())
-      newErrors.phone = "Phone is required.";
-    if (!formData.state)
-      newErrors.state = "State is required.";
-    if (!formData.city)
-      newErrors.city = "City is required.";
-    if (!formData.entrance)
-      newErrors.entrance = "Entrance is required.";
-    if (!formData.exam)
-      newErrors.exam = "Exam is required.";
+    if (!formData.email.trim()) newErrors.email = "Email is required.";
+    if (!formData.phone.trim()) newErrors.phone = "Phone is required.";
+    if (!formData.state) newErrors.state = "State is required.";
+    if (!formData.city) newErrors.city = "City is required.";
+    if (!formData.entrance) newErrors.entrance = "Entrance is required.";
+    if (!formData.exam) newErrors.exam = "Exam is required.";
 
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log("FORM DATA 👉", formData);
+      await emailService.sendCounsellingEmail(formData);
     }
   };
 
   return (
-    <div className="w-full border border-gray-200 border border-gray-200-gray-200 bg-white/70 shadow-lg p-4 rounded-xl text-cyan-950">
+    <div className="w-full  border-gray-200 border border-gray-200-gray-200 bg-white/70 shadow-lg p-4 rounded-xl text-cyan-950">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-4">
-        <Logo />
         <h3 className="sm:text-xl text-[18px] font-semibold text-amber-700">
           Free Counselling
         </h3>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         {/* Name */}
-        <input
-          name="fullname"
-          onChange={handleChange}
-          value={formData.fullname}
-          type="text"
-          className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
-          placeholder="Enter your First and Last name"
-        />
-        {errors.fullname && (
-          <span className="text-red-700 text-xs">
-            {errors.fullname}
-          </span>
-        )}
+        <div className="flex flex-col gap-1">
+          <input
+            name="fullname"
+            onChange={handleChange}
+            value={formData.fullname}
+            type="text"
+            className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
+            placeholder="Enter your First and Last name"
+          />
+          {errors.fullname && (
+            <span className="text-red-700 text-xs">{errors.fullname}</span>
+          )}
+        </div>
 
         {/* Email */}
-        <input
-          name="email"
-          value={formData.email}
-          type="text"
-          onChange={handleChange}
-          className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
-          placeholder="Enter your Email ID"
-        />
-        {errors.email && (
-          <span className="text-red-700 text-xs">
-            {errors.email}
-          </span>
-        )}
+        <div className="flex flex-col gap-1">
+          <input
+            name="email"
+            value={formData.email}
+            type="text"
+            onChange={handleChange}
+            className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
+            placeholder="Enter your Email ID"
+          />
+          {errors.email && (
+            <span className="text-red-700 text-xs">{errors.email}</span>
+          )}
+        </div>
 
         {/* Phone */}
-        <div className="flex gap-2 items-center">
-          <span className="font-semibold">+91</span>
-          <input
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            type="text"
-            className="w-full border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
-            placeholder="Enter your phone number"
-          />
+        <div className="flex flex-col gap-1">
+          <div className="flex gap-2 items-center">
+            <span className="font-semibold">+91</span>
+            <input
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              type="text"
+              className="w-full border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
+              placeholder="Enter your phone number"
+            />
+          </div>
+          {errors.phone && (
+            <span className="text-red-700 text-xs">{errors.phone}</span>
+          )}
         </div>
-        {errors.phone && (
-          <span className="text-red-700 text-xs">
-            {errors.phone}
-          </span>
-        )}
 
         {/* State + City */}
         <div className="grid grid-cols-2 gap-3">
