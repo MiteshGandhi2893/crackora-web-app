@@ -1,5 +1,8 @@
 "use client";
-
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CoursePackageCard } from "./course-card/CourseCard";
 import { Pagination } from "swiper/modules";
