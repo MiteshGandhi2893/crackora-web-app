@@ -42,7 +42,7 @@ export function TopPackages() {
           slidesPerView={1.1}
           spaceBetween={14}
           centeredSlides
-          className="pb-10"
+          className="pb-15 h-110"
         >
           {pkgContext.topPackages.map((item, i) => (
             <SwiperSlide key={i}>
@@ -53,7 +53,7 @@ export function TopPackages() {
       </div>
 
       {/* Desktop grid */}
-      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-15">
         {pkgContext.topPackages.map((item, i) => (
           <CoursePackageCard key={i} topPackage={item} />
         ))}
