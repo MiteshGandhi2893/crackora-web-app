@@ -9,10 +9,35 @@ const nextConfig: NextConfig = {
         port: "5000",
         pathname: "/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.crackora.com",
+        pathname: "/**",
+      },
     ],
-    domains: ["api.crackora.com"],
   },
-  /* config options here */
+  compress: true,
+  poweredByHeader: false,
+  headers: async () => [
+    {
+      source: "/_next/static/:path*",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=31536000, immutable",
+        },
+      ],
+    },
+    {
+      source: "/:path*",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "no-cache, no-store, must-revalidate",
+        },
+      ],
+    },
+  ],
 };
 
 export default nextConfig;
