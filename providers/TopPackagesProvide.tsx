@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { coursesService } from "@/services/courses.service";
+import { packageService } from "@/services/courses.service";
 import { CoursePackage } from "@/interfaces/CoursePackage.interface";
 
 type TopPackageType = {
@@ -18,8 +18,8 @@ export function TopPackagesProvider({ children }: { children: React.ReactNode })
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
-    coursesService
-      .getCoursePackages()
+    packageService
+      .getPackages()
       .then(setTopPackages)
       .catch((err) => {
         console.error(err);

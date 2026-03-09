@@ -14,4 +14,5 @@ export interface Menu {
   isActive?: boolean;
   subMenu?: SubMenu[];
   slug?: string;
+  target?:string;
 }

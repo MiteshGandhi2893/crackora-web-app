@@ -19,5 +19,6 @@ export interface CoursePackage {
     in_top?: boolean;
     hero_content?: string;
     faq?: object;
+    slug?: string;
 
 }

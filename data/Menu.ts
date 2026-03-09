@@ -1,19 +1,19 @@
 import { Menu } from "@/interfaces/menu.interface";
 import {
-  BiSolidNews ,
+  BiSolidNews,
   BiSolidFileBlank,
-  BiSolidSpreadsheet, 
+  BiSolidSpreadsheet,
   BiSolidDashboard,
 } from "react-icons/bi";
-
 
 export const menu: Menu[] = [
   {
     id: "1",
     label: "Mock Tests",
-    href: "/mock-tests",
-    icon: BiSolidNews ,
+    href: "https://learn.crackora.com/learn/MCA-Mocktest-Series",
+    icon: BiSolidNews,
     isActive: false,
+    target: "_blank",
   },
   {
     id: "exams",

@@ -1,14 +1,14 @@
-"use client"
+"use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { authService } from "../services/Authentication.service";
 
 // Define your user interface
 export interface User {
-  id: string;
-  username: string;
-  fullname: string;
-  phone: string;
-  email: string;
+  id?: string;
+  username?: string;
+  fullname?: string;
+  phone?: string;
+  email?: string;
 }
 
 // Strictly allow only User or null
@@ -27,8 +27,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUser = async () => {
       try {
         const res = await authService.signInStatus();
-        if (res.user) {
-          setUser(res.user as User);
+        if (res.success && res.user) {
+          setUser(res.user); // ✅ No TypeScript error
         } else {
           setUser(null);
         }

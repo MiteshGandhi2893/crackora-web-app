@@ -1,6 +1,13 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { AuthModal } from "@/modals/AuthModal";
 import { authService } from "@/services/Authentication.service";
 
@@ -8,12 +15,15 @@ export interface User {
   username: string;
   fullname: string;
   email: string;
-  roles: [string];
+  roles: string[];
 }
 
 interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
+  refreshUser: () => Promise<void>;
+  logout: () => void;
+
   openAuth: () => void;
   closeAuth: () => void;
 
@@ -29,20 +39,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [postAuthAction, setPostAuthAction] = useState<(() => void) | null>(
     null,
   );
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await authService.signInStatus(); // endpoint that returns user if JWT is valid
-        if (res?.user) {
-          setUser(res?.user as User);
-        }
-      } catch (err) {
-        console.log("No valid JWT or failed to fetch user", err);
+
+  // 🔥 Fetch user
+  const refreshUser = async () => {
+    try {
+      const res = await authService.signInStatus();
+
+      if (res.success && res.user) {
+        setUser(res.user); // ✅ No TypeScript error
+      } else {
         setUser(null);
       }
-    };
+    } catch {
+      setUser(null);
+    }
+  };
 
-    fetchUser();
+  // 🔥 Clear user
+  const logout = () => {
+    setUser(null);
+  };
+
+  useEffect(() => {
+    refreshUser();
   }, []);
 
   return (
@@ -50,9 +69,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         setUser,
+        refreshUser,
+        logout,
         openAuth: () => setIsOpen(true),
         closeAuth: () => setIsOpen(false),
-
         postAuthAction,
         setPostAuthAction,
       }}

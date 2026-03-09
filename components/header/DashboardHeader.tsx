@@ -6,7 +6,7 @@ import { LoginStatus } from "../app-buttons/login-button";
 
 export function DashboardHeader({ onMenuClick }: any) {
   return (
-    <header className="w-full h-16 bg-gray-300/60 border shadow rounded-xl px-2 flex items-center justify-between">
+    <header className="w-full h-16   rounded-xl px-5 flex items-center justify-between">
       {/* LEFT: Mobile Menu Button */}
       <div className="flex items-center">
         <button
@@ -17,11 +17,11 @@ export function DashboardHeader({ onMenuClick }: any) {
         </button>
 
         {/* CENTER / TITLE if needed */}
-        <div className="text-cyan-900 font-medium text-sm">Dashboard</div>
+        <div className="text-cyan-900  sm:text-xl text-sm font-semibold">Dashboard</div>
       </div>
 
       {/* RIGHT */}
-      <div className="">
+      <div className="border rounded-xl p-2 bg-amber-50 border-amber-200">
         <LoginStatus />
       </div>
     </header>

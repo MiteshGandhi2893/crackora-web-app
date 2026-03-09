@@ -1,72 +1,88 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Image from "next/image";
-import { API_BASE_URL, apiService } from "@/services/api.service";
+import { API_BASE_URL } from "@/services/api.service";
 import { useRouter } from "next/navigation";
 import { useExams } from "@/providers/ExamsProvider";
 
 export function MegaExamInfoMenu({ onClose }: any) {
   const data = useExams();
   const router = useRouter();
-  
-  // Handle click: set cookie and navigate
+
   const handleExamClick = (exam: any) => {
-    // Navigate to slug-only URL
     router.push(`/exam-info/${exam.slug}`);
     onClose?.();
   };
 
   return (
-    <div className="w-full overflow-hidden">
-      {/* ================= HEADER ================= */}
-      <div className="flex items-center justify-end px-8 pt-1">
+    <div className="w-full overflow-hidden bg-white">
+
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-6 sm:px-8 py-3 border-b border-[#f0ede6]">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[12px] font-bold tracking-[0.18em] uppercase text-amber-700">
+            Explore Exams
+          </span>
+        
+        </div>
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-700 text-3xl"
+          className="w-8 h-8 rounded-lg bg-[#f8f7f4] hover:bg-[#f0ede6] border border-[#e8e4dc] flex items-center justify-center text-[#05101f]/50 hover:text-[#05101f] transition-all duration-200 text-lg leading-none"
         >
           ×
         </button>
       </div>
 
-      {/* ================= COLUMNS ================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 px-8 pb-5">
+      {/* Columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x divide-[#f0ede6]">
         {data.entrances.map((entrance, idx) => (
           <div key={idx} className="flex flex-col">
-            {/* Entrance Title */}
-            <div className="px-3 bg-white border-b border-b-cyan-950/30">
-              <h3 className="text-lg font-semibold text-cyan-900">
+
+            {/* Category title */}
+            <div className="px-5 py-3 border-b border-[#f0ede6] bg-[#faf9f7]">
+              <h3 className="text-xs font-bold tracking-[0.12em] uppercase text-[#05101f]/60">
                 {entrance.title}
               </h3>
             </div>
 
-            {/* Scrollable Exams */}
-            <div className="flex-1 overflow-y-auto max-h-[79vh] px-2 py-2 gap-5">
+            {/* Exam list */}
+            <div className="flex-1 overflow-y-auto max-h-[72vh] p-3 flex flex-col gap-2">
               {entrance.exams.map((exam, i) => (
-                <div
+                <button
                   key={i}
                   onClick={() => handleExamClick(exam)}
-                  className="block bg-gray-100/80 border border-gray-100 mb-4 rounded-lg p-3 transition hover:bg-cyan-950/90 hover:scale-105 text-cyan-950 hover:text-white group cursor-pointer"
+                  className="group w-full flex items-center gap-3 bg-white border border-[#e8e4dc] hover:border-amber-300 rounded-xl p-3 text-left transition-all duration-200 hover:shadow-[0_4px_16px_rgba(5,16,31,0.08)] hover:-translate-y-0.5"
                 >
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-10 h-10">
-                      <Image
-                        src={`${API_BASE_URL}/public/${exam?.icon || ""}`}
-                        alt={exam.title || ""}
-                        fill
-                        unoptimized
-                        className="w-10 h-10 border border-gray-300 shadow object-center"
-                      />
-                    </div>
-                    <p className="text-[14px] font-medium text-amber-800 group-hover:text-amber-400 group-hover:font-semibold">
+                  {/* Icon */}
+                  <div className="relative w-9 h-9 rounded-lg overflow-hidden border border-[#e8e4dc] bg-[#f8f7f4] flex-shrink-0">
+                    <Image
+                      src={`${API_BASE_URL}/public/${exam?.icon || ""}`}
+                      alt={exam.title || ""}
+                      fill
+                      unoptimized
+                      className="object-contain p-1"
+                    />
+                  </div>
+
+                  {/* Text */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-semibold text-[#05101f] group-hover:text-amber-600 transition-colors duration-200 truncate">
                       {exam.title}
+                    </p>
+                    <p className="text-[11px] text-[#05101f]/40 line-clamp-1 mt-0.5 leading-snug">
+                      {exam.description || "Syllabus, mock tests & analytics"}
                     </p>
                   </div>
 
-                  <p className="text-xs mt-1 line-clamp-2">
-                    {exam.description ||
-                      "Syllabus, mock tests and performance analytics"}
-                  </p>
-                </div>
+                  {/* Arrow */}
+                  <svg
+                    className="w-3.5 h-3.5 text-[#05101f]/20 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all duration-200 flex-shrink-0"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               ))}
             </div>
           </div>

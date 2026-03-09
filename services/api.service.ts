@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const API_BASE_URL = "https://api.crackora.com";
-// export const API_BASE_URL = "http://localhost:5000";
-
+// export const API_BASE_URL = "https://api.crackora.com";
+export const API_BASE_URL = "http://localhost:5000";
 
 interface RequestOptions {
   method: "GET" | "POST" | "PUT" | "DELETE";
@@ -13,11 +12,13 @@ interface ApiResponse<T> {
   success: boolean;
   data?: T | any;
   error?: string;
+  status?: number;
+  statusText?: string; // optional
 }
 
 const apiRequest = async <T>(
   endpoint: string,
-  { method, body, headers }: RequestOptions
+  { method, body, headers }: RequestOptions,
 ): Promise<ApiResponse<T>> => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -30,14 +31,36 @@ const apiRequest = async <T>(
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    // Always read text first
-    const text = await response.text();
+    // 🔥 GLOBAL 401 HANDLER
+    if (response.status === 401) {
+      const text = await response.text();
+      let responseData: any = null;
 
+      try {
+        responseData = text ? JSON.parse(text) : null;
+      } catch {}
+
+      if (typeof window !== "undefined" && responseData['message'].includes("Unauthorized")) {
+        console.log('EVENT FIRED')
+        window.dispatchEvent(
+          new CustomEvent("unauthorized", {
+            detail: responseData?.type || responseData?.message,
+          }),
+        );
+      }
+
+      return {
+        success: false,
+        error: responseData?.message || "Unauthorized",
+        status: response.status,
+      };
+    }
+
+    const text = await response.text();
     let responseData: any = null;
     try {
       responseData = text ? JSON.parse(text) : null;
     } catch {
-      // 👇 This is where HTML responses land
       console.error("Non-JSON response from API:", text);
     }
 
@@ -53,15 +76,17 @@ const apiRequest = async <T>(
     return { success: true, data: responseData };
   } catch (error) {
     console.error("Network Error:", error);
-    return { success: false, error: "Network error. Please try again later." };
+    return {
+      success: false,
+      error: "Network error. Please try again later.",
+    };
   }
 };
-
 
 // Exported CRUD operations
 export const apiService = {
   getPublicAsset: (path: string) => {
-      return `${API_BASE_URL}/public${path}`;
+    return `${API_BASE_URL}/public${path}`;
   },
   get: async <T>(endpoint: string, headers?: HeadersInit) =>
     await apiRequest<T>(endpoint, { method: "GET", headers }),

@@ -8,6 +8,8 @@ import { StudyPlannerProvider } from "@/providers/StudyPlanProvider";
 import { SnackbarProvider } from "@/providers/SnackbarProvider";
 import { LoadingProvider } from "@/providers/LoadingProvider";
 import { TopPackagesProvider } from "@/providers/TopPackagesProvide";
+import SessionWatcher from "@/components/SessionWatcher";
+import { Suspense } from "react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -43,10 +45,12 @@ export default async function RootLayout({
         <SnackbarProvider>
           <LoadingProvider>
             <AuthProvider>
+              <Suspense fallback={<div>Loading...</div>}>
+              <SessionWatcher />
+              </Suspense>
               <ExamProvider>
                 <TopPackagesProvider>
-
-                <StudyPlannerProvider>{children}</StudyPlannerProvider>
+                  <StudyPlannerProvider>{children}</StudyPlannerProvider>
                 </TopPackagesProvider>
               </ExamProvider>
             </AuthProvider>

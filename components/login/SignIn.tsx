@@ -5,6 +5,7 @@ import { authService } from "@/services/Authentication.service";
 import { useAuth, User } from "@/providers/AuthProvider";
 import Image from "next/image";
 import { Severity } from "@/interfaces/authentication-interface";
+import { Logo } from "../header/Logo";
 
 interface SignInProps {
   handleIsLogin: (val: boolean) => void;
@@ -128,11 +129,8 @@ export function SignIn({ handleIsLogin, sendMessage, onSuccess }: SignInProps) {
             <span className="text-red-700 text-sm">**{errors.submit}</span>
           )}
 
-        <div className="flex items-center justify-center text-sm relative mt-2">
+        <div className="flex items-center justify-center text-md relative mt-2">
           Not a{" "}
-          <div className="relative w-25 h-15 flex items-center">
-            <Image src="/crackora-logo.svg" alt="Crackora" fill />
-          </div>
           user?
           <span
             className="ml-2 text-amber-600 cursor-pointer underline"

@@ -5,10 +5,10 @@
 
 import { useEffect, useState } from "react";
 import { BiCalendar, BiCalendarEvent } from "react-icons/bi";
-import Image from "next/image";
 import { Menu } from "@/interfaces/menu.interface";
 import { CreatePlanButton } from "./app-buttons/create-plan";
 import Link from "next/link";
+import { Logo } from "./header/Logo";
 
 export function Sidebar({
   studyPlans,
@@ -33,7 +33,7 @@ export function Sidebar({
           id: plan.study_plan_id,
           label: `${plan.exam_title} plan`,
           icon: BiCalendarEvent,
-          href: `/dashboard/study-plan/${plan.study_plan_id}`
+          href: `/dashboard/study-plan/${plan.study_plan_id}`,
         })),
       },
     ];
@@ -59,7 +59,7 @@ export function Sidebar({
       <aside
         className={`
           fixed top-0 left-0 h-full w-64
-          bg-linear-to-b from-gray-200 to-cyan-900/60
+       bg-cyan-950/90
           transform transition-transform duration-300 ease-in-out
           z-50 shadow-xl
 
@@ -70,12 +70,12 @@ export function Sidebar({
         `}
       >
         {/* Logo (Desktop Only) */}
-        <div className="w-full sm:h-16 h-13 relative">
-          <Image src="/crackora-logo.svg" alt="Logo" fill />
+        <div className="w-full sm:h-16 h-13 relative py-1.5 px-3 bg-amber-50/90">
+          <Logo />
         </div>
 
         <div className="flex flex-col gap-2 mt-5">
-          <div className="text-gray-600 ml-5 text-sm">Menu</div>
+          <div className="text-gray-100 ml-5 text-sm">Menu</div>
 
           <ul className="flex flex-col">
             {menuItems.map((m) => (
@@ -89,7 +89,7 @@ export function Sidebar({
                   className={`flex items-center w-full transition-colors duration-200
                     ${
                       activeTab === m.id
-                        ? "text-cyan-950"
+                        ? "text-cyan-900"
                         : "hover:bg-cyan-800 hover:text-white text-cyan-950"
                     }`}
                 >
@@ -99,9 +99,9 @@ export function Sidebar({
 
                   <div
                     className={`flex items-center gap-2 pl-3 w-full py-1.5
-                      ${activeTab === m.id ? "bg-amber-100/50" : ""}`}
+                      ${activeTab === m.id ? "bg-amber-50/80" : ""}`}
                   >
-                    {m.icon && <m.icon className="w-5 h-5 text-amber-600" />}
+                    {m.icon && <m.icon className="w-5 h-5 text-amber-700" />}
                     <span className="text-sm sm:text-[15px]">{m.label}</span>
                   </div>
                 </div>
@@ -122,11 +122,14 @@ export function Sidebar({
                             setMobileMenuOpen(false);
                           }}
                         >
-                          <Link className={`flex items-center gap-2  w-full`} href={entry.href}>
+                          <Link
+                            className={`flex items-center gap-2  w-full`}
+                            href={entry.href}
+                          >
                             {entry.icon && (
-                              <entry.icon className="w-5 h-5 text-amber-600" />
+                              <entry.icon className="w-5 h-5 text-amber-500" />
                             )}
-                            <span className="text-[12px] sm:text-[13px] text-gray-800">
+                            <span className="text-[12px] sm:text-[13px] text-cyan-50">
                               {entry.label}
                             </span>
                           </Link>

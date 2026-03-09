@@ -1,73 +1,64 @@
 "use client";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CoursePackageCard } from "./course-card/CourseCard";
-import { Navigation, Pagination } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import { useTopPackages } from "@/providers/TopPackagesProvide";
-
-const categories = [
-  "MBA Entrance",
-  "LAW Entrance",
-  "MCA Entrance",
-  "BBA Entrance",
-];
 
 export function TopPackages() {
   const pkgContext = useTopPackages();
 
   return (
-    <section className="w-full bg-white py-8 lg:py-14 sm:px-10 z-30 isolate lg:px-30 px-8">
-      {/* Heading */}
-      <div className="flex flex-col mb-8 gap-2">
-        <h2 className=" text-cyan-950 font-semibold text-2xl lg:text-4xl ">
-          Popular Mock Tests
-        </h2>
-        <div className="bg-amber-600 h-0.5 sm:w-50 w-30"></div>
+    <section className="w-full bg-[#f8f7f4] py-16 lg:py-24 px-6 sm:px-10 lg:px-24 relative overflow-hidden">
+
+      {/* Subtle background accent */}
+      <div className="pointer-events-none absolute top-0 right-0 w-[40vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.06),transparent_65%)]" />
+
+      {/* Section header */}
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12 gap-4">
+        <div className="flex flex-col gap-3">
+          <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-amber-600 font-sans">
+            Top Picks
+          </span>
+          <h2 className="font-serif text-3xl lg:text-4xl xl:text-5xl text-[#05101f] leading-tight tracking-tight">
+            Popular Mock Tests
+          </h2>
+          <div className="h-0.5 w-12 bg-amber-500 rounded-full" />
+        </div>
+        <p className="text-[#05101f]/50 text-sm max-w-xs leading-relaxed font-sans hidden sm:block">
+          Handpicked packages trusted by thousands of exam aspirants across India.
+        </p>
       </div>
 
-      <div className="flex px-0">
-        {/* Slider w=82%*/}
-        <div className="relative w-full lg:w-full sm:px-6">
-          {/* Desktop arrows */}
-          <button className="swiper-prev absolute -left-5 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-cyan-800 text-white shadow z-30 text-2xl">
-            {" "}
-            ‹{" "}
-          </button>{" "}
-          <button className="swiper-next absolute -right-5 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-cyan-800 shadow z-30 text-white text-2xl">
-            {" "}
-            ›{" "}
-          </button>
-          <Swiper
-            modules={[Navigation, Pagination]}
-            navigation={{
-              prevEl: ".swiper-prev",
-              nextEl: ".swiper-next",
-            }}
-            pagination={{ clickable: true }}
-            slidesPerView={1.15}
-            spaceBetween={10}
-            breakpoints={{
-              0: { slidesPerView: 1.25, centeredSlides: true },
-              480: { slidesPerView: 1.15, spaceBetween: 20 },
-              640: { slidesPerView: 2.5, spaceBetween: 25 },
-              1280: { slidesPerView: 4, spaceBetween: 20 },
-              1536: { slidesPerView: 4 },
-            }}
-            className="px-14  pb-10 h-110"
-          >
-            {pkgContext.topPackages.map((item, index) => (
-              <SwiperSlide key={index}>
-                <CoursePackageCard topPackage={item} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+      {/* Mobile slider */}
+      <div className="block md:hidden">
+        <Swiper
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
+          slidesPerView={1.1}
+          spaceBetween={14}
+          centeredSlides
+          className="pb-10"
+        >
+          {pkgContext.topPackages.map((item, i) => (
+            <SwiperSlide key={i}>
+              <CoursePackageCard topPackage={item} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
+
+      {/* Desktop grid */}
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {pkgContext.topPackages.map((item, i) => (
+          <CoursePackageCard key={i} topPackage={item} />
+        ))}
+      </div>
+
+      <style jsx>{`
+        .font-serif { font-family: 'Playfair Display', Georgia, serif; }
+        .font-sans { font-family: 'DM Sans', system-ui, sans-serif; }
+      `}</style>
     </section>
   );
 }
-
-// breakpoints={{
-//           640: { slidesPerView: 2, centeredSlides: true },
-//           768: { slidesPerView: 3, centeredSlides: false },
-//           1024: { slidesPerView: 3, centeredSlides: false },
-//         }}

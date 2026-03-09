@@ -67,7 +67,7 @@ export function Navbar({
       <div
         onClick={() => handleMenuClick(menu)}
         className={`
-          cursor-pointer text-sky-900 flex justify-between items-center
+          cursor-pointer text-cyan-950 flex justify-between items-center
           ${mobile ? "pl-2 pb-2 mt-4 border-b" : "text-[16px]"}
         `}
       >

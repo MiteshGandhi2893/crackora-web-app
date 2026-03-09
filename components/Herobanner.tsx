@@ -1,18 +1,80 @@
-"use client"
+"use client";
+
 import { useExamMenu } from "@/providers/ExamMenuUIProvider";
 import Image from "next/image";
-
-export function HeroBanner() {
-   const { setOpen } = useExamMenu();
+import Link from "next/link";
+import { useEffect, useState } from "react";
+function FlyText({ text }: { text: string }) {
   return (
-    <div className="relative w-full lg:min-h-150 min-h-200 overflow-hidden bg-cyan-950 lg:hero  bg-opacity-10 mt-16" >
-     <div className="absolute inset-0 z-10">
+    <>
+      {text.split("").map((char, i) => (
+        <span
+          key={i}
+          className="inline-block opacity-0 animate-fly"
+          style={{
+            animationDelay: `${i * 35}ms`,
+            animationFillMode: "forwards",
+          }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </>
+  );
+}
+export function HeroBanner() {
+  const { setOpen } = useExamMenu();
 
+  const slides = [
+    {
+      title: "MAH MCA CET 2026 Full-Length Mock Test Series",
+      subtitle: "Real exam-level practice for MCA entrances.",
+      description:
+        "Practice MAH MCA CET with full-length mock tests designed according to the latest exam pattern. Get detailed solutions and performance analysis to improve your score.",
+      button: "Buy Mock Test Series",
+      link: "https://learn.crackora.com/learn/MCA-Mocktest-Series",
+    },
+    {
+      title: "Computer Concepts for MCA Entrance – 500 Important MCQs",
+      subtitle: "Master the most important Computer topics.",
+      description:
+        "A focused e-book covering 500 important Computer Concepts MCQs frequently asked in MCA entrance exams like MAH MCA CET and NIMCET.",
+      button: "Buy E-Book",
+      link: "https://learn.crackora.com/learn/Computer-Concep-500-Important-MCQs",
+    },
+    {
+      title: "Entrance Exam GK Power Pack – 1500+ Important Questions",
+      subtitle: "Boost your GK for LAW and other entrances.",
+      description:
+        "Comprehensive GK preparation with 1500+ important questions covering static GK, current affairs, and exam-relevant topics for LAW entrance exams.",
+      button: "Buy GK Power Pack",
+      link: "https://learn.crackora.com/learn/Computer-Concep-500-Important-MCQs",
+    },
+  ];
+  const [index, setIndex] = useState(0);
+  const [animate, setAnimate] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimate(false);
+
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % slides.length);
+        setAnimate(true);
+      }, 300);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="relative w-full lg:min-h-150 min-h-200 overflow-hidden bg-cyan-950 lg:hero  bg-opacity-10 mt-16">
+      <div className="absolute inset-0 z-10">
         {/* Deep space base */}
         <div className="absolute inset-0 bg-[#020617]" />
 
         {/* Cyan nebula */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(6,182,212,0.18),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
 
         {/* Green nebula */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
@@ -23,33 +85,40 @@ export function HeroBanner() {
         {/* CSS star texture (no image → faster) */}
         <div
           className="absolute inset-0 opacity-[0.15]
-          bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)]
-          bg-size-[26px_26px]"
+          bg-[radial-gradient(circle_at_10px_1px,rgba(255,255,255,.8)_1px,transparent_0)]
+          bg-size-[30px_30px]"
         />
       </div>
       <div className="absolute top-0 left-0 w-screen h-full bg-[rgba(0,0,0,0.2)] z-10"></div>
 
       <div className="absolute top-0 left-0  lg:py-20 py-10 pb-20 flex flex-col lg:flex-row  gap-14 z-10 w-full justify-center items-center">
-        {/* ================= LEFT CONTENT ================= */}
-        <div className="lg:w-[60%] w-full text-white/90 z-10 flex flex-col justify-center  lg:px-30 md:px-15 px-6">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight lg:text-left text-center">
-            Prepare smarter.
-            <br className="lg:block hidden" /> Crack exams with confidence.
-          </h1>
+        {/* ================= LEFT CONTENT (Animated) ================= */}
+        {/* ================= LEFT CONTENT (Animated) ================= */}
+        <div className="lg:w-[60%] w-full text-white/90 z-10 flex flex-col justify-center lg:px-30 md:px-15 px-6">
+          <div
+            key={index}
+            className={`transition-all duration-500 ease-in-out transform
+      ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
+    `}
+          >
+            {/* TITLE with Fly Letters */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight lg:text-left text-center text-amber-50">
+              <FlyText text={slides[index].title} />
+            </h1>
 
-          <p className="mt-6 text-white/75  lg:text-lg sm:text-lg text-md  lg:text-left text-center">
-            Crackora is a focused preparation ecosystem built for Indian
-            competitive exams — no noise, only outcomes.
-          </p>
+            {/* DESCRIPTION fade only */}
+            <p className="mt-6 text-white/75 lg:text-lg sm:text-lg text-md lg:text-left text-center transition-opacity duration-700">
+              {slides[index].description}
+            </p>
 
-          <div className="lg:mt-8 mt-5 flex flex-wrap gap-4 lg:justify-start justify-center">
-            <button onClick={() => setOpen(true)} className="bg-amber-600 cursor-pointer text-white px-3 py-3 lg:text-[15px] text-xs rounded-xl font-medium hover:scale-105 transition">
-              Explore Exams
-            </button>
-
-            {/* <button className="border border-white/40 cursor-pointer px-6 py-3  lg:text-[16px] text-xs  rounded-xl text-white hover:bg-amber-400/30 transition">
-              Talk to Mentor
-            </button> */}
+            {/* BUTTON */}
+            <div className="lg:mt-8 mt-5 flex flex-wrap gap-4 lg:justify-start justify-center">
+              <Link href={slides[index].link} >
+                <button className="bg-amber-600 cursor-pointer text-white px-6 py-3 lg:text-[15px] text-xs rounded-xl font-medium hover:scale-105 hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300">
+                  {slides[index].button}
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -63,7 +132,7 @@ export function HeroBanner() {
             </span>
           </div>
 
-          <div className="absolute lg:bottom-50 lg:-left-30 sm:bottom-25  -bottom-8 left-10 flex items-end rotate-0">
+          <div className="absolute lg:bottom-50 lg:-left-20 sm:bottom-25  -bottom-8 left-10 flex items-end rotate-0">
             <span className=" text-white sm:text-lg  text-xs drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               MH CET LAW
             </span>
@@ -87,7 +156,7 @@ export function HeroBanner() {
             </span>
           </div>
 
-          <div className="absolute lg:top-10 lg:-left-20 sm:-top-20 sm:left-1/2  sm:flex hidden items-end rotate-0">
+          <div className="absolute lg:top-10 lg:-left-8 sm:-top-20 sm:left-1/2  sm:flex hidden items-end rotate-0">
             <span className=" text-white sm:text-lg drop-shadow-[0px_10px_8px_rgba(255,255,255,0.5)]">
               MAH MCA CET{" "}
             </span>
@@ -99,7 +168,7 @@ export function HeroBanner() {
             </span>
           </div>
 
-          <div className="absolute lg:w-100 lg:h-100 w-60 h-60 rounded-full bg-gradient-to-tr from-white/10 to-white/0 blur-3xl" />
+          <div className="absolute lg:w-100 lg:h-100 w-60 h-60 rounded-full bg-linear-to-tr from-white/10 to-white/0 blur-3xl" />
 
           {/* Orbit container */}
           <div className="relative lg:w-100 sm:w-70 sm:h-70 w-65 lg:h-100 h-65 flex items-center justify-center">
@@ -144,7 +213,6 @@ export function HeroBanner() {
       relative
     "
               >
-
                 <Image
                   src="/vertical-logo.svg"
                   alt="Crackora"

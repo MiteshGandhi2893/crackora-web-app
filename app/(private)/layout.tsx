@@ -12,13 +12,17 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   const token = cookieStore.get("jwt")?.value;
 
-  const studyPlans = await studyPlannerService.getStudentPlans({
-    Cookie: `jwt=${token}`,
-  });
+  let studyPlans = null;
 
-  return (
-    <LayoutShell studyPlans={studyPlans}>
-      {children}
-    </LayoutShell>
-  );
+  try {
+    const res = await studyPlannerService.getStudentPlans({
+      Cookie: `jwt=${token}`,
+    });
+
+    studyPlans = res.plans;
+  } catch (error) {
+    console.error("Error fetching study plan:", error);
+  }
+
+  return <LayoutShell studyPlans={studyPlans}>{children}</LayoutShell>;
 }

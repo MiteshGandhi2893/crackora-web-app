@@ -1,3 +1,4 @@
+import { User } from "@/providers/AuthProvider";
 import {
   SignInPayload,
   SignUpPayload,
@@ -7,39 +8,59 @@ import { apiService } from "./api.service";
 export const authService = {
   signIn: async (signInPayload: SignInPayload) => {
     const response = await apiService.post("/user/signIn", signInPayload);
-    if (response.success) {
-      return { user: response.data };
-    } else {
-      return { error: response.error };
+
+    if (!response.success) {
+      return {
+        success: false,
+        error: response.error,
+        status: response.status,
+      };
     }
+
+    return {
+      success: true,
+      user: response.data,
+      status: response.status,
+    };
   },
 
   signUp: async (signUpPayload: SignUpPayload) => {
     const response = await apiService.post("/user/signUp", signUpPayload);
-    if (response.success) {
-      return { user: response.data };
-    } else {
-      return { error: response.error };
+
+    if (!response.success) {
+      return {
+        success: false,
+        error: response.error,
+        status: response.status,
+      };
     }
+
+    return {
+      success: true,
+      user: response.data,
+      status: response.status,
+    };
   },
 
   signOut: async () => {
-    const response = await apiService.get("/user/signout");
-    return response;
+    return await apiService.get("/user/signout");
   },
 
   signInStatus: async () => {
-    const response = await apiService.get("/user/signin-status");
-    if (response.success) {
-      return { user: response.data };
-    } else {
-      return { error: response.error };
-    }
-  },
+    const response = await apiService.get<User>("/user/signin-status");
 
-  //  getCoursesByExam: async () => {
-  //         const response = await apiService.get('/coursesByExams')
-  //         if (!response.success) throw new Error(response.error);
-  //         return response.data as Entrance[];
-  //     }
+    if (!response.success) {
+      return {
+        success: false,
+        error: response.error,
+        status: response.status,
+      };
+    }
+
+    return {
+      success: true,
+      user: response.data,
+      status: response.status,
+    };
+  },
 };

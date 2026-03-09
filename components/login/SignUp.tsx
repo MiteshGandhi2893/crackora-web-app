@@ -249,9 +249,6 @@ export function SignUp(props: any) {
 
         <div className="flex items-center text-md justify-center">
           Already a{" "}
-          <div className="relative w-25 h-15 flex items-center">
-            <Image src="/crackora-logo.svg" alt="Crackora" fill />
-          </div>
           user?
           <a
             className="ml-2 text-amber-600 cursor-pointer underline text-sm"

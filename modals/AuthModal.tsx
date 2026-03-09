@@ -8,6 +8,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { SignIn } from "@/components/login/SignIn";
 import { SignUp } from "@/components/login/SignUp";
 import {useSnackbar} from "@/providers/SnackbarProvider";
+import { Logo } from "@/components/header/Logo";
 
 export function AuthModal() {
   const { closeAuth, setUser, postAuthAction, setPostAuthAction } = useAuth();
@@ -40,15 +41,10 @@ export function AuthModal() {
 
         {/* Right Form */}
         <div className="lg:w-1/2 w-full h-full p-4 flex flex-col overflow-y-auto justify-center">
-          <div className="flex items-center justify-center text-2xl text-cyan-900 font-sans tracking-wider relative mb-1">
-            Welcome to
-            <div className="relative w-35 h-15 ml-2 flex items-start">
-              <Image src="/crackora-logo.svg" fill alt="Crackora" />
-            </div>
+          <div className="flex gap-3 items-center justify-center text-2xl text-cyan-900 font-sans tracking-wider relative">
+           <Logo/>
           </div>
-          <div className="flex w-full justify-center text-amber-700 mt-[-2%] text-sm">
-            More Than Prep. It’s a Mindset.
-          </div>
+          
 
           {/* Form */}
           {isLogin ? (
