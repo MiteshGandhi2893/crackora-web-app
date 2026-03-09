@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
         pathname: "/public/**",
       },
     ],
+    domains: ["api.crackora.com"],
   },
   /* config options here */
 };

@@ -14,7 +14,7 @@ export interface CoursePackage {
     duration?: number;
     expiry_date: string;
     entrance_name: string;
-    checkout_link: string;
+    checkout_link?: string;
     is_active?: boolean;
     in_top?: boolean;
     hero_content?: string;

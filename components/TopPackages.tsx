@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { CoursePackageCard } from "./course-card/CourseCard";
 import { Pagination } from "swiper/modules";
 import { useTopPackages } from "@/providers/TopPackagesProvide";
+import Link from "next/link";
 
 export function TopPackages() {
   const pkgContext = useTopPackages();
@@ -24,7 +25,7 @@ export function TopPackages() {
             Top Picks
           </span>
           <h2 className="font-serif text-3xl lg:text-4xl xl:text-5xl text-[#05101f] leading-tight tracking-tight">
-            Popular Mock Tests
+            Popular Packages
           </h2>
           <div className="h-0.5 w-12 bg-amber-500 rounded-full" />
         </div>
@@ -54,7 +55,9 @@ export function TopPackages() {
       {/* Desktop grid */}
       <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {pkgContext.topPackages.map((item, i) => (
-          <CoursePackageCard key={i} topPackage={item} />
+           <Link href={item.checkout_link || '/'} key={i}>
+             <CoursePackageCard topPackage={item} />
+           </Link>
         ))}
       </div>
 
