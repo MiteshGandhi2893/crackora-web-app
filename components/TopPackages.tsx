@@ -14,7 +14,6 @@ export function TopPackages() {
 
   return (
     <section className="w-full bg-[#f8f7f4] py-16 lg:py-24 px-6 sm:px-10 lg:px-24 relative overflow-hidden">
-
       {/* Subtle background accent */}
       <div className="pointer-events-none absolute top-0 right-0 w-[40vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.06),transparent_65%)]" />
 
@@ -30,7 +29,8 @@ export function TopPackages() {
           <div className="h-0.5 w-12 bg-amber-500 rounded-full" />
         </div>
         <p className="text-[#05101f]/50 text-sm max-w-xs leading-relaxed font-sans hidden sm:block">
-          Handpicked packages trusted by thousands of exam aspirants across India.
+          Handpicked packages trusted by thousands of exam aspirants across
+          India.
         </p>
       </div>
 
@@ -55,15 +55,17 @@ export function TopPackages() {
       {/* Desktop grid */}
       <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {pkgContext.topPackages.map((item, i) => (
-           <Link href={item.checkout_link || '/'} key={i}>
-             <CoursePackageCard topPackage={item} />
-           </Link>
+          <CoursePackageCard key={i} topPackage={item} />
         ))}
       </div>
 
       <style jsx>{`
-        .font-serif { font-family: 'Playfair Display', Georgia, serif; }
-        .font-sans { font-family: 'DM Sans', system-ui, sans-serif; }
+        .font-serif {
+          font-family: "Playfair Display", Georgia, serif;
+        }
+        .font-sans {
+          font-family: "DM Sans", system-ui, sans-serif;
+        }
       `}</style>
     </section>
   );
