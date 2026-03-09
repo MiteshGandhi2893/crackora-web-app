@@ -82,7 +82,7 @@ export function WhyCrackora() {
           <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(5,16,31,0.12)] border border-[#e8e4dc]">
             <iframe
               className="w-full h-full"
-              src="https://www.youtube.com/embed/8Apv0Jj695A?si=EZe20ODdrz7qjJes"
+              src="https://www.youtube.com/embed/5UA_XiBI-hk?si=9xr5Dlb9j4A64euL"
               title="Crackora intro"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             />

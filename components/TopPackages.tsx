@@ -28,7 +28,7 @@ export function TopPackages() {
           </h2>
           <div className="h-0.5 w-12 bg-amber-500 rounded-full" />
         </div>
-        <p className="text-[#05101f]/50 text-sm max-w-xs leading-relaxed font-sans hidden sm:block">
+        <p className="text-[#05101f]/70 sm:text-md text-sm max-w-sm leading-relaxed font-sans hidden sm:block">
           Handpicked packages trusted by thousands of exam aspirants across
           India.
         </p>
