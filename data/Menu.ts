@@ -1,39 +1,43 @@
 import { Menu } from "@/interfaces/menu.interface";
 import {
   BiSolidNews,
-  BiSolidFileBlank,
   BiSolidSpreadsheet,
-  BiSolidDashboard,
 } from "react-icons/bi";
+import { TbToolsOff } from "react-icons/tb";
+import { RiMindMap } from "react-icons/ri";
+import { BsChatLeftText } from "react-icons/bs";
+
 
 export const menu: Menu[] = [
   {
-    id: "1",
-    label: "Mock Tests",
-    href: "https://learn.crackora.com/learn/MCA-Mocktest-Series",
-    icon: BiSolidNews,
-    isActive: false,
-    target: "_blank",
-  },
-  {
     id: "exams",
-    label: "Exams",
+    label: "Exams", // mega menu → all MCA entrances
     href: "#",
     icon: BiSolidSpreadsheet,
-    isActive: false,
+  },
+  // {
+  //   id: "mock-tests",
+  //   label: "Mock Tests",
+  //   href: "https://learn.crackora.com/learn/MCA-Mocktest-Series",
+  //   icon: BiSolidNews,
+  //   target: "_blank",
+  // },
+  {
+    id: "mca-roadmap",
+    label: "MCA Roadmap",
+    href: "/mca-journey",
+    icon: RiMindMap,
   },
   {
-    id: "3",
-    label: "Past Papers",
-    href: "/past-papers",
-    icon: BiSolidFileBlank,
-    isActive: false,
+    id: "free-tools",
+    label: "MCA Tools", // replaces Dashboard — much more traffic
+    href: "/tools/college",
+    icon: TbToolsOff,
   },
   {
-    id: "4",
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: BiSolidDashboard,
-    isActive: false,
+    id: "blogs",
+    label: "Blogs", // replaces Dashboard — much more traffic
+    href: "/blogs",
+    icon: BsChatLeftText,
   },
 ];

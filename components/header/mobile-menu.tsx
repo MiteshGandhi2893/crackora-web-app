@@ -92,94 +92,92 @@ export function MobileMenu({
       const isOpen = openLevel1 === item.id;
 
       return (
-        <>
-          <div key={item.id}>
-            {/* ── Level 1 ── */}
-            <div
-              className={`flex justify-between items-center py-3 px-1 cursor-pointer border-b border-[#f0ede6] transition-colors duration-150
+        <div key={item.id}>
+          {/* ── Level 1 ── */}
+          <div
+            className={`flex justify-between items-center py-3 px-1 cursor-pointer border-b border-[#f0ede6] transition-colors duration-150
               ${isOpen ? "text-amber-600" : "text-cyan-950/80 hover:text-amber-600"}`}
-              onClick={() => handleMenuClick(item)}
-            >
-              <span className="flex items-center gap-2 text-sm font-semibold">
-                {item.icon && (
-                  <item.icon className="w-4 h-4 text-amber-700 opacity-80" />
-                )}
-                {item.label === "Dashboard" ? (
-                  <span>{item.label}</span> // NOT a Link
-                ) : item.href && item.href !== "#" ? (
-                  <Link href={item.href}>{item.label}</Link>
-                ) : (
-                  <span>{item.label}</span>
-                )}
-              </span>
-              {hasSubMenu &&
-                (isOpen ? (
-                  <BiCaretDown className="w-4 h-4 text-amber-500 flex-shrink-0" />
-                ) : (
-                  <BiCaretRight className="w-4 h-4 text-[#05101f]/30 flex-shrink-0" />
-                ))}
-            </div>
-
-            {/* ── Level 2 ── */}
+            onClick={() => handleMenuClick(item)}
+          >
+            <span className="flex items-center gap-2 text-sm font-semibold">
+              {item.icon && (
+                <item.icon className="w-4 h-4 text-amber-700 opacity-80" />
+              )}
+              {item.label === "Dashboard" ? (
+                <span>{item.label}</span> // NOT a Link
+              ) : item.href && item.href !== "#" ? (
+                <Link href={item.href}>{item.label}</Link>
+              ) : (
+                <span>{item.label}</span>
+              )}
+            </span>
             {hasSubMenu &&
-              isOpen &&
-              item.subMenu!.map((subItem) => {
-                const hasChild = !!subItem.subMenu?.length;
-                const subOpen = openLevel2 === subItem.id;
+              (isOpen ? (
+                <BiCaretDown className="w-4 h-4 text-amber-500 flex-shrink-0" />
+              ) : (
+                <BiCaretRight className="w-4 h-4 text-[#05101f]/30 flex-shrink-0" />
+              ))}
+          </div>
 
-                return (
-                  <div key={subItem.id}>
-                    <div
-                      className={`flex items-center justify-between pl-5 pr-1 py-2.5 cursor-pointer border-b border-[#f0ede6] transition-colors duration-150
+          {/* ── Level 2 ── */}
+          {hasSubMenu &&
+            isOpen &&
+            item.subMenu!.map((subItem) => {
+              const hasChild = !!subItem.subMenu?.length;
+              const subOpen = openLevel2 === subItem.id;
+
+              return (
+                <div key={subItem.id}>
+                  <div
+                    className={`flex items-center justify-between pl-5 pr-1 py-2.5 cursor-pointer border-b border-[#f0ede6] transition-colors duration-150
                       ${subOpen ? "text-amber-600" : "text-[#05101f]/55 hover:text-amber-600"}`}
-                      onClick={() =>
-                        hasChild && setOpenLevel2(subOpen ? null : subItem.id)
-                      }
-                    >
-                      <span className="text-[13px] font-medium">
-                        {subItem.label}
-                      </span>
-                      {hasChild &&
-                        (subOpen ? (
-                          <BiCaretDown className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
-                        ) : (
-                          <BiCaretRight className="w-3.5 h-3.5 text-[#05101f]/30 flex-shrink-0" />
-                        ))}
-                    </div>
-
-                    {/* ── Level 3 (leaf) ── */}
+                    onClick={() =>
+                      hasChild && setOpenLevel2(subOpen ? null : subItem.id)
+                    }
+                  >
+                    <span className="text-[13px] font-medium">
+                      {subItem.label}
+                    </span>
                     {hasChild &&
-                      subOpen &&
-                      subItem.subMenu!.map((lastItem) => (
-                        <div
-                          key={lastItem.id}
-                          role="button"
-                          onClick={() => {
-                            router.push(`/exam-info/${lastItem.slug}`);
-                            onClose();
-                          }}
-                          className="flex items-center gap-3 pl-9 pr-3 py-2.5 border-b border-[#f0ede6] hover:bg-amber-50 transition-colors duration-150 group cursor-pointer"
-                        >
-                          <div className="relative w-7 h-7 rounded-md overflow-hidden border border-[#e8e4dc] bg-[#f8f7f4] flex-shrink-0">
-                            <Image
-                              src={apiService.getPublicAsset(
-                                lastItem.imageIcon || "",
-                              )}
-                              alt={lastItem.label}
-                              fill
-                              className="object-contain p-0.5"
-                            />
-                          </div>
-                          <span className="text-xs font-semibold text-amber-600 group-hover:text-amber-700">
-                            {lastItem.label}
-                          </span>
-                        </div>
+                      (subOpen ? (
+                        <BiCaretDown className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+                      ) : (
+                        <BiCaretRight className="w-3.5 h-3.5 text-[#05101f]/30 flex-shrink-0" />
                       ))}
                   </div>
-                );
-              })}
-          </div>
-        </>
+
+                  {/* ── Level 3 (leaf) ── */}
+                  {hasChild &&
+                    subOpen &&
+                    subItem.subMenu!.map((lastItem) => (
+                      <div
+                        key={lastItem.id}
+                        role="button"
+                        onClick={() => {
+                          router.push(`/exam-info/${lastItem.slug}`);
+                          onClose();
+                        }}
+                        className="flex items-center gap-3 pl-9 pr-3 py-2.5 border-b border-[#f0ede6] hover:bg-amber-50 transition-colors duration-150 group cursor-pointer"
+                      >
+                        <div className="relative w-7 h-7 rounded-md overflow-hidden border border-[#e8e4dc] bg-[#f8f7f4] flex-shrink-0">
+                          <Image
+                            src={apiService.getPublicAsset(
+                              lastItem.imageIcon || "",
+                            )}
+                            alt={lastItem.label}
+                            fill
+                            className="object-contain p-0.5"
+                          />
+                        </div>
+                        <span className="text-xs font-semibold text-amber-600 group-hover:text-amber-700">
+                          {lastItem.label}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
+        </div>
       );
     });
 

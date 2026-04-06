@@ -68,7 +68,7 @@ export function Navbar({
         onClick={() => handleMenuClick(menu)}
         className={`
           cursor-pointer text-cyan-950 flex justify-between items-center
-          ${mobile ? "pl-2 pb-2 mt-4 border-b" : "text-[16px]"}
+          ${mobile ? "pl-2 pb-2 mt-4 border-b" : "text-[14px]"}
         `}
       >
         <span className="flex items-center gap-1">

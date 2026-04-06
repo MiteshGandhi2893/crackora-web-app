@@ -2,10 +2,11 @@ import { CounsellingSection } from "@/components/counselling-section";
 import { DemoLectures } from "@/components/DemoLectures";
 import { Footer } from "@/components/Footer";
 import { HeroBanner } from "@/components/Herobanner";
-import { StudyPlanSection } from "@/components/study-plan/StudyPlanSection";
+import { ToolsSection } from "@/components/study-plan/ToolsSection";
 import { Testimonials } from "@/components/Testimonials";
 import { TopPackages } from "@/components/TopPackages";
-import { WhyCrackora } from "@/components/WhyCrackora";
+import {  WhyCrackora } from "@/components/WhyCrackora";
+import { McaJourneySection } from "@/components/WhyMCA";
 
 export default function Home() {
   
@@ -14,7 +15,8 @@ export default function Home() {
       <HeroBanner/>
       <TopPackages/>
       <WhyCrackora/>
-      <StudyPlanSection/>
+      <McaJourneySection/>
+      <ToolsSection/>
       <DemoLectures/>
       <CounsellingSection/>
       <Testimonials/>

@@ -15,12 +15,12 @@ export interface Exam {
   slug?: string;
   category?: string;
   content?: string;
+  faq?: string;          // stored as JSON string: JSON.stringify(FaqItem[])
   icon?: string;
   meta_title?: string;
   meta_description?: string;
   table_index: any[];
 }
-
 
 export interface Week {
   label: string;

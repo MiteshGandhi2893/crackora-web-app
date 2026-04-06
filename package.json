@@ -12,6 +12,8 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.7",
+    "@next/bundle-analyzer": "^16.2.2",
+    "@tailwindcss/typography": "^0.5.19",
     "india-state-city": "^1.0.3",
     "next": "16.1.6",
     "react": "19.2.3",

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import {
@@ -16,13 +16,14 @@ export interface User {
   fullname: string;
   email: string;
   roles: string[];
+  avatar?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   refreshUser: () => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 
   openAuth: () => void;
   closeAuth: () => void;
@@ -36,27 +37,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [postAuthAction, setPostAuthAction] = useState<(() => void) | null>(
-    null,
-  );
+  const [postAuthAction, setPostAuthAction] = useState<(() => void) | null>(null);
 
-  // 🔥 Fetch user
+  // Restore session on mount: tries in-memory token, then silent cookie refresh.
+  // Returns null cleanly if no valid session — never throws.
   const refreshUser = async () => {
     try {
       const res = await authService.signInStatus();
-
-      if (res.success && res.user) {
-        setUser(res.user); // ✅ No TypeScript error
-      } else {
-        setUser(null);
-      }
+      setUser(res.success && res.user ? (res.user as User) : null);
     } catch {
       setUser(null);
     }
   };
 
-  // 🔥 Clear user
-  const logout = () => {
+  // Clear user + server-side refresh token
+  const logout = async () => {
+    await authService.signOut();
     setUser(null);
   };
 

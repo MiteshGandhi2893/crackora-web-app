@@ -39,7 +39,7 @@ export function RequestCallback() {
 
   return (
     <>
-      <div className="w-full h-full border border-gray-200 bg-white shadow-lg p-3 rounded-xl">
+      <div className="w-full h-full border border-gray-200 bg-white shadow-xs shadow-amber-500 p-3 rounded-xl">
         <h1 className="text-center text-xl font-semibold text-amber-700">
           Request Callback
         </h1>

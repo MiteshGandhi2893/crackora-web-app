@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop } from "@mui/material";
 import Image from "next/image";
 
 interface LoadingContextType {
@@ -23,21 +23,35 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
     >
       {children}
 
-      {/* ✅ Full screen blackout overlay */}
       <Backdrop
         open={open}
         sx={{
           color: "#fff",
           zIndex: (theme) => theme.zIndex.drawer + 999,
-          backgroundColor: "rgba(0, 0, 0, 0.7)", // darkness level
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
         }}
       >
-        <div className="flex flex-col gap-2">
-          <div className="relative">
+        {/* Spinning logo */}
+        <div className="flex flex-col items-center bg-amber-100/80 p-2 rounded-lg">
+          <div
+            style={{
+              animation: "spin 2s linear infinite",
+              width: 64,
+              height: 64,
+              position: "relative",
+            }}
+          >
             <Image src={"/monogram.svg"} alt="loader" fill />
           </div>
-          <CircularProgress color="inherit" />
+          
         </div>
+
+        <style>{`
+          @keyframes spin {
+            0%   { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+          }
+        `}</style>
       </Backdrop>
     </LoadingContext.Provider>
   );

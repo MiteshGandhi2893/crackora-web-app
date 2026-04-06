@@ -4,12 +4,13 @@
 import { useEffect, useState } from "react";
 import { useExams } from "@/providers/ExamsProvider";
 import { Exam } from "@/interfaces/entrance-interface";
-import { Logo } from "../header/Logo";
 import { emailService } from "@/services/email.service";
-
+import { useLoader } from "@/providers/LoadingProvider";
+import { useSnackbar } from "@/providers/SnackbarProvider";
 export function CounsellingForm() {
   const data = useExams();
-
+  const { showLoader, hideLoader } = useLoader();
+  const { showMessage } = useSnackbar();
   const [states, setStates] = useState<any[]>([]);
   const [cities, setCities] = useState<any[]>([]);
   const [exams, setExams] = useState<Exam[]>();
@@ -25,6 +26,17 @@ export function CounsellingForm() {
     exam: "",
   });
 
+  const resetForm = () => {
+    setFormData({
+      fullname: "",
+      email: "",
+      phone: "",
+      state: "",
+      city: "",
+      entrance: "",
+      exam: "",
+    });
+  };
   const [errors, setErrors] = useState<any>({});
 
   /* ------------------ Load states (LAZY IMPORT) ------------------ */
@@ -62,7 +74,8 @@ export function CounsellingForm() {
 
   /* ------------------ Entrance change ------------------ */
   const handleEntranceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const entrance = data.entrances.find((v) => v.id === e.target.value);
+    // ✅ Find by title since option value is entrance.title
+    const entrance = data.entrances.find((v) => v.title === e.target.value);
 
     setFormData((prev) => ({
       ...prev,
@@ -90,7 +103,6 @@ export function CounsellingForm() {
     e.preventDefault();
 
     const newErrors: any = {};
-
     if (!formData.fullname.trim())
       newErrors.fullname = "Full Name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
@@ -102,13 +114,21 @@ export function CounsellingForm() {
 
     setErrors(newErrors);
 
+    showLoader();
     if (Object.keys(newErrors).length === 0) {
-      await emailService.sendCounsellingEmail(formData);
+      const res = await emailService.sendCounsellingEmail(formData);
+      if (res.data?.success) {
+        showMessage(res.data?.message, "success");
+      } else {
+        showMessage(res.data?.message, "error");
+      }
     }
+    hideLoader();
+    resetForm();
   };
 
   return (
-    <div className="w-full  border-gray-200 border border-gray-200-gray-200 bg-white/70 shadow-lg p-4 rounded-xl text-cyan-950">
+    <div className="w-full  border-gray-200 border border-gray-200-gray-200 bg-[#f8f7f4]/80 shadow-lg p-4 rounded-xl text-cyan-950">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-4">
         <h3 className="sm:text-xl text-[18px] font-semibold text-amber-700">
@@ -116,7 +136,7 @@ export function CounsellingForm() {
         </h3>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         {/* Name */}
         <div className="flex flex-col gap-1">
           <input
@@ -204,7 +224,7 @@ export function CounsellingForm() {
           >
             <option value="">Select Entrance</option>
             {data.entrances.map((entrance) => (
-              <option key={entrance.id} value={entrance.id}>
+              <option key={entrance.id} value={entrance.title}>
                 {entrance.title}
               </option>
             ))}
@@ -227,7 +247,7 @@ export function CounsellingForm() {
 
         <button
           type="submit"
-          className="w-full bg-amber-700 text-white rounded py-1 hover:bg-amber-800 transition"
+          className="w-full bg-amber-600 text-white rounded py-1 hover:bg-amber-600 transition cursor-pointer"
         >
           Submit
         </button>

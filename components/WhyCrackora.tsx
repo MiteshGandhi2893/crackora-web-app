@@ -1,28 +1,39 @@
-import { BiCalendarCheck, BiVideo, BiQuestionMark, BiBookOpen } from "react-icons/bi";
+"use client";
+
+import {
+  BiTargetLock,
+  BiBuildings,
+  BiQuestionMark,
+  BiTrendingUp,
+} from "react-icons/bi";
 
 const features = [
   {
-    icon: <BiCalendarCheck className="w-5 h-5" />,
-    title: "Personalized Study Plan",
-    description: "Tailored schedules that adapt to your exam date and available hours.",
+    icon: <BiTargetLock className="w-5 h-5" />,
+    title: "Entrance Preparation Guidance",
+    description:
+      "Clear roadmap for NIMCET, MAH MCA CET, CUET PG and other exams — what to study, how to prepare, and how to improve step by step.",
     accent: "amber",
   },
   {
-    icon: <BiQuestionMark className="w-5 h-5" />,
-    title: "Live Doubt Sessions",
-    description: "Get expert answers whenever you're stuck — don't let doubts slow you down.",
+    icon: <BiBuildings className="w-5 h-5" />,
+    title: "College Selection Support",
+    description:
+      "Understand colleges, cutoffs, rankings and options so you choose the right MCA college based on your rank, budget and goals.",
     accent: "cyan",
   },
   {
-    icon: <BiBookOpen className="w-5 h-5" />,
-    title: "Exam-Specific Resources",
-    description: "Curated, high-quality materials focused exactly on your target exam.",
+    icon: <BiQuestionMark className="w-5 h-5" />,
+    title: "MCA Study Guidance",
+    description:
+      "Help during your MCA — subjects, specialisations, projects, and how to build the right skills during 2 years.",
     accent: "amber",
   },
   {
-    icon: <BiVideo className="w-5 h-5" />,
-    title: "Live & Recorded Sessions",
-    description: "Learn at your own pace — anytime, anywhere, on any device.",
+    icon: <BiTrendingUp className="w-5 h-5" />,
+    title: "Career & Placement Direction",
+    description:
+      "Guidance for internships, skills, specialisation choices and placements so you finish MCA with real career opportunities.",
     accent: "cyan",
   },
 ];
@@ -42,77 +53,103 @@ const accentMap: Record<string, { card: string; icon: string; bar: string }> = {
 
 export function WhyCrackora() {
   return (
-    <section className="w-full bg-[#f8f7f4] px-6 sm:px-12 lg:px-24 py-16 lg:py-10 relative overflow-hidden lg:pb-24">
+    <section className="w-full bg-[#f8f7f4] px-6 sm:px-12 lg:px-24 py-16 lg:py-24 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        {/* glows */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
+        <div className="pointer-events-none absolute -top-10 right-0 w-[35vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.05),transparent_65%)]" />
 
-      {/* Glow */}
-      <div className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
+        
 
-      {/* Header + video row */}
-      <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 items-start lg:items-center mb-14">
+        {/* header */}
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 items-start lg:items-center mb-14">
+          {/* left */}
+          <div className="lg:w-1/2 flex flex-col gap-4">
+            <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-amber-600 font-sans">
+              Why Crackora
+            </span>
 
-        {/* Left copy */}
-        <div className="lg:w-1/2 flex flex-col gap-4">
-          <span className="text-3xl font-bold tracking-[0.2em] uppercase text-amber-600 font-sans">
-            Why Crackora
-          </span>
-          <h2 className="font-serif text-3xl lg:text-4xl xl:text-5xl text-[#05101f] leading-tight tracking-tight">
-            Expert-led learning,<br />
-            <span className="text-cyan-800">tailored for you</span>
-          </h2>
-          <div className="h-0.5 w-12 bg-amber-500 rounded-full" />
-          <p className="text-[#05101f]/70 text-base leading-relaxed max-w-lg font-sans">
-            A focused platform that prioritizes realistic mock tests and meaningful practice.
-            Instead of overwhelming you, we deliver the right tools at the right time — growing
-            into a complete exam-prep ecosystem, step by step.
-          </p>
+            <h2 className="font-serif text-3xl lg:text-4xl xl:text-5xl text-cyan-900 leading-tight">
+              Best platform for{" "}
+              <span className="text-amber-600">MCA Entrance Preparation</span>
+            </h2>
 
-          {/* Stat row */}
-          <div className="flex gap-8 pt-2">
-            {[["10K+", "Students"], ["50+", "Mock Tests"], ["95%", "Satisfaction"]].map(([num, label]) => (
-              <div key={label} className="flex flex-col">
-                <span className="font-serif text-2xl text-[#05101f] font-bold">{num}</span>
-                <span className="text-[11px] text-[#05101f]/40 font-sans tracking-wide uppercase">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+            <div className="h-0.5 w-12 bg-amber-500 rounded-full" />
 
-        {/* Right video */}
-        <div className="lg:w-1/2 w-full">
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(5,16,31,0.12)] border border-[#e8e4dc]">
-            <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/embed/5UA_XiBI-hk?si=9xr5Dlb9j4A64euL"
-              title="Crackora intro"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            />
-          </div>
-        </div>
-      </div>
+            <p className="text-[#05101f]/70 text-base leading-relaxed max-w-lg font-sans">
+              Crackora helps MCA aspirants at every stage — entrance exam
+              preparation, college selection, MCA studies, and placement
+              guidance. Instead of figuring everything alone, you get a clear
+              path from the day you start preparing until you land your first
+              job.
+            </p>
 
-      {/* Feature cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {features.map((f, i) => {
-          const a = accentMap[f.accent];
-          return (
-            <div
-              key={i}
-              className={`${a.card} rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 hover:shadow-[0_4px_24px_rgba(5,16,31,0.09)] hover:-translate-y-0.5 group`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-9 h-9 rounded-xl ${a.icon} flex items-center justify-center shrink-0`}>
-                  {f.icon}
+            {/* stats */}
+            <div className="flex gap-8 pt-2">
+              {[
+                ["10K+", "Students"],
+                ["50+", "Mock Tests"],
+                ["40+", "Colleges"],
+              ].map(([num, label]) => (
+                <div key={label} className="flex flex-col">
+                  <span className="font-serif text-2xl text-[#05101f] font-bold">
+                    {num}
+                  </span>
+                  <span className="text-[11px] text-[#05101f]/40 font-sans tracking-wide uppercase">
+                    {label}
+                  </span>
                 </div>
-                <div className={`h-0.75 flex-1 rounded-full ${a.bar} opacity-30 group-hover:opacity-60 transition-opacity duration-300`} />
-              </div>
-              <h3 className="text-cyan-900 text-md font-semibold font-sans leading-snug">{f.title}</h3>
-              <p className="text-cyan-950/60 text-xs leading-relaxed">{f.description}</p>
+              ))}
             </div>
-          );
-        })}
-      </div>
+          </div>
 
-      
+          {/* video */}
+          <div className="lg:w-1/2 w-full">
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(5,16,31,0.12)] border border-[#e8e4dc]">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/5UA_XiBI-hk"
+                title="Why Crackora MCA preparation"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {features.map((f, i) => {
+            const a = accentMap[f.accent];
+
+            return (
+              <div
+                key={i}
+                className={`${a.card} rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 shadow-[0_2px_16px_rgba(5,16,31,0.07)] hover:shadow-[0_8px_40px_rgba(5,16,31,0.13)] hover:-translate-y-1 group`}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-9 h-9 rounded-xl ${a.icon} flex items-center justify-center`}
+                  >
+                    {f.icon}
+                  </div>
+
+                  <div
+                    className={`h-0.5 flex-1 rounded-full ${a.bar} opacity-30 group-hover:opacity-60`}
+                  />
+                </div>
+
+                <h3 className="text-cyan-900 text-sm font-semibold">
+                  {f.title}
+                </h3>
+
+                <p className="text-cyan-950/60 text-xs leading-relaxed">
+                  {f.description}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </section>
   );
 }

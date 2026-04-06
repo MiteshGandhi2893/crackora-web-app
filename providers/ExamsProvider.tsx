@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { packageService } from "@/services/courses.service";
 import { Entrance } from "@/interfaces/entrance-interface";
+import { entranceService } from "@/services/entrance.service";
 
 type ExamContextType = {
   entrances: Entrance[];
@@ -18,8 +18,8 @@ export function ExamProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
-    packageService
-      .getCoursesByExam()
+    entranceService
+      .getMCAEntranceExams()
       .then(setEntrances)
       .catch((err) => {
         console.error(err);

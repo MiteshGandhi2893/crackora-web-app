@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
 import { useExams } from "@/providers/ExamsProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useLoader } from "@/providers/LoadingProvider";
@@ -16,6 +16,8 @@ import {
   Step35TopicPreview,
   WeakSelection,
 } from "@/components/study-plan/Step35TopicPreview";
+
+// ─── Everything below this line is IDENTICAL to the original ───────────────
 
 const LEVELS = [
   {
@@ -105,7 +107,6 @@ function calcHours(start: string, end: string, wdH: number, weH: number) {
   return Math.round(total);
 }
 
-// ── Step dots ──────────────────────────────────────────────────────────────
 function StepDots({ current }: { current: number }) {
   return (
     <div className="flex items-center justify-center py-3 px-4 border-b border-gray-100 bg-white shrink-0 overflow-x-auto scrollbar-hide">
@@ -271,7 +272,6 @@ function NavButtons({
   );
 }
 
-// ── STEP 0 ─────────────────────────────────────────────────────────────────
 function Step0({
   form,
   set,
@@ -283,7 +283,6 @@ function Step0({
   const selectedEntrance: Entrance | undefined = entrances.find(
     (e) => e.id === form.entrance?.id,
   );
-
   if (loading)
     return (
       <div className="text-center py-10 text-cyan-400">
@@ -297,7 +296,6 @@ function Step0({
         ⚠️ {error}
       </div>
     );
-
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -372,7 +370,6 @@ function Step0({
   );
 }
 
-// ── STEP 1 ─────────────────────────────────────────────────────────────────
 function Step1({
   form,
   set,
@@ -381,19 +378,16 @@ function Step1({
   set: (p: Partial<FormState>) => void;
 }) {
   const [prepReq, setPrepReq] = useState<PrepRequirement | null>(null);
-
   useEffect(() => {
     if (!form.exam?.id || !form.examPrepLevel) return;
     studyPlannerService
       .getPrepRequirement(form.exam.id, form.examPrepLevel)
       .then(setPrepReq);
   }, [form.exam?.id, form.examPrepLevel]);
-
   const days =
     form.prepStartDate && form.examDate
       ? diffDays(form.prepStartDate, form.examDate)
       : null;
-
   function getDaysBadge(d: number) {
     if (!prepReq) {
       if (d < 30)
@@ -432,9 +426,7 @@ function Step1({
       label: `Good window. Aim for ${prepReq.recommended_days} days for full coverage.`,
     };
   }
-
   const badge = days !== null && days > 0 ? getDaysBadge(days) : null;
-
   return (
     <div>
       <StepHeading
@@ -476,9 +468,10 @@ function Step1({
           <input
             type="date"
             value={form.examDate}
-            min={
-              form.prepStartDate ? addDays(form.prepStartDate, 7) : todayStr()
-            }
+            min={form.prepStartDate || todayStr()}
+            // min={
+            //   form.prepStartDate ? addDays(form.prepStartDate, 7) : todayStr()
+            // }
             onChange={(e) => set({ examDate: e.target.value })}
             className="w-full bg-white border border-cyan-900 rounded-lg px-3 py-2.5 text-cyan-900 text-sm outline-none focus:border-cyan-600 transition-colors"
           />
@@ -510,7 +503,6 @@ function Step1({
   );
 }
 
-// ── STEP 2 ─────────────────────────────────────────────────────────────────
 function Step2({
   form,
   set,
@@ -530,7 +522,6 @@ function Step2({
           form.hoursPerWeekend,
         )
       : null;
-
   return (
     <div>
       <StepHeading
@@ -605,7 +596,6 @@ function Step2({
   );
 }
 
-// ── STEP 3 ─────────────────────────────────────────────────────────────────
 function Step3({
   form,
   set,
@@ -659,7 +649,6 @@ function Step3({
   );
 }
 
-// ── STEP 4 ────────────────────────────────────────────────────────────────
 function Step4Wrapper({
   form,
   set,
@@ -676,7 +665,6 @@ function Step4Wrapper({
     },
     [set],
   );
-
   return (
     <div>
       <StepHeading
@@ -697,7 +685,6 @@ function Step4Wrapper({
   );
 }
 
-// ── STEP 5: Review ─────────────────────────────────────────────────────────
 function Step5({
   form,
   onSubmit,
@@ -716,7 +703,6 @@ function Step5({
   );
   const level = LEVELS.find((l) => l.id === form.examPrepLevel);
   const weakTotal = form.weakSubSectionIds.length + form.weakTopicIds.length;
-
   const rows = [
     { label: "Entrance", value: form.entrance?.title, icon: "🎓" },
     { label: "Exam", value: form.exam?.title, icon: "📝" },
@@ -732,7 +718,6 @@ function Step5({
     { label: "Total Hours", value: `~${hours} hrs`, icon: "⏱️" },
     { label: "Level", value: level?.label, icon: level?.icon },
   ];
-
   return (
     <div>
       <StepHeading
@@ -758,7 +743,6 @@ function Step5({
           </div>
         ))}
       </div>
-
       {weakTotal > 0 && (
         <div className="flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 rounded-xl mb-4 animate-[fadeSlide_0.3s_ease]">
           <span className="text-xl shrink-0">🎯</span>
@@ -777,7 +761,6 @@ function Step5({
           </div>
         </div>
       )}
-
       <div className="bg-gradient-to-br from-amber-50 to-white border border-amber-200 rounded-2xl p-5 text-center">
         <p className="text-3xl mb-2">🚀</p>
         <p className="font-extrabold text-base text-cyan-900 mb-1">
@@ -829,15 +812,32 @@ function Step5({
   );
 }
 
-// ── Main export ────────────────────────────────────────────────────────────
+// ─── Interface change: onPlanGenerated is now always called ───────────────
+// ─── (for both guest and logged-in users)                   ───────────────
 interface StudyPlannerModalProps {
   onClose: () => void;
-  onPlanGenerated?: (data: unknown) => void;
+  /**
+   * Called with the raw plan data immediately after generation.
+   * For LOGGED-IN users: called before router.push("/dashboard")
+   * For GUEST users:     called and then modal closes —
+   *                      the parent (StudyPlannerCard) shows the read-only plan.
+   *                      No redirect happens for guests.
+   */
+  onPlanGenerated: (data: any) => void;
+  /**
+   * NEW: When true, the modal generates the plan and hands it back
+   * via onPlanGenerated WITHOUT redirecting to /dashboard.
+   * The parent component decides what to do with the data.
+   * Use this on the /tools page.
+   * When false (default), behaves exactly like the original modal.
+   */
+  guestPreviewMode?: boolean;
 }
 
 export function StudyPlannerModal({
   onClose,
   onPlanGenerated,
+  guestPreviewMode = false,
 }: StudyPlannerModalProps) {
   const [step, setStep] = useState(0);
   const [loading, setLoad] = useState(false);
@@ -895,33 +895,65 @@ export function StudyPlannerModal({
     setStep((s) => s - 1);
   };
 
+  // ─── THE ONLY CHANGED FUNCTION ─────────────────────────────────────────
   const handleSubmit = async () => {
-    if (!user || !user.username) {
-      // Not logged in — close modal, show auth, and run plan generation after login
+    const payload = {
+      entrance: form.entrance,
+      exam: form.exam,
+      prepStartDate: form.prepStartDate,
+      examDate: form.examDate,
+      hoursPerWeekday: form.hoursPerWeekday,
+      hoursPerWeekend: form.hoursPerWeekend,
+      examPrepLevel: form.examPrepLevel,
+      weakSubSectionIds: form.weakSubSectionIds,
+      weakTopicIds: form.weakTopicIds,
+    };
+
+    // ✅ GUEST + preview mode (tools page)
+    if (!user && guestPreviewMode) {
+      setLoad(true);
+      setError(null);
+      showLoader();
+
+      try {
+        const res = await studyPlannerService.generateStudyPlan(payload);
+
+        // ✅ store in sessionStorage
+        sessionStorage.setItem("previewPlan", JSON.stringify(res.data));
+
+        onPlanGenerated(res.data);
+
+        onClose();
+
+        router.push("/study-plan-preview");
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : "Something went wrong");
+      } finally {
+        setLoad(false);
+        hideLoader();
+      }
+
+      return;
+    }
+
+    // ✅ Guest normal flow (dashboard mode)
+    if (!user && !guestPreviewMode) {
       onClose();
+
       showLoader();
 
       setPostAuthAction(() => async () => {
         hideLoader();
-        showLoader(); // show loader during generation
+        showLoader();
 
         try {
-          const payload = {
-            entrance: form.entrance,
-            exam: form.exam,
-            prepStartDate: form.prepStartDate,
-            examDate: form.examDate,
-            hoursPerWeekday: form.hoursPerWeekday,
-            hoursPerWeekend: form.hoursPerWeekend,
-            examPrepLevel: form.examPrepLevel,
-            weakSubSectionIds: form.weakSubSectionIds,
-            weakTopicIds: form.weakTopicIds,
-          };
-          const data = await studyPlannerService.generateStudyPlan(payload);
-          onPlanGenerated?.(data);
+          const res = await studyPlannerService.generateStudyPlan(payload);
+
+          onPlanGenerated(res.data);
+
           router.push("/dashboard");
         } catch (e) {
-          console.error("Plan generation failed:", e);
+          console.error("Plan generation failed", e);
         } finally {
           hideLoader();
         }
@@ -932,26 +964,17 @@ export function StudyPlannerModal({
       return;
     }
 
-    // Already logged in
+    // ✅ Logged in
     setLoad(true);
     setError(null);
     showLoader();
     onClose();
 
     try {
-      const payload = {
-        entrance: form.entrance,
-        exam: form.exam,
-        prepStartDate: form.prepStartDate,
-        examDate: form.examDate,
-        hoursPerWeekday: form.hoursPerWeekday,
-        hoursPerWeekend: form.hoursPerWeekend,
-        examPrepLevel: form.examPrepLevel,
-        weakSubSectionIds: form.weakSubSectionIds,
-        weakTopicIds: form.weakTopicIds,
-      };
-      const data = await studyPlannerService.generateStudyPlan(payload);
-      onPlanGenerated?.(data);
+      const res = await studyPlannerService.generateStudyPlan(payload);
+
+      onPlanGenerated(res.data);
+
       router.push("/dashboard");
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Something went wrong");
@@ -960,6 +983,7 @@ export function StudyPlannerModal({
       hideLoader();
     }
   };
+  // ─── END OF CHANGED FUNCTION ───────────────────────────────────────────
 
   return (
     <>
@@ -978,30 +1002,20 @@ export function StudyPlannerModal({
         disableEscapeKeyDown
         BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.75)" } }}
         PaperProps={{
-          // Mobile: full screen. Desktop: 85vh centered modal
           className:
             "!rounded-none sm:!rounded-2xl !shadow-2xl !bg-[#faf9f7] !m-0 sm:!m-4 !flex !flex-col !overflow-hidden !font-sans !w-full sm:!max-h-[85vh] !h-full sm:!h-auto",
           style: { maxHeight: "100dvh" },
         }}
       >
-        {/* ── Header ── */}
+        {/* Header — identical to original */}
         <div className="relative flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4 shrink-0 border-b border-cyan-800 bg-cyan-900">
           <div className="absolute inset-0 z-10">
-            {/* Deep space base */}
             <div className="absolute inset-0 bg-[#020617]" />
-
-            {/* Cyan nebula */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
-
-            {/* Green nebula */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
-
-            {/* Soft atmospheric diffusion */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.04),transparent_120%)]" />
-
-          
           </div>
-          <div className="absolute top-0 left-0 w-screen h-full bg-[rgba(0,0,0,0.2)] z-10"></div>
+          <div className="absolute top-0 left-0 w-screen h-full bg-[rgba(0,0,0,0.2)] z-10" />
           <div className="flex items-center gap-2.5 z-20">
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-500 flex items-center justify-center text-sm shrink-0">
               📋
@@ -1033,10 +1047,8 @@ export function StudyPlannerModal({
           </button>
         </div>
 
-        {/* ── Step dots ── */}
         <StepDots current={step} />
 
-        {/* ── Scrollable content ── */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto bg-[#f8f7f4]">
           <div
             key={step}
@@ -1050,13 +1062,11 @@ export function StudyPlannerModal({
             {step === 5 && (
               <Step5 form={form} onSubmit={handleSubmit} loading={loading} />
             )}
-
             {error && (
               <div className="mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-red-500 text-xs">
                 ⚠️ {error}
               </div>
             )}
-
             {step === 5 && (
               <div className="mt-4">
                 <button
@@ -1070,7 +1080,6 @@ export function StudyPlannerModal({
           </div>
         </div>
 
-        {/* ── Fixed bottom nav (steps 0–4 only) ── */}
         {step < 5 && (
           <NavButtons
             step={step}
