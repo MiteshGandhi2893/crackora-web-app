@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: meta.title,
       description: meta.description,
-      url: `https://yoursite.com/tools/${slug}`,
+      url: `https://crackora.com/tools/${slug}`,
       type: "website",
     },
     twitter: {
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: meta.description,
     },
     alternates: {
-      canonical: `https://yoursite.com/tools/${slug}`,
+      canonical: `https://crackora.com/tools/${slug}`,
     },
   };
 }
