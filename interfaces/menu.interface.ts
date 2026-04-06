@@ -3,6 +3,7 @@ export interface SubMenu {
   label: string;
   isActive?: boolean;
   subMenu?: Menu[];
+   href?: string;
 }
 
 export interface Menu {
