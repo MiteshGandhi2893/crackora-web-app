@@ -688,7 +688,7 @@ export function StudyPlanReadOnly({
   );
 
   const tc     = data.timeCategory;
-  const feasib = data.feasibility;
+  const feasib = data.feasibility as FeasibilityInfo;
   const examTitle = data.exam?.title || data.inputs?.examTitle || "this exam";
 
   const TABS: { id:TabId; label:string; emoji:string }[] = [
