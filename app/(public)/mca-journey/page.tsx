@@ -111,6 +111,7 @@ function ExamCard({ exam, expanded, onToggle }: {
               src={`${API_BASE_URL}/public${exam.icon}`}
               alt={exam.full_name} fill unoptimized
               className="object-contain p-1"
+               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         ) : (

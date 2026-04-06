@@ -135,7 +135,7 @@ export default async function BlogDetailPage({
               alt={blog.title}
               fill
               priority
-              sizes="100vw"
+               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
             {/* Gradient overlay */}
@@ -179,6 +179,7 @@ export default async function BlogDetailPage({
                       alt={blog.author.name ?? "Author"}
                       width={36}
                       height={36}
+                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="rounded-full border-2 border-amber-400/50"
                     />
                   ) : (

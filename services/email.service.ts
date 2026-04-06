@@ -9,4 +9,11 @@ export const emailService = {
     );
     return response;
   },
+  sendCallbackEmail: async (formData: any) => {
+    const response: any = await apiService.post(
+      "/send-email/exam-callback",
+      formData,
+    );
+    return response;
+  },
 };
