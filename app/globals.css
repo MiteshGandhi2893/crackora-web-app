@@ -63,7 +63,6 @@ body {
     font-size: 0.9rem;
   }
 
-
   .exam-content table td,
   .exam-content table th {
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -77,9 +76,19 @@ body {
     color: white;
   }
 
+  .exam-content table:has(th) th a {
+    color: #d97000 !important;
+    font-weight: bold;
+  }
+
   .exam-content table:not(:has(th)) tr:first-child td {
     background-color: #164e61;
     color: white;
+  }
+
+  .exam-content table:not(:has(th)) tr:first-child td a {
+    color: #d97000 !important;
+    font-weight: bold;
   }
 
   /* ✅ Zebra striping (data rows only) */

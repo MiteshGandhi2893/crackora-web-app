@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function AboutUs() {
   return (
     <section className="bg-[#f8f7f4] min-h-screen">
@@ -8,19 +10,19 @@ export default function AboutUs() {
           Who we are
         </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-cyan-900 leading-tight max-w-2xl">
-          About Crackora
+          The people behind Crackora
         </h1>
         <div className="h-0.5 w-16 bg-amber-500 mt-4 mb-6" />
         <p className="text-gray-600 leading-relaxed max-w-2xl text-base">
-          Crackora is your complete companion for the MCA journey — from the day you start
-          preparing for your entrance exam, all the way to landing your first job after
-          graduation. We don`t stop at helping you crack the exam. We stay with you through
-          college selection, academics, internships, and career growth.
+          Crackora was built by two people who have seen, up close, what it takes for an MCA 
+          student to truly succeed — not just crack an entrance exam, but build a career worth 
+          being proud of. One of us has spent years inside classrooms, helping students unlock 
+          their potential. The other has spent years inside the industry, building software and 
+          understanding what it actually takes to get hired and grow.
         </p>
         <p className="text-gray-600 leading-relaxed max-w-2xl text-base mt-4">
-          Built equally by two partners who bring technology and teaching together, Crackora
-          combines smart tools with real classroom expertise — so every student gets both
-          the strategy and the support they need at every stage.
+          Together, we cover every stage of your MCA journey — from the moment you start 
+          preparing for your entrance exam, all the way to your first job offer.
         </p>
 
         {/* Journey steps */}
@@ -29,8 +31,8 @@ export default function AboutUs() {
             { step: "01", label: "Entrance Prep" },
             { step: "02", label: "College Selection" },
             { step: "03", label: "MCA Academics" },
-            { step: "04", label: "Internships" },
-            { step: "05", label: "Job Placements" },
+            { step: "04", label: "Skill Building" },
+            { step: "05", label: "Placements" },
           ].map((s, i) => (
             <div key={s.step} className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-full px-3 py-1.5 shadow-sm">
@@ -48,27 +50,28 @@ export default function AboutUs() {
         <div className="border-t border-gray-200" />
       </div>
 
-      {/* ── Co-Founder 1: Mitesh Gandhi — photo LEFT, text RIGHT ── */}
+      {/* ── Co-Founder 1: Mohd Azad — photo LEFT, text RIGHT ── */}
       <div className="max-w-6xl mx-auto px-6 py-16">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
 
           {/* Photo frame */}
           <div className="w-full lg:w-80 shrink-0">
             <div className="relative">
-              <div className="absolute -top-3 -left-3 w-full h-full rounded-2xl border-2 border-amber-300" />
-              <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-cyan-800 to-cyan-950 aspect-4/5 w-full max-w-xs mx-auto lg:max-w-none flex flex-col items-center justify-end pb-8 px-6">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg viewBox="0 0 200 240" className="w-48 opacity-10 text-white fill-current">
-                    <circle cx="100" cy="75" r="50"/>
-                    <path d="M20 240 Q20 160 100 160 Q180 160 180 240Z"/>
-                  </svg>
-                </div>
-                <div className="relative z-10 text-center">
+              <div className="absolute -top-3 -left-3 w-full h-full rounded-2xl border-2 border-amber-600" />
+              <div className="relative rounded-2xl overflow-hidden aspect-4/5 w-full max-w-xs mx-auto lg:max-w-none flex flex-col items-center justify-end pb-8 px-6 h-85">
+                <Image
+                  src={"/Azad.jpeg"}
+                  fill
+                  alt="Azad Sir — Co-Founder Crackora, MCA entrance exam mentor"
+                  className="object-cover object-center "
+                />
+                <div className="absolute z-10 text-center top-10 right-5">
                   <div className="inline-block bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-2">
                     Co-Founder
                   </div>
-                  <p className="text-white font-bold text-lg leading-tight">Mitesh Gandhi</p>
-                  <p className="text-cyan-200 text-xs mt-1">Add your photo here</p>
+                  <p className="text-white font-bold text-lg leading-tight drop-shadow">
+                    Azad Sir
+                  </p>
                 </div>
               </div>
             </div>
@@ -78,85 +81,114 @@ export default function AboutUs() {
           <div className="flex-1 space-y-5">
             <div>
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
-                Technology & Product
+                Academics & Entrance Coaching
               </p>
               <h2 className="text-2xl sm:text-3xl font-bold text-cyan-900">
-                Mitesh Gandhi
+                Azad Sir
               </h2>
               <p className="text-sm text-gray-500 mt-1 font-medium">
-                Co-Founder · Software Developer · 7+ Years of Experience
+                Co-Founder · MCA Entrance Mentor · 10+ Years Teaching Experience
               </p>
             </div>
 
             <p className="text-gray-600 leading-relaxed">
-              Mitesh drives the technology and product vision behind Crackora. With over{" "}
-              <strong className="text-gray-800">7 years of software development experience</strong>,
-              he built Crackora`s tools to be genuinely useful for students — not just pretty
-              dashboards, but things that actually solve real problems at every stage of the
-              MCA journey.
+              Most students who don`t crack their entrance exam aren`t short on intelligence — 
+              they`re short on the right guidance. Azad Sir has spent over a decade fixing 
+              exactly that. He has personally mentored hundreds of students through 
+              <strong className="text-gray-800"> MAH MCA CET, NIMCET, CAT, CLAT</strong>, 
+              and more — and he understands what it actually takes to get selected in the 
+              first attempt.
             </p>
 
-            <div className="flex flex-wrap gap-2">
+            <p className="text-gray-600 leading-relaxed">
+              His strength lies in making hard things feel simple. Whether it`s Quantitative 
+              Aptitude, Logical Reasoning, or Computer Concepts, Azad Sir doesn`t just 
+              teach — he builds the exam temperament, speed, and accuracy that separates 
+              selected students from the rest.
+            </p>
+
+            {/* Subjects */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+                What he teaches at Crackora
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "Quantitative Aptitude",
+                  "Logical Reasoning",
+                  "Computer Concepts",
+                  "Basic Mathematics",
+                  "MCA Entrance Strategy",
+                  "College Selection Guidance",
+                ].map((s) => (
+                  <span
+                    key={s}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-100 px-3 py-1.5 rounded-full"
+                  >
+                    <span className="text-amber-400">✦</span> {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Philosophy */}
+            <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-2 shadow-sm">
+              <p className="text-xs font-bold uppercase tracking-widest text-cyan-900 mb-3">
+                His teaching philosophy
+              </p>
               {[
-                "MSc Computer Science — Binghamton University, New York",
-                "MSc Advanced CS with Data Science — University of Strathclyde, Scotland",
-              ].map(c => (
-                <span key={c} className="inline-flex items-center gap-1.5 text-xs font-semibold bg-cyan-50 text-cyan-800 border border-cyan-100 px-3 py-1.5 rounded-full">
-                  <span className="text-cyan-400">🎓</span> {c}
-                </span>
+                ["Clarity", "He breaks down complex topics until they feel obvious."],
+                ["Strategy", "He teaches you how to think in an exam, not just what to study."],
+                ["Consistency", "He believes pressure burns students out — the right system sustains them."],
+              ].map(([title, desc]) => (
+                <div key={title} className="flex gap-3 items-start">
+                  <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                  <p className="text-sm text-gray-600">
+                    <strong className="text-gray-800">{title} over confusion. </strong>
+                    {desc}
+                  </p>
+                </div>
               ))}
             </div>
 
-            <p className="text-gray-600 leading-relaxed">
-              Having guided students through MCA entrance preparation himself, Mitesh
-              noticed something most platforms miss — students don`t stop needing help after
-              the entrance exam. Questions about which college to choose, how to handle the
-              MCA curriculum, how to get internships, how to crack placements — these are just
-              as important, and nobody was answering them in one place.
-            </p>
-
-            <p className="text-gray-600 leading-relaxed">
-              That`s why Crackora was built to cover the entire journey. From entrance cutoffs
-              and college predictors to career guidance and placement support — it`s all here.
+            <p className="text-gray-500 text-sm leading-relaxed border-l-2 border-amber-400 pl-4 italic">
+              If you`re serious about selection, you need more than preparation — you need 
+              the right mentor. With Azad Sir, you don`t just study… you prepare to win.
             </p>
           </div>
         </div>
       </div>
 
-      {/* ── Equal partners divider ──────────────────────────── */}
+      {/* ── Divider ─────────────────────────────────────────── */}
       <div className="max-w-6xl mx-auto px-6 py-2">
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-gray-200" />
-          {/* <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-5 py-2 shadow-sm shrink-0">
-            <span className="text-amber-500 text-base">🤝</span>
-            <span className="text-xs font-black uppercase tracking-widest text-cyan-900">Equal Partners · 50 / 50</span>
-            <span className="text-amber-500 text-base">🤝</span>
-          </div> */}
           <div className="flex-1 h-px bg-gray-200" />
         </div>
       </div>
 
-      {/* ── Co-Founder 2: Mohd Azad — text LEFT, photo RIGHT ── */}
+      {/* ── Co-Founder 2: Mitesh Gandhi — text LEFT, photo RIGHT ── */}
       <div className="max-w-6xl mx-auto px-6 py-16">
         <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
 
           {/* Photo frame */}
           <div className="w-full lg:w-80 shrink-0">
             <div className="relative">
-              <div className="absolute -top-3 -right-3 w-full h-full rounded-2xl border-2 border-cyan-300" />
-              <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-amber-700 to-amber-900 aspect-4/5 w-full max-w-xs mx-auto lg:max-w-none flex flex-col items-center justify-end pb-8 px-6">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg viewBox="0 0 200 240" className="w-48 opacity-10 text-white fill-current">
-                    <circle cx="100" cy="75" r="50"/>
-                    <path d="M20 240 Q20 160 100 160 Q180 160 180 240Z"/>
-                  </svg>
-                </div>
+              <div className="absolute -top-3 -right-3 w-full h-full rounded-2xl border-2 border-cyan-800" />
+              <div className="relative rounded-2xl overflow-hidden aspect-4/5 w-full max-w-xs mx-auto lg:max-w-none flex flex-col items-center justify-end pb-8 px-6 h-80">
+                <Image
+                  src={"/Mitesh.jpeg"}
+                  fill
+                  alt="Mitesh Gandhi — Co-Founder Crackora, MCA career mentor and software developer"
+                  className="object-cover object-center"
+                />
                 <div className="relative z-10 text-center">
-                  <div className="inline-block bg-cyan-700 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-2">
+                  <div className="inline-block bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-2">
                     Co-Founder
                   </div>
-                  <p className="text-white font-bold text-lg leading-tight">Mohd Azad</p>
-                  <p className="text-amber-200 text-xs mt-1">Add your photo here</p>
+                  <p className="text-white font-bold text-lg leading-tight drop-shadow">
+                    Mitesh Gandhi
+                  </p>
                 </div>
               </div>
             </div>
@@ -166,48 +198,94 @@ export default function AboutUs() {
           <div className="flex-1 space-y-5">
             <div>
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
-                Academics & Teaching
+                Technology, Academics & Career Mentorship
               </p>
               <h2 className="text-2xl sm:text-3xl font-bold text-cyan-900">
-                Mohd Azad
+                Mitesh Gandhi
               </h2>
               <p className="text-sm text-gray-500 mt-1 font-medium">
-                Co-Founder · Educator · 10+ Years of Teaching Experience
+                Co-Founder · Software Developer · 8+ Years of Industry Experience
               </p>
             </div>
 
             <p className="text-gray-600 leading-relaxed">
-              Mohd Azad brings the academic and teaching backbone to Crackora. With over{" "}
-              <strong className="text-gray-800">10 years of hands-on teaching experience</strong>,
-              he ensures that every piece of content and guidance on the platform is accurate,
-              practical, and genuinely exam-relevant — not just theoretically correct.
+              Mitesh has spent 8 years building real software — not just studying it. 
+              He has worked across automation testing, full-stack development, and data science, 
+              and he brings that ground-level industry perspective directly to Crackora`s 
+              students. When he tells you what skills actually matter for getting hired after 
+              MCA, it`s not guesswork — it comes from having been in the industry himself.
             </p>
 
+            <p className="text-gray-600 leading-relaxed">
+              He noticed something important: most MCA students reach their final year 
+              without knowing how to write a resume, how to approach a DSA problem in an 
+              interview, or even which companies are actually hiring MCA graduates. Crackora 
+              was built to fix that — one student at a time.
+            </p>
+
+            {/* Qualifications */}
             <div className="flex flex-wrap gap-2">
               {[
-                "Current Affairs",
-                "General Knowledge",
-                "Logical Reasoning",
-                "CAT Preparation",
-                "MCA Entrance Coaching",
-              ].map(s => (
-                <span key={s} className="inline-flex items-center gap-1.5 text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-100 px-3 py-1.5 rounded-full">
-                  <span className="text-amber-400">✦</span> {s}
+                "MSc Computer Science — State University of New York",
+                "MSc Advanced CS with Data Science — University of Strathclyde, Scotland",
+              ].map((c) => (
+                <span
+                  key={c}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-100 px-3 py-1.5 rounded-full"
+                >
+                  <span className="text-cyan-400">🎓</span> {c}
                 </span>
               ))}
             </div>
 
-            <p className="text-gray-600 leading-relaxed">
-              Having worked directly with hundreds of students, Azad understands that most
-              students don`t struggle because they`re not smart — they struggle because nobody
-              gave them a clear roadmap. What to study, how to study it, which college is
-              actually worth it, what skills get you hired after MCA — these are questions
-              real students ask and rarely get straight answers to.
-            </p>
+            {/* Subjects */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-600 mb-2">
+                What he teaches at Crackora
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "Mathematics (Entrance)",
+                  "English (Entrance)",
+                  "Computer Concepts",
+                  "Data Structures & Algorithms",
+                  "Programming & Skill Building",
+                  "Interview Preparation",
+                  "MCA Academics Guidance",
+                ].map((s) => (
+                  <span
+                    key={s}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-100 px-3 py-1.5 rounded-full"
+                  >
+                    <span className="text-cyan-400">✦</span> {s}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-            <p className="text-gray-600 leading-relaxed">
-              Crackora`s content and guidance is built around those exact questions — practical,
-              honest, and designed for students who are navigating the MCA path for the first time.
+            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm space-y-2">
+              <p className="text-xs font-bold uppercase tracking-widest text-cyan-900 mb-3">
+                What he focuses on
+              </p>
+              {[
+                ["Real skills over certificates.", "He teaches DSA, programming, and problem-solving the way industry actually expects it."],
+                ["Academics that lead somewhere.", "He helps you navigate the MCA syllabus with an eye on what will matter in your career."],
+                ["Honest career guidance.", "No inflated promises — just a clear-eyed view of where MCA graduates can go and how to get there."],
+              ].map(([title, desc]) => (
+                <div key={title} className="flex gap-3 items-start">
+                  <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-cyan-600 shrink-0" />
+                  <p className="text-sm text-gray-600">
+                    <strong className="text-gray-800">{title} </strong>
+                    {desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-gray-500 text-sm leading-relaxed border-l-2 border-cyan-700 pl-4 italic">
+              There are thousands of MCA students out there who are capable of building 
+              great careers — they just never got the right guidance at the right time. 
+              That`s the gap Crackora is here to close.
             </p>
           </div>
         </div>
@@ -220,11 +298,12 @@ export default function AboutUs() {
             What we cover
           </p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            We are with you through the entire MCA journey
+            We stay with you through the entire MCA journey
           </h2>
           <p className="text-cyan-300 text-sm leading-relaxed max-w-2xl mb-10">
-            Most platforms stop at entrance prep. We don`t. Getting into an MCA college is just
-            the beginning — what happens after matters just as much.
+            Most platforms stop at entrance prep. We don`t. Getting into an MCA college is 
+            just the beginning — what happens after matters just as much, and we`ve built 
+            Crackora to be there for every stage.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -233,42 +312,47 @@ export default function AboutUs() {
                 icon: "📚",
                 stage: "Stage 1",
                 title: "Entrance Preparation",
-                body: "NIMCET, MAH MCA CET, and other entrance exams. Study plans, practice questions, cutoff data, and college predictors — everything you need to crack the exam.",
+                body: "MAH MCA CET, NIMCET, and beyond. Expert coaching in Maths, English, Reasoning, and Computer Concepts — with cutoff data, mock tests, and college predictors built in.",
               },
               {
                 icon: "🏫",
                 stage: "Stage 2",
                 title: "College Selection",
-                body: "Once you have your rank, we help you choose the right college — comparing cutoffs, fees, placements, and location so you make a decision you won't regret.",
+                body: "Once you have your score, we help you choose wisely — comparing colleges on placements, fees, location, and reputation so you don't spend two years somewhere you regret.",
               },
               {
                 icon: "💡",
                 stage: "Stage 3",
                 title: "MCA Academics",
-                body: "Inside MCA, the syllabus can be overwhelming. We help you focus on what actually matters for both exams and your career, not just what's in the textbook.",
+                body: "The MCA syllabus is vast. We help you focus on what actually builds your foundation, not just what's in the exam paper — because your degree should mean something.",
               },
               {
-                icon: "💼",
+                icon: "💻",
                 stage: "Stage 4",
-                title: "Internships",
-                body: "Getting your first internship during MCA opens doors that are hard to open later. We guide you on where to look, how to apply, and how to prepare.",
+                title: "Skill Building",
+                body: "DSA, programming, problem-solving — the skills that actually get you hired. We teach these the way industry expects, not the way textbooks present them.",
               },
               {
                 icon: "🚀",
                 stage: "Stage 5",
                 title: "Placements & Jobs",
-                body: "From resume building to interview prep to understanding which companies hire MCA graduates — we help you walk into placements with confidence.",
+                body: "Resume writing, interview prep, company research — we prepare you for placements like a mentor who has actually been through the hiring process, because we have.",
               },
               {
                 icon: "🎯",
                 stage: "Always",
                 title: "Honest Guidance",
-                body: "No fluff. No false promises. Just clear, practical advice from people who have actually been through this journey and helped hundreds of students navigate it.",
+                body: "No fluff. No false promises. Just clear, practical advice from two people who genuinely care where you end up — not just whether you cleared an entrance exam.",
               },
-            ].map(card => (
-              <div key={card.title} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+            ].map((card) => (
+              <div
+                key={card.title}
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors"
+              >
                 <div className="text-2xl mb-2">{card.icon}</div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-amber-400 mb-1">{card.stage}</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-amber-400 mb-1">
+                  {card.stage}
+                </p>
                 <h3 className="text-white font-bold text-sm mb-2">{card.title}</h3>
                 <p className="text-cyan-200 text-xs leading-relaxed">{card.body}</p>
               </div>
@@ -276,13 +360,12 @@ export default function AboutUs() {
           </div>
 
           <p className="text-cyan-400 text-xs leading-relaxed mt-10 max-w-2xl border-t border-white/10 pt-8">
-            Crackora is not just another content platform. It is a long-term companion — built
-            by two people who genuinely care about where MCA students end up, not just whether
-            they cleared an entrance exam.
+            Crackora is not just another content platform. It is a long-term companion — 
+            built by two people who genuinely care about where MCA students end up, not 
+            just whether they cleared an entrance exam.
           </p>
         </div>
       </div>
-
     </section>
   );
 }

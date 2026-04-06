@@ -9,30 +9,30 @@ import { BiSolidQuoteAltLeft } from "react-icons/bi";
 
 const testimonials = [
   {
-    text: "Crackora's MCA mock tests felt very close to the real exam. The detailed solutions and performance analysis helped me improve my speed and accuracy consistently.",
+    text: "Crackora's MCA mock tests felt extremely close to the actual entrance exams. The detailed solutions and performance analysis helped me consistently improve my speed and accuracy.",
     name: "Pram Gandhi",
-    role: "MCA Aspirant",
+    role: "MCA Entrance Aspirant",
     initial: "P",
     accent: "bg-amber-400",
   },
   {
-    text: "The structured e-books and topic-wise mock tests made my MCA entrance preparation clear and focused. I finally understood where I was losing marks.",
+    text: "The structured e-books and topic-wise tests made my MCA entrance preparation focused. I could clearly identify weak areas and improve step by step.",
     name: "Rohit Kulkarni",
-    role: "MCA Entrance Student",
+    role: "MCA CET Student",
     initial: "R",
     accent: "bg-cyan-400",
   },
   {
-    text: "Practicing LAW mock tests on Crackora improved my Legal Aptitude and reasoning significantly. The exam-level questions boosted my confidence before MH CET Law.",
+    text: "The academic content helped me build strong fundamentals during my MCA. Concepts were explained in a very practical and easy-to-understand way.",
     name: "Aarav Mehta",
-    role: "LAW Aspirant",
+    role: "MCA Student",
     initial: "A",
     accent: "bg-emerald-400",
   },
   {
-    text: "The LAW preparation material was concise and easy to revise. Mock tests helped me manage time better and approach questions strategically.",
+    text: "Crackora didn't just help with exams, it helped me build real skills. From aptitude to problem-solving, I feel more confident for placements now.",
     name: "Sneha Sharma",
-    role: "CLAT / MH CET Law Student",
+    role: "MCA Student · Skills Development",
     initial: "S",
     accent: "bg-pink-400",
   },

@@ -9,6 +9,7 @@ import { SignIn } from "@/components/login/SignIn";
 import { SignUp } from "@/components/login/SignUp";
 import { useSnackbar } from "@/providers/SnackbarProvider";
 import { Logo } from "@/components/header/Logo";
+import { BiX } from "react-icons/bi";
 
 export function AuthModal() {
   const { closeAuth, setUser, postAuthAction, setPostAuthAction } = useAuth();
@@ -17,8 +18,6 @@ export function AuthModal() {
   const { showMessage } = useSnackbar();
 
   const handleSuccess = (user: any) => {
-    // user object is already stored in tokenStore by authService.signIn —
-    // we just push it into context so the UI reacts immediately
     setUser(user);
     closeAuth();
     if (postAuthAction) {
@@ -32,19 +31,28 @@ export function AuthModal() {
       open
       fullWidth
       maxWidth="md"
-      onClose={closeAuth}
       disableEscapeKeyDown
+      // ── removed onClose so clicking the backdrop does nothing ──
       BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.9)" } }}
     >
-      <div className="lg:h-[80vh] flex">
-        {/* Left panel — hidden when T&C overlay is shown */}
+      <div className="lg:h-[80vh] flex relative">
+
+        {/* ── Close button ───────────────────────────────────────── */}
+        <button
+          onClick={closeAuth}
+          className="absolute top-3 right-3 z-50 w-8 h-8 rounded-lg bg-cyan-950 hover:bg-rose-600 flex items-center justify-center transition-colors duration-200 cursor-pointer"
+        >
+          <BiX className="w-5 h-5 text-white" />
+        </button>
+
+        {/* Left panel */}
         {showLeft && (
           <div className="w-1/2 bg-cyan-950 lg:flex hidden p-5 justify-center items-center h-full relative">
             <Image src="/login.svg" fill alt="Login illustration" />
           </div>
         )}
 
-        {/* Right form — expands to full width when T&C is shown */}
+        {/* Right form */}
         <div
           className={`${
             showLeft ? "lg:w-1/2" : "w-full"
