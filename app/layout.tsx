@@ -9,7 +9,7 @@ import { SnackbarProvider } from "@/providers/SnackbarProvider";
 import { LoadingProvider } from "@/providers/LoadingProvider";
 import { TopPackagesProvider } from "@/providers/TopPackagesProvide";
 import SessionWatcher from "@/components/SessionWatcher";
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 import { Suspense } from "react";
 const geistSans = Geist({
@@ -28,7 +28,6 @@ const roboto = Roboto({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
   variable: "--font-roboto",
-  
 });
 
 export const metadata: Metadata = {
@@ -44,6 +43,10 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {" "}
+        <GoogleAnalytics gaId="G-GBJ5XBZPMJ" /> {/* 👈 here */}
+      </head>
       <body
         className={`${roboto.variable} ${geistMono.variable} bg-white  lg:overflow-y-auto`}
       >
@@ -51,7 +54,7 @@ export default async function RootLayout({
           <LoadingProvider>
             <AuthProvider>
               <Suspense fallback={<div>Loading...</div>}>
-              <SessionWatcher />
+                <SessionWatcher />
               </Suspense>
               <ExamProvider>
                 <TopPackagesProvider>
@@ -61,7 +64,6 @@ export default async function RootLayout({
             </AuthProvider>
           </LoadingProvider>
         </SnackbarProvider>
-          <GoogleAnalytics gaId="G-GBJ5XBZPMJ" /> {/* 👈 here */}
       </body>
     </html>
   );
