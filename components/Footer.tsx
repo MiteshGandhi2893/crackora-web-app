@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Link from "next/link";
 import { Logo } from "./header/Logo";
-import { STARS } from "@/lib/util";
+import { useEffect, useState } from "react";
 
 function FooterColumn({
   title,
@@ -32,6 +34,19 @@ function FooterColumn({
 }
 
 export function Footer() {
+  const [stars, setStars] = useState<any[]>([]);
+  useEffect(() => {
+    const generated = Array.from({ length: 40 }).map((_, i) => ({
+      id: i, // ✅ stable
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      w: `${Math.random() * 2 + 1}px`,
+      opacity: Math.random(),
+      amber: Math.random() > 0.7,
+    }));
+
+    setStars(generated);
+  }, []);
   return (
     <footer className="relative border-t border-white/5 overflow-hidden">
       <div className="max-w-6xl mx-auto lg:px-0 px-10">
@@ -52,7 +67,7 @@ export function Footer() {
           aria-hidden="true"
         >
           {/* FIX: guard against undefined STARS */}
-          {(STARS ?? []).map((s) => (
+          {(stars ?? []).map((s) => (
             <span
               key={s.id}
               className={`absolute rounded-full ${s.amber ? "bg-amber-300" : "bg-white"}`}

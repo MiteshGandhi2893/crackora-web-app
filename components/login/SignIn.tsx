@@ -296,7 +296,7 @@ const handleSendForgotOtp = async () => {
             <label className="text-cyan-950">Email</label>
             <input name="username" value={formData.username} onChange={handleChange} onBlur={handleBlur}
               type="email" placeholder="Enter your registered email"
-              className="outline-0 border p-2 border-gray-300 bg-white rounded-md text-sm" />
+              className="outline-0 border p-2 border-gray-300 bg-white rounded-md text-sm text-gray-600" />
             {errors.username && <span className="text-red-700 text-sm">{errors.username}</span>}
           </div>
 
@@ -313,7 +313,7 @@ const handleSendForgotOtp = async () => {
             </div>
             <input name="password" value={formData.password} onChange={handleChange} onBlur={handleBlur}
               type="password" placeholder="Enter your password"
-              className="outline-0 border p-2 border-gray-300 bg-white rounded-md text-sm" />
+              className="outline-0 border p-2 border-gray-300 bg-white rounded-md text-sm text-gray-600" />
             {errors.password && <span className="text-red-700 text-sm">{errors.password}</span>}
           </div>
 
@@ -323,7 +323,7 @@ const handleSendForgotOtp = async () => {
           </button>
           {errors.submit && <span className="text-red-700 text-sm">**{errors.submit}</span>}
 
-          <div className="flex items-center justify-center text-md relative mt-2">
+          <div className="flex text-gray-700 items-center justify-center text-sm relative mt-2 ">
             Not a user?
             <span className="ml-2 text-amber-600 cursor-pointer underline" onClick={() => handleIsLogin(false)}>
               Sign Up

@@ -672,7 +672,7 @@ export function SignUp(props: any) {
           </button>
         </div>
 
-        <div className="flex items-center text-md justify-center">
+        <div className="flex items-center text-sm justify-center text-gray-700">
           Already a user?
           <a
             className="ml-2 text-amber-600 cursor-pointer underline text-md"

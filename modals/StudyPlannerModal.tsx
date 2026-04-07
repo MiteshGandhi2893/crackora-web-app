@@ -5,7 +5,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Dialog from "@mui/material/Dialog";
-import { useExams } from "@/providers/ExamsProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useLoader } from "@/providers/LoadingProvider";
 import { Entrance, Exam } from "@/interfaces/entrance-interface";
@@ -16,7 +15,7 @@ import {
   Step35TopicPreview,
   WeakSelection,
 } from "@/components/study-plan/Step35TopicPreview";
-
+import { getCachedExams } from "@/services/EntranceCache";
 // ─── Everything below this line is IDENTICAL to the original ───────────────
 
 const LEVELS = [
@@ -279,29 +278,48 @@ function Step0({
   form: FormState;
   set: (p: Partial<FormState>) => void;
 }) {
-  const { entrances, loading, error } = useExams();
-  const selectedEntrance: Entrance | undefined = entrances.find(
-    (e) => e.id === form.entrance?.id,
-  );
-  if (loading)
+  const [entrances, setEntrances] = useState<Entrance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await getCachedExams();
+        setEntrances(data || []);
+      } catch (err) {
+        setError("Failed to load exams");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
+
+  const selectedEntrance = entrances.find((e) => e.id === form.entrance?.id);
+
+  if (loading) {
     return (
-      <div className="text-center py-10 text-cyan-400">
-        <div className="text-3xl mb-3">⏳</div>
-        <p className="text-sm">Loading exams...</p>
-      </div>
+      <div className="text-center py-10 text-cyan-400">⏳ Loading exams...</div>
     );
-  if (error)
+  }
+
+  if (error) {
     return (
       <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-500 text-sm">
         ⚠️ {error}
       </div>
     );
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <div>
         <label className="block text-[11px] font-semibold text-cyan-900 uppercase tracking-widest mb-2">
           Select Entrance
         </label>
+
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {entrances.map((entrance) => (
             <SelectCard
@@ -318,18 +336,20 @@ function Step0({
               <p className="font-semibold text-sm text-cyan-900">
                 {entrance.title}
               </p>
-              <p className="font-semibold text-[11px] text-amber-600 mt-0.5">
+              <p className="text-[11px] text-amber-600 mt-0.5">
                 {entrance.exams.length} exams
               </p>
             </SelectCard>
           ))}
         </div>
       </div>
+
       {selectedEntrance && (
         <div className="animate-[fadeSlide_0.3s_ease]">
           <label className="block text-[11px] font-semibold text-cyan-900 uppercase tracking-widest mb-2">
             Select Exam
           </label>
+
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {selectedEntrance.exams.map((exam: Exam) => (
               <SelectCard
@@ -341,24 +361,16 @@ function Step0({
                 className="px-3 py-2.5 flex items-center gap-2"
               >
                 {exam.icon && (
-                  <div className="relative w-8 h-8 shrink-0">
+                  <div className="relative w-8 h-8">
                     <Image
-                      src={`${API_BASE_URL}/public/${exam?.icon || ""}`}
-                      alt={exam.title || ""}
+                      src={`${API_BASE_URL}/public/${exam.icon}`}
+                      alt={exam.title}
                       fill
-                      unoptimized
                       className="object-contain"
                     />
                   </div>
                 )}
-                <span
-                  className={[
-                    "font-bold text-sm leading-tight",
-                    form.exam?.id === exam.id
-                      ? "text-amber-600"
-                      : "text-cyan-950",
-                  ].join(" ")}
-                >
+                <span className="font-bold text-sm text-cyan-950">
                   {exam.title}
                 </span>
               </SelectCard>

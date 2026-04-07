@@ -2,26 +2,19 @@ import { Menu } from "@/interfaces/menu.interface";
 import {
   BiSolidNews,
   BiSolidSpreadsheet,
+  BiUser,
 } from "react-icons/bi";
 import { TbToolsOff } from "react-icons/tb";
 import { RiMindMap } from "react-icons/ri";
 import { BsChatLeftText } from "react-icons/bs";
 
-
-export const menu: Menu[] = [
+export const baseMenu: Menu[] = [
   {
     id: "exams",
-    label: "Exams", // mega menu → all MCA entrances
+    label: "Exams",
     href: "#",
     icon: BiSolidSpreadsheet,
   },
-  // {
-  //   id: "mock-tests",
-  //   label: "Mock Tests",
-  //   href: "https://learn.crackora.com/learn/MCA-Mocktest-Series",
-  //   icon: BiSolidNews,
-  //   target: "_blank",
-  // },
   {
     id: "mca-roadmap",
     label: "MCA Roadmap",
@@ -30,14 +23,25 @@ export const menu: Menu[] = [
   },
   {
     id: "free-tools",
-    label: "MCA Tools", // replaces Dashboard — much more traffic
+    label: "MCA Tools",
     href: "/tools/college",
     icon: TbToolsOff,
   },
   {
     id: "blogs",
-    label: "Blogs", // replaces Dashboard — much more traffic
+    label: "Blogs",
     href: "/blogs",
     icon: BsChatLeftText,
   },
 ];
+
+// 👇 Optional grouped menu (clean UX)
+
+
+// 👇 Dashboard config
+export const dashboardMenu: Menu = {
+  id: "dashboard",
+  label: "Dashboard",
+  href: "/dashboard",
+  icon: BiUser,
+};

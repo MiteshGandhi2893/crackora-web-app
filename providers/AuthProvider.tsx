@@ -37,7 +37,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [postAuthAction, setPostAuthAction] = useState<(() => void) | null>(null);
+  const [postAuthAction, setPostAuthAction] = useState<(() => void) | null>(
+    null,
+  );
+
 
   // Restore session on mount: tries in-memory token, then silent cookie refresh.
   // Returns null cleanly if no valid session — never throws.
@@ -53,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Clear user + server-side refresh token
   const logout = async () => {
     await authService.signOut();
-    setUser(null);
+    await refreshUser();
   };
 
   useEffect(() => {

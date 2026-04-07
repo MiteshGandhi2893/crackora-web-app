@@ -6,12 +6,20 @@ import "swiper/css/effect-fade";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CoursePackageCard } from "./course-card/CourseCard";
 import { Pagination } from "swiper/modules";
-import { useTopPackages } from "@/providers/TopPackagesProvide";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { CoursePackage } from "@/interfaces/CoursePackage.interface";
+import { getCachedPackages } from "@/services/TopPackageCache.service";
 
 export function TopPackages() {
-  const pkgContext = useTopPackages();
+  const [topPackages, setTopPackages] = useState<CoursePackage[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    getCachedPackages()
+      .then(setTopPackages)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
   return (
     <section className="w-full bg-[#f8f7f4] py-16 lg:py-24  relative overflow-hidden">
       <div className="max-w-6xl mx-auto lg:px-10 px-5">
@@ -45,10 +53,10 @@ export function TopPackages() {
             centeredSlides
             className="pb-15 h-110"
           >
-            {pkgContext.topPackages.map((item, i) => (
+            {topPackages.map((item, i) => (
               <div key={i}>
                 {item.is_active && (
-                  <SwiperSlide >
+                  <SwiperSlide>
                     <CoursePackageCard topPackage={item} />
                   </SwiperSlide>
                 )}
@@ -59,7 +67,7 @@ export function TopPackages() {
 
         {/* Desktop grid */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-15">
-          {pkgContext.topPackages.map(
+          {topPackages.map(
             (item, i) =>
               item.is_active && <CoursePackageCard key={i} topPackage={item} />,
           )}

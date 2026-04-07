@@ -1,17 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { API_BASE_URL } from "@/services/api.service";
 import { useRouter } from "next/navigation";
-import { useExams } from "@/providers/ExamsProvider";
+import { Entrance } from "@/interfaces/entrance-interface";
+import { getCachedExams } from "@/services/EntranceCache";
 
 export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
-  const data = useExams();
+ const [entrances, setEntrances] = useState<Entrance[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [search, setSearch] = useState("");
 
-  const allExams = data.entrances.flatMap((e) => e.exams);
+  useEffect(() => {
+    getCachedExams()
+      .then(setEntrances)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const allExams = entrances.flatMap((e) => e.exams);
   const filtered = allExams.filter((exam) =>
     exam.title?.toLowerCase().includes(search.toLowerCase()),
   );

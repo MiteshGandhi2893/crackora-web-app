@@ -2,17 +2,34 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog } from "@mui/material";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/providers/AuthProvider";
-import { SignIn } from "@/components/login/SignIn";
-import { SignUp } from "@/components/login/SignUp";
 import { useSnackbar } from "@/providers/SnackbarProvider";
 import { Logo } from "@/components/header/Logo";
 import { BiX } from "react-icons/bi";
 
+// ✅ Fix: Proper dynamic import with types + no SSR
+const SignIn = dynamic(
+  () =>
+    import("@/components/login/SignIn").then((mod) => mod.SignIn),
+  { ssr: false }
+);
+
+const SignUp = dynamic(
+  () =>
+    import("@/components/login/SignUp").then((mod) => mod.SignUp),
+  { ssr: false }
+);
+
 export function AuthModal() {
-  const { closeAuth, setUser, postAuthAction, setPostAuthAction } = useAuth();
+  const {
+    closeAuth,
+    setUser,
+    postAuthAction,
+    setPostAuthAction,
+  } = useAuth(); // ❌ removed isAuthOpen (not needed)
+
   const [isLogin, setIsLogin] = useState(true);
   const [showLeft, setShowLeft] = useState(true);
   const { showMessage } = useSnackbar();
@@ -20,6 +37,7 @@ export function AuthModal() {
   const handleSuccess = (user: any) => {
     setUser(user);
     closeAuth();
+
     if (postAuthAction) {
       postAuthAction();
       setPostAuthAction(null);
@@ -27,17 +45,10 @@ export function AuthModal() {
   };
 
   return (
-    <Dialog
-      open
-      fullWidth
-      maxWidth="md"
-      disableEscapeKeyDown
-      // ── removed onClose so clicking the backdrop does nothing ──
-      BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.9)" } }}
-    >
-      <div className="lg:h-[80vh] flex relative">
+    <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+      <div className="w-full max-w-3xl bg-white relative lg:h-[80vh] flex">
 
-        {/* ── Close button ───────────────────────────────────────── */}
+        {/* Close button */}
         <button
           onClick={closeAuth}
           className="absolute top-3 right-3 z-50 w-8 h-8 rounded-lg bg-cyan-950 hover:bg-rose-600 flex items-center justify-center transition-colors duration-200 cursor-pointer"
@@ -48,7 +59,13 @@ export function AuthModal() {
         {/* Left panel */}
         {showLeft && (
           <div className="w-1/2 bg-cyan-950 lg:flex hidden p-5 justify-center items-center h-full relative">
-            <Image src="/login.svg" fill alt="Login illustration" />
+            <Image
+              src="/login.svg"
+              fill
+              alt="Login illustration"
+              loading="lazy"
+              className="object-contain"
+            />
           </div>
         )}
 
@@ -65,19 +82,25 @@ export function AuthModal() {
           {isLogin ? (
             <SignIn
               handleIsLogin={setIsLogin}
-              sendMessage={(msg) => showMessage(msg.text, msg.severity)}
+              sendMessage={(msg: any) =>
+                showMessage(msg.text, msg.severity)
+              }
               onSuccess={handleSuccess}
             />
           ) : (
             <SignUp
               handleIsLogin={setIsLogin}
-              isTermsShown={(shown: boolean) => setShowLeft(!shown)}
-              sendMessage={(msg: any) => showMessage(msg.text, msg.severity)}
+              isTermsShown={(shown: boolean) =>
+                setShowLeft(!shown)
+              }
+              sendMessage={(msg: any) =>
+                showMessage(msg.text, msg.severity)
+              }
               onSuccess={handleSuccess}
             />
           )}
         </div>
       </div>
-    </Dialog>
+    </div>
   );
 }

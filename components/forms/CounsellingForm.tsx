@@ -2,26 +2,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
-import { useExams } from "@/providers/ExamsProvider";
 import { Exam } from "@/interfaces/entrance-interface";
 import { emailService } from "@/services/email.service";
 import { useLoader } from "@/providers/LoadingProvider";
 import { useSnackbar } from "@/providers/SnackbarProvider";
+import { getCachedExams } from "@/services/EntranceCache";
 
 const CATEGORIES = [
-  { value: "MCA Entrance Prep",    label: "MCA Entrance Prep",  icon: "🎯" },
+  { value: "MCA Entrance Prep", label: "MCA Entrance Prep", icon: "🎯" },
   { value: "College & Admissions", label: "College & Admissions", icon: "🏫" },
-  { value: "MCA Academics",        label: "MCA Academics",       icon: "📖" },
-  { value: "Skills & Placement",   label: "Skills & Placement",  icon: "⚡" },
+  { value: "MCA Academics", label: "MCA Academics", icon: "📖" },
+  { value: "Skills & Placement", label: "Skills & Placement", icon: "⚡" },
 ];
 
 export function CounsellingForm() {
-  const data = useExams();
   const { showLoader, hideLoader } = useLoader();
   const { showMessage } = useSnackbar();
   const [states, setStates] = useState<any[]>([]);
   const [cities, setCities] = useState<any[]>([]);
-  const [exams, setExams] = useState<Exam[]>();
+  const [exams, setExams] = useState<Exam[]>([]);
   const [selectedStateIso, setSelectedStateIso] = useState("");
 
   const [formData, setFormData] = useState({
@@ -50,7 +49,7 @@ export function CounsellingForm() {
     });
     setSelectedStateIso("");
     setCities([]);
-    setExams(undefined);
+    setExams([]);
     setErrors({});
   };
 
@@ -64,7 +63,7 @@ export function CounsellingForm() {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -84,16 +83,23 @@ export function CounsellingForm() {
   };
 
   /* ------------------ Category pill select ------------------ */
-  const handleCategorySelect = (value: string) => {
-    // If switching away from MCA Entrance, clear the exam
-    const newExam = value === "MCA Entrance" ? formData.exam : "";
-    setFormData((prev) => ({ ...prev, category: value, exam: newExam }));
+  const handleCategorySelect = async (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      category: value,
+      exam: value === "MCA Entrance Prep" ? prev.exam : "",
+    }));
 
-    if (value === "MCA Entrance") {
-      // Auto-set exams from first entrance group for now
-      setExams(data.entrances?.[0]?.exams);
+    if (value === "MCA Entrance Prep") {
+      // 🚀 Fetch ONLY when needed
+      const entrances = await getCachedExams();
+
+      const allExams =
+        entrances?.flatMap((entrance) => entrance.exams || []) || [];
+
+      setExams(allExams);
     } else {
-      setExams(undefined);
+      setExams([]);
     }
   };
 
@@ -106,7 +112,8 @@ export function CounsellingForm() {
     e.preventDefault();
     const newErrors: any = {};
 
-    if (!formData.fullname.trim()) newErrors.fullname = "Full Name is required.";
+    if (!formData.fullname.trim())
+      newErrors.fullname = "Full Name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
     if (!formData.phone.trim()) newErrors.phone = "Phone is required.";
     if (!formData.state) newErrors.state = "State is required.";
@@ -262,13 +269,11 @@ export function CounsellingForm() {
               onChange={handleExamChange}
             >
               <option value="">Select Exam</option>
-              {data.entrances.map((entrance) =>
-                entrance.exams?.map((exam) => (
-                  <option key={exam.title} value={exam.title}>
-                    {exam.title}
-                  </option>
-                ))
-              )}
+              {exams.map((exam) => (
+                <option key={exam.title} value={exam.title}>
+                  {exam.title}
+                </option>
+              ))}
             </select>
             {errors.exam && (
               <span className="text-red-700 text-xs">{errors.exam}</span>

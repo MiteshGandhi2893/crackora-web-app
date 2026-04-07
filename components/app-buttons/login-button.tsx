@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { BiLogIn, BiLogOut, BiCog } from "react-icons/bi";
+import { useLoader } from "@/providers/LoadingProvider";
 
 function Avatar({ name }: { name: string }) {
   const initials = name
@@ -23,7 +24,7 @@ function Avatar({ name }: { name: string }) {
 export function LoginStatus(props: any) {
   const { mobile } = props;
   const router = useRouter();
-
+  const { showLoader, hideLoader } = useLoader();
   // ✅ Use logout from context — it calls authService.signOut() AND sets user → null
   const { user, logout, openAuth, setPostAuthAction } = useAuth();
 
@@ -42,17 +43,21 @@ export function LoginStatus(props: any) {
 
   const handleLoginClick = () => {
     setPostAuthAction(() => () => {
+      showLoader();
       router.push("/dashboard");
+      hideLoader();
     });
     openAuth();
   };
 
-  // ✅ Call context logout — clears server token + sets user null → UI re-renders
-  const handleLogout = async () => {
-    setOpenMenu(false);
-    await logout();
-    router.push("/");
-  };
+const handleLogout = async () => {
+  setOpenMenu(false);
+
+  await logout(); // clears user + server token
+
+  // Force client-side reload for SSR pages (like home)
+  router.replace("/"); // replace instead of push to prevent stale state in history
+};
 
   return (
     <div
