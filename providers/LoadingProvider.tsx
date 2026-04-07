@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Backdrop } from "@mui/material";
 import Image from "next/image";
 
 interface LoadingContextType {
@@ -23,36 +22,27 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
     >
       {children}
 
-      <Backdrop
-        open={open}
-        sx={{
-          color: "#fff",
-          zIndex: (theme) => theme.zIndex.drawer + 999,
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-        }}
-      >
-        {/* Spinning logo */}
-        <div className="flex flex-col items-center bg-amber-100/80 p-2 rounded-lg">
-          <div
-            style={{
-              animation: "spin 2s linear infinite",
-              width: 64,
-              height: 64,
-              position: "relative",
-            }}
-          >
-            <Image src={"/monogram.svg"} alt="loader" fill />
+      {open && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80">
+          <div className="flex flex-col items-center bg-amber-100/80 p-2 rounded-lg">
+            <div
+              className="relative w-16 h-16 animate-spin"
+            >
+              <Image src="/monogram.svg" alt="loader" fill />
+            </div>
           </div>
-          
         </div>
+      )}
 
-        <style>{`
-          @keyframes spin {
-            0%   { transform: rotate(360deg); }
-            100% { transform: rotate(0deg); }
-          }
-        `}</style>
-      </Backdrop>
+      <style>{`
+        @keyframes spin {
+          0%   { transform: rotate(360deg); }
+          100% { transform: rotate(0deg); }
+        }
+        .animate-spin {
+          animation: spin 2s linear infinite;
+        }
+      `}</style>
     </LoadingContext.Provider>
   );
 }

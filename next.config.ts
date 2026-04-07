@@ -1,18 +1,17 @@
 import type { NextConfig } from "next";
+import withBundleAnalyzer from "@next/bundle-analyzer";
 
-const nextConfig: NextConfig = {
+const isAnalyze = process.env.ANALYZE === "true";
+
+// Wrap your Next.js config with the analyzer
+const nextConfig: NextConfig = withBundleAnalyzer({
+  enabled: isAnalyze,
+})({
   compress: true,
   poweredByHeader: false,
-
   images: {
-    formats: ["image/avif", "image/webp"], // ✅ serve modern formats — cuts image size 40-60%
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "5000",
-        pathname: "/public/**",
-      },
       {
         protocol: "https",
         hostname: "api.crackora.com",
@@ -24,9 +23,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
+  experimental: {
+    optimizePackageImports: ["react-icons"],
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
   headers: async () => [
-    // ✅ Next.js static chunks have content hashes — safe to cache forever
     {
       source: "/_next/static/:path*",
       headers: [
@@ -36,27 +39,25 @@ const nextConfig: NextConfig = {
         },
       ],
     },
-    // ✅ Public folder assets (images, fonts, icons)
     {
-      source: "/public/:path*",
+      source: "/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|ttf|woff|woff2)",
       headers: [
         {
           key: "Cache-Control",
-          value: "public, max-age=86400", // 1 day — adjust if assets change often
+          value: "public, max-age=31536000, immutable",
         },
       ],
     },
-    // ✅ HTML pages — always revalidate so users get fresh content
     {
       source: "/:path*",
       headers: [
         {
           key: "Cache-Control",
-          value: "no-cache, no-store, must-revalidate",
+          value: "public, max-age=0, must-revalidate",
         },
       ],
     },
   ],
-};
+});
 
 export default nextConfig;

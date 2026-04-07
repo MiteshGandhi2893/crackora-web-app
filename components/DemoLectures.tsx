@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { BiPlay } from "react-icons/bi";
-
+import Image from "next/image";
 type DemoVideo = {
   title: string;
   desc: string;
@@ -23,17 +23,20 @@ export function DemoLectures() {
     {
       title: "OLAT",
       desc: "Law aptitude & reasoning basics",
-      videoId: "OZBWfyYtYQY",
+      videoId: "oAQtkhUmWQ0",
     },
     {
       title: "SLAT",
       desc: "Legal aptitude & comprehension",
-      videoId: "R2zC3dKQ42Y",
+      videoId: "oAQtkhUmWQ0",
     },
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
   const activeVideo = videos[activeIndex];
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const thumbnail = `https://img.youtube.com/vi/${activeVideo.videoId}/hqdefault.jpg`;
 
   return (
     <section className="w-full bg-[#f8f7f4] px-6 sm:px-12 lg:px-24 pb-16 lg:py-0 lg:pb-24 relative overflow-hidden">
@@ -66,7 +69,10 @@ export function DemoLectures() {
               return (
                 <button
                   key={video.title}
-                  onClick={() => setActiveIndex(i)}
+                  onClick={() => {
+                    setActiveIndex(i);
+                    setIsPlaying(false); // 👈
+                  }}
                   className={`group w-full flex items-center gap-4 rounded-xl px-4 py-3.5 text-left transition-all duration-200
                   ${
                     isActive
@@ -109,15 +115,35 @@ export function DemoLectures() {
           </div>
 
           {/* Right — video player */}
-          <div className="rounded-2xl overflow-hidden border border-[#e8e4dc] shadow-[0_8px_40px_rgba(5,16,31,0.1)] bg-[#05101f]">
-            <iframe
-              key={activeVideo.videoId}
-              className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1&rel=0`}
-              title={activeVideo.title}
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+          <div className="rounded-2xl overflow-hidden border border-[#e8e4dc] shadow-[0_8px_40px_rgba(5,16,31,0.1)] bg-[#05101f] relative">
+            {!isPlaying ? (
+              <div
+                className="relative w-full aspect-video cursor-pointer group"
+                onClick={() => setIsPlaying(true)}
+              >
+                <Image
+                  src={thumbnail}
+                  alt={activeVideo.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                {/* Play button */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg group-hover:scale-105 transition">
+                    <BiPlay className="w-8 h-8 text-black ml-1" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <iframe
+                className="w-full aspect-video"
+                src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1&rel=0`}
+                title={activeVideo.title}
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
           </div>
         </div>
       </div>
