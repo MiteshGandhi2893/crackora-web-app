@@ -494,7 +494,7 @@ export function HeroBanner() {
     }
     if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
     dispatch({ type: "GO", next });
-    exitTimeoutRef.current = setTimeout(() => dispatch({ type: "CLEAR_EXIT" }), 450);
+    exitTimeoutRef.current = setTimeout(() => dispatch({ type: "CLEAR_EXIT" }), 1000);
   }, [visible, isMobile]);
 
   // Stable auto-advance callback — no closure over stale `visible`
@@ -503,7 +503,7 @@ export function HeroBanner() {
     goTo(next);
   }, [visible, goTo]);
 
-  const resetTimer = useInterval(advance, 3000);
+  const resetTimer = useInterval(advance, 5000);
 
   const handleDot = useCallback((i: number) => {
     goTo(i);
