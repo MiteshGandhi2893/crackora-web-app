@@ -614,12 +614,12 @@ export function HeroBanner() {
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 w-full sm:w-auto justify-center lg:justify-start">
-                    <Link href={slide.primaryBtn.href} className="w-full sm:w-auto">
+                    <Link href={slide.primaryBtn.href} className="w-full sm:w-auto" target="_blank">
                       <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold cursor-pointer px-5 py-3 sm:px-7 sm:py-3 text-[13px] sm:text-[14px] lg:text-[15px] rounded-xl transition-all duration-300 shadow-lg shadow-amber-900/40 hover:scale-105 hover:shadow-amber-500/40">
                         {slide.primaryBtn.label}
                       </button>
                     </Link>
-                    <Link href={slide.secondaryBtn.href} className="w-full sm:w-auto">
+                    <Link href={slide.secondaryBtn.href} className="w-full sm:w-auto" target="_blank">
                       <button className="w-full border border-white/25 text-white/85 font-medium cursor-pointer px-5 py-3 sm:px-6 sm:py-3 text-[13px] sm:text-[14px] lg:text-[15px] rounded-xl bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:scale-105">
                         {slide.secondaryBtn.label}
                       </button>
