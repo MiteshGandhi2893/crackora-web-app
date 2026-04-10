@@ -1,7 +1,6 @@
 "use client";
 
 import { STARS } from "@/lib/util";
-import { useExamMenu } from "@/providers/ExamMenuUIProvider";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,10 +9,8 @@ import {
   useState,
   useCallback,
   memo,
-  useMemo,
   useReducer,
 } from "react";
-import { BiSend } from "react-icons/bi";
 
 /* ─────────────────────────────────────────────────────
    Stars — single canvas, drawn once, zero DOM nodes
@@ -34,7 +31,7 @@ const StarField = memo(function StarField() {
       STARS.forEach((s) => {
         const x = (parseFloat(s.left) / 100) * canvas.width;
         const y = (parseFloat(s.top) / 100) * canvas.height;
-        const r = parseFloat(s.w + '') / 2;
+        const r = parseFloat(s.w + "") / 2;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fillStyle = s.amber
@@ -45,7 +42,6 @@ const StarField = memo(function StarField() {
     };
 
     draw();
-
     let raf: number;
     const onResize = () => {
       cancelAnimationFrame(raf);
@@ -68,10 +64,9 @@ const StarField = memo(function StarField() {
 });
 
 /* ─────────────────────────────────────────────────────
-   Orbit constants (computed once, outside component)
+   Orbit constants (unchanged from original)
 ───────────────────────────────────────────────────── */
-const CX = 210,
-  CY = 210;
+const CX = 210, CY = 210;
 const R_OUTER = 175;
 const R_MIDDLE = 100;
 
@@ -81,64 +76,24 @@ const polar = (angleDeg: number, r: number) => ({
 });
 
 const OUTER_ITEMS = [
-  "NIMCET",
-  "MAH MCA CET",
-  "CUET PG MCA",
-  "TANCET",
-  "IPU CET MCA",
-  "WB JECA",
+  "NIMCET", "MAH MCA CET", "CUET PG MCA", "TANCET", "IPU CET MCA", "WB JECA",
 ].map((label, i) => ({ label, ...polar(-90 + i * 60, R_OUTER) }));
 
 const MIDDLE_ITEMS = [
-  "Mock Tests",
-  "Doubt Solving",
-  "Study Planner",
-  "Analytics",
-  "Career Guide",
-  "PYQ Bank",
+  "Mock Tests", "Doubt Solving", "Study Planner", "Analytics", "Career Guide", "PYQ Bank",
 ].map((label, i) => ({ label, ...polar(-60 + i * 60, R_MIDDLE) }));
 
-/* ─────────────────────────────────────────────────────
-   OrbitBubble — memoized, no internal state
-───────────────────────────────────────────────────── */
 const OrbitBubble = memo(function OrbitBubble({
-  x,
-  y,
-  label,
-  tier,
-}: {
-  x: number;
-  y: number;
-  label: string;
-  tier: "outer" | "middle";
-}) {
+  x, y, label, tier,
+}: { x: number; y: number; label: string; tier: "outer" | "middle" }) {
   const cfg = {
-    outer: {
-      r: 28,
-      bg: "#B46309",
-      border: "rgba(251,200,36,0.68)",
-      glow: "rgba(245,150,11,0.22)",
-      glowR: 30,
-      textCol: "#fff",
-      ts: 9.0,
-      sw: 1.2,
-    },
-    middle: {
-      r: 25,
-      bg: "#164E63",
-      border: "rgba(103,232,249,0.58)",
-      glow: "rgba(6,182,212,0.18)",
-      glowR: 28,
-      textCol: "#fff",
-      ts: 9,
-      sw: 1.0,
-    },
+    outer: { r: 28, bg: "#B46309", border: "rgba(251,200,36,0.68)", glow: "rgba(245,150,11,0.22)", glowR: 30, textCol: "#fff", ts: 9.0, sw: 1.2 },
+    middle: { r: 25, bg: "#164E63", border: "rgba(103,232,249,0.58)", glow: "rgba(6,182,212,0.18)", glowR: 28, textCol: "#fff", ts: 9, sw: 1.0 },
   };
   const c = cfg[tier];
   const words = label.split(" ");
   const line1 = words.slice(0, Math.ceil(words.length / 2)).join(" ");
   const line2 = words.length > 1 ? words.slice(Math.ceil(words.length / 2)).join(" ") : "";
-
   return (
     <g>
       <circle cx={x} cy={y} r={c.glowR} fill={c.glow} />
@@ -155,9 +110,6 @@ const OrbitBubble = memo(function OrbitBubble({
   );
 });
 
-/* ─────────────────────────────────────────────────────
-   ThreeRingOrbit — fully memoized, never re-renders
-───────────────────────────────────────────────────── */
 const ThreeRingOrbit = memo(function ThreeRingOrbit() {
   return (
     <div className="w-full flex items-center justify-center select-none">
@@ -195,28 +147,21 @@ const ThreeRingOrbit = memo(function ThreeRingOrbit() {
               <stop offset="55%" stopColor="#1d4ed8" stopOpacity="0.05" />
               <stop offset="100%" stopColor="transparent" stopOpacity="0" />
             </radialGradient>
-            {/* Lightweight glow — blur only, no feMerge double-paint */}
             <filter id="rg" x="-25%" y="-25%" width="150%" height="150%">
               <feGaussianBlur stdDeviation="2" />
             </filter>
           </defs>
-
           <circle cx={CX} cy={CY} r={215} fill="url(#amb)" />
           <circle cx={CX} cy={CY} r={R_OUTER + 30} fill="url(#outerFill)" />
           <circle cx={CX} cy={CY} r={R_MIDDLE + 26} fill="url(#middleFill)" />
-
           <circle cx={CX} cy={CY} r={R_OUTER} fill="none" stroke="rgba(251,191,36,0.38)" strokeWidth={1} strokeDasharray="5 7" filter="url(#rg)" />
           <circle cx={CX} cy={CY} r={R_MIDDLE} fill="none" stroke="rgba(103,232,249,0.32)" strokeWidth={0.9} strokeDasharray="4 6" filter="url(#rg)" />
-
           {OUTER_ITEMS.map(({ x, y, label }) => (
             <line key={`cl${label}`} x1={CX + (x - CX) * 0.86} y1={CY + (y - CY) * 0.86} x2={x} y2={y} stroke="rgba(251,191,36,0.09)" strokeWidth={0.6} />
           ))}
-
           <circle cx={CX} cy={CY} r={64} fill="url(#cg)" />
           <circle cx={CX} cy={CY} r={43} fill="url(#pg)" stroke="rgba(251,191,36,0.55)" />
-
           <image href="/vertical-logo.svg" x={CX - 22} y={CY - 26} width={50} height={50} preserveAspectRatio="xMidYMid meet" />
-
           {MIDDLE_ITEMS.map(({ x, y, label }) => (
             <OrbitBubble key={label} x={x} y={y} label={label} tier="middle" />
           ))}
@@ -230,64 +175,95 @@ const ThreeRingOrbit = memo(function ThreeRingOrbit() {
 });
 
 /* ─────────────────────────────────────────────────────
-   LiveBatchCard — memoized
+   MentorCard — beautiful photo + pricing card
 ───────────────────────────────────────────────────── */
-const LiveBatchCard = memo(function LiveBatchCard() {
+const MentorCard = memo(function MentorCard({
+  name,
+  role,
+  photoSrc,
+  photoAlt,
+  features,
+  bookHref,
+  badge,
+}: {
+  name: string;
+  role: string;
+  photoSrc: string;
+  photoAlt: string;
+  features: string[];
+  bookHref: string;
+  badge?: string;
+}) {
   return (
-    <div className="w-full max-w-[340px] sm:max-w-[390px] lg:max-w-[410px] mx-auto lg:mx-0 lg:ml-auto">
+    <div className="w-full max-w-[340px] sm:max-w-[390px] lg:max-w-[420px] mx-auto lg:mx-0 lg:ml-auto">
       <div className="rounded-2xl bg-[#f8f7f4] shadow-2xl shadow-black/50 overflow-hidden">
         <div className="h-1 bg-gradient-to-r from-amber-500 to-amber-400" />
+
         <div className="p-4 sm:p-5 lg:p-6">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
-            </span>
-            <span className="text-green-600 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase">Now Enrolling</span>
-          </div>
-
-          <div className="flex items-start justify-between mb-3 sm:mb-0">
-            <div>
-              <h2 className="text-gray-900 text-[18px] sm:text-xl lg:text-2xl font-bold leading-tight">
-                MCA 2027<span className="block text-amber-600">Live Batch</span>
-              </h2>
-              <p className="text-gray-400 text-[10px] sm:text-[11px] mt-0.5 tracking-wide">NIMCET · MAH MCA CET · CUET PG · TANCET</p>
-            </div>
-            <div className="flex flex-col items-end sm:hidden shrink-0 ml-3">
-              <div className="flex items-baseline gap-0.5">
-                <span className="text-amber-600 text-[18px] font-bold">₹999</span>
-                <span className="text-gray-400 text-[10px]">/mo</span>
+          {/* Mentor identity row */}
+          <div className="flex items-center gap-3 sm:gap-4 mb-4">
+            {/* Photo container */}
+            <div className="relative shrink-0">
+              {/* Decorative ring */}
+              <div className="absolute -inset-0.75 rounded-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 z-0" />
+              <div className="absolute -inset-[6px] rounded-full bg-amber-500/20 z-[-1]" />
+              <div className="relative z-10 w-30 h-30 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2 border-white">
+                <Image
+                  src={photoSrc}
+                  alt={photoAlt}
+                  fill
+                  className="object-cover object-center"
+                />
               </div>
-              <span className="text-[9px] text-amber-700 border border-amber-200 bg-amber-50 px-1.5 py-0.5 rounded-full font-medium mt-1">Limited</span>
+              {/* Verified dot */}
+              <div className="absolute bottom-0 right-0 z-20 w-4 h-4 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center">
+                <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <h3 className="text-gray-900 font-bold text-[15px] sm:text-[17px] leading-tight">{name}</h3>
+              <p className="text-gray-500 text-[11px] sm:text-[12px] mt-0.5 leading-snug">{role}</p>
+              {badge && (
+                <span className="inline-block mt-1 text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+                  {badge}
+                </span>
+              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-y-2 gap-x-2 mt-3 mb-3 sm:mt-4 sm:mb-4">
-            {["3 Live Sessions/week","Recorded Backups","Doubt Solving","Mock Tests Included","Study Planner","PYQ Discussions"].map((f) => (
+          {/* Features */}
+          <div className="grid grid-cols-2 gap-y-2 gap-x-2 mb-4">
+            {features.map((f) => (
               <div key={f} className="flex items-start gap-1.5">
-                <span className="mt-[4px] w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
-                <span className="text-gray-600 text-[10px] sm:text-[11px] lg:text-[13px] leading-snug">{f}</span>
+                <span className="mt-[5px] w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                <span className="text-gray-600 text-[10px] sm:text-[11px] lg:text-[12px] leading-snug">{f}</span>
               </div>
             ))}
           </div>
 
           <div className="w-full h-px bg-gray-100 mb-3 sm:mb-4" />
 
-          <div className="hidden sm:flex items-center justify-between mb-4">
+          {/* Pricing */}
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-gray-400 text-xs line-through">₹1,999</span>
-              <span className="text-amber-600 text-2xl font-bold">₹999</span>
-              <span className="text-gray-400 text-xs">/month</span>
+              <span className="text-gray-400 text-xs line-through">₹599</span>
+              <span className="text-amber-600 text-2xl sm:text-3xl font-bold">249</span>
+              <span className="text-gray-400 text-xs">/ session</span>
             </div>
-            <span className="text-[11px] text-amber-700 border border-amber-200 bg-amber-50 px-2.5 py-1 rounded-full font-medium">Limited seats</span>
+            <span className="text-[11px] text-green-700 border border-green-200 bg-green-50 px-2.5 py-1 rounded-full font-bold">
+              50% OFF
+            </span>
           </div>
 
-          <Link href="/live-classes">
-            <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2.5 rounded-xl text-[13px] sm:text-sm lg:text-[15px] transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/30 cursor-pointer">
-              Enroll Now →
+          <Link href={bookHref}>
+            <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2.5 rounded-xl text-[13px] sm:text-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/30 cursor-pointer">
+              Book 1-on-1 Session →
             </button>
           </Link>
-          <p className="text-center text-gray-400 text-[10px] sm:text-[11px] mt-2">Starts May 2026 · Cancel Anytime</p>
+          <p className="text-center text-gray-400 text-[10px] sm:text-[11px] mt-2">45 min · Limited slots · Offer ends soon</p>
         </div>
       </div>
     </div>
@@ -295,50 +271,60 @@ const LiveBatchCard = memo(function LiveBatchCard() {
 });
 
 /* ─────────────────────────────────────────────────────
-   GuidanceCard — memoized
+   WebinarCTACard — teaser card linking to /webinar
 ───────────────────────────────────────────────────── */
-const GuidanceCard = memo(function GuidanceCard() {
-  const questions = [
-    { q: "Which MCA entrance exam suits me?", show: true },
-    { q: "Should I do MCA or MTech?", show: true },
-    { q: "Which college should I target?", show: false },
-    { q: "What's the right prep strategy?", show: false },
+const WebinarCTACard = memo(function WebinarCTACard() {
+  const topics = [
+    "What MCA really is",
+    "Who should & shouldn't do MCA",
+    "Top 5 student mistakes",
+    "Live Q&A with mentors",
   ];
-
   return (
-    <div className="w-full max-w-[340px] sm:max-w-[390px] lg:max-w-[460px] mx-auto lg:mx-0 lg:ml-auto">
+    <div className="w-full max-w-[340px] sm:max-w-[390px] lg:max-w-[420px] mx-auto lg:mx-0 lg:ml-auto">
       <div className="rounded-2xl bg-[#f8f7f4] shadow-2xl shadow-black/50 overflow-hidden">
         <div className="h-1 bg-gradient-to-r from-amber-500 to-amber-400" />
         <div className="p-4 sm:p-5 lg:p-6">
-          <span className="inline-block text-amber-600 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase mb-2 sm:mb-3">Free MCA Guidance</span>
-          <h2 className="text-gray-900 text-[17px] sm:text-lg lg:text-xl font-bold leading-tight mb-1.5 sm:mb-2">
-            Not sure where<span className="block text-amber-600">to start?</span>
-          </h2>
-          <p className="text-gray-500 text-[11px] sm:text-[13px] leading-relaxed mb-3 sm:mb-4">
-            Our mentors will help you figure out which exam, college, and career suits you — completely free.
-          </p>
-
-          <div className="space-y-1.5 mb-3 sm:mb-4">
-            {questions.map(({ q, show }) => (
-              <div key={q} className={`items-start gap-2 p-2 sm:p-2.5 rounded-lg bg-gray-50 border border-gray-100 ${show ? "flex" : "hidden sm:flex"}`}>
-                <span className="text-amber-500 text-[11px] shrink-0 mt-0.5"><BiSend /></span>
-                <span className="text-gray-600 text-[11px] sm:text-[12px] lg:text-[13px] leading-snug">{q}</span>
-              </div>
-            ))}
-            <p className="text-amber-500 text-[10px] font-medium sm:hidden">+ 2 more topics we can help with</p>
+          {/* Live badge */}
+          <div className="flex items-center gap-2 mb-3">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
+            </span>
+            <span className="text-red-600 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase">Upcoming — Free Webinar</span>
           </div>
 
-          <div className="w-full h-px bg-gray-100 mb-3 sm:mb-4" />
+          <h2 className="text-gray-900 text-[18px] sm:text-xl font-bold leading-tight mb-1">
+            MCA Masterclass
+            <span className="block text-amber-600 text-[15px] sm:text-[17px] font-semibold mt-0.5">Everything You Need to Know</span>
+          </h2>
 
-          <a href="https://wa.me/91XXXXXXXXXX?text=Hi%2C%20I%20need%20guidance%20for%20MCA%20entrance" target="_blank" rel="noopener noreferrer">
-            <button className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-2.5 rounded-xl text-[13px] sm:text-sm transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 cursor-pointer flex items-center justify-center gap-2">
-              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
-              Chat with a Mentor — Free
+          {/* Date + time */}
+          <div className="flex flex-wrap gap-2 mt-2.5 mb-3">
+            {[{ icon: "📅", t: "Sunday, 15 Feb" }, { icon: "⏰", t: "11:00 AM IST" }, { icon: "🖥️", t: "Google Meet" }].map((c) => (
+              <span key={c.t} className="flex items-center gap-1 text-[10px] sm:text-[11px] text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
+                {c.icon} {c.t}
+              </span>
+            ))}
+          </div>
+
+          <div className="space-y-1.5 mb-4">
+            {topics.map((t) => (
+              <div key={t} className="flex items-center gap-2">
+                <span className="text-amber-500 text-[11px]">✓</span>
+                <span className="text-gray-600 text-[11px] sm:text-[12px]">{t}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="w-full h-px bg-gray-100 mb-3" />
+
+          <Link href="/webinar">
+            <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2.5 rounded-xl text-[13px] sm:text-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/30 cursor-pointer">
+              Register Free — Seats Limited →
             </button>
-          </a>
-          <p className="text-center text-gray-400 text-[10px] sm:text-[11px] mt-2">Typically replies within 2 hours</p>
+          </Link>
+          <p className="text-center text-gray-400 text-[10px] sm:text-[11px] mt-2">No cost · 90 min · Ask doubts live</p>
         </div>
       </div>
     </div>
@@ -346,49 +332,85 @@ const GuidanceCard = memo(function GuidanceCard() {
 });
 
 /* ─────────────────────────────────────────────────────
-   Slide data (static, defined outside component)
+   Slide definitions
 ───────────────────────────────────────────────────── */
 const slides = [
-  {
-    id: "batch",
-    eyebrow: "live" as const,
-    title: "NIMCET 2027 — Live Batch Now Open",
-    titleAccent: "Live Batch",
-    description: "India's most focused MCA entrance prep. Live classes 3×/week, doubt solving, mock test access, and a personalised study plan. Limited seats.",
-    primaryBtn: { label: "Enroll Now — ₹999/month", href: "/live-classes" },
-    secondaryBtn: { label: "View Schedule", href: "/live-classes#schedule" },
-    right: "batch" as const,
-  },
+  // ── COMMENTED OUT: Live Batch slide ──
+  // {
+  //   id: "batch",
+  //   eyebrow: "live" as const,
+  //   title: "NIMCET 2027 — Live Batch Now Open",
+  //   titleAccent: "Live Batch",
+  //   description: "India's most focused MCA entrance prep...",
+  //   primaryBtn: { label: "Enroll Now — ₹999/month", href: "/live-classes" },
+  //   secondaryBtn: { label: "View Schedule", href: "/live-classes#schedule" },
+  //   right: "batch" as const,
+  // },
+
+  // ── Slide 1: Platform (keep as-is) ──
   {
     id: "platform",
     eyebrow: "platform" as const,
     title: "Your MCA Journey Starts Here — Entrance to Employment",
     titleAccent: "Starts Here",
-    description: "From cracking NIMCET and MAH MCA CET to landing your first ₹8–18 LPA tech role — Crackora guides you through every step. Mock tests, college predictor, career roadmap. All free.",
+    description:
+      "From cracking NIMCET and MAH MCA CET to landing your first ₹8–18 LPA tech role — Crackora guides you through every step. Mock tests, college predictor, career roadmap. All free.",
     primaryBtn: { label: "Explore Free Tools", href: "/tools/college" },
     secondaryBtn: { label: "Start Free Mock Test", href: "https://learn.crackora.com/learn/Free-MAH-MCA-CET-2026-Mock-Test" },
     right: "orbit" as const,
   },
-  {
-    id: "guidance",
-    eyebrow: "guidance" as const,
-    title: "Confused About MCA? We'll Guide You — Free",
-    titleAccent: "MCA?",
-    description: "Not sure which exam to give, which college to target, or whether MCA is right for you? Talk to our mentors — no sales pitch, just honest guidance.",
-    primaryBtn: { label: "Chat with a Mentor", href: "https://wa.me/91XXXXXXXXXX?text=Hi%2C%20I%20need%20MCA%20guidance" },
-    secondaryBtn: { label: "Read MCA Career Guide", href: "/guidance" },
-    right: "guidance" as const,
-  },
-];
 
-const eyebrowMap = {
-  live: { cls: "border-amber-400/60 bg-amber-950/60 text-amber-300", label: "2027 Batch — Enrolling Now" },
+  // ── Slide 2: College Selection 1-on-1 (Azad Sir) ──
+  {
+    id: "college-selection",
+    eyebrow: "session" as const,
+    title: "Pick the Right College — Before It's Too Late",
+    titleAccent: "Right College",
+    description:
+      "One wrong college choice can cost you 2 years and ₹4–10 lakhs. In a 45-minute session with Azad Sir, get a ranked shortlist built around your score, budget, and career goal — so you apply with confidence, not guesswork.",
+    primaryBtn: { label: "Book for 249 — 58% Off →", href: "https://learn.crackora.com/learn/fast-checkout/264886?priceId=260251&cpst=1775810584196" },
+    secondaryBtn: { label: "See What's Covered", href: "https://learn.crackora.com/learn/MCA-Counselling-Program--1-1-College-Guidance" },
+    right: "college-mentor" as const,
+  },
+
+  // ── Slide 3: MCA Guidance 1-on-1 (Mitesh Gandhi) ──
+  {
+    id: "mca-guidance",
+    eyebrow: "session" as const,
+    title: "Not Sure About MCA? Get Honest Guidance",
+    titleAccent: "Honest Guidance",
+    description:
+      "Should you do MCA or MTech? Which specialisation fits your goals? Which exam to target? Mitesh Gandhi will cut through the noise and give you a clear, personalised roadmap — no sales pitch, just clarity.",
+    primaryBtn: { label: "Book for 249 — 58% Off →", href: "https://learn.crackora.com/learn/fast-checkout/264897?priceId=260255&cpst=1775810143484" },
+    secondaryBtn: { label: "See What's Covered", href: "https://learn.crackora.com/learn/MCA-Success-Blueprint--1-to-1-Career-Mentorship-Program" },
+    right: "guidance-mentor" as const,
+  },
+
+  // // ── Slide 4: Free Webinar CTA ──
+  // {
+  //   id: "webinar",
+  //   eyebrow: "webinar" as const,
+  //   title: "Free Live Webinar — MCA Masterclass",
+  //   titleAccent: "MCA Masterclass",
+  //   description:
+  //     "90 minutes. Everything about MCA — what it is, who should do it, biggest student mistakes, which entrance exam suits you, and live Q&A. Free, no recording sold. Register before seats fill up.",
+  //   primaryBtn: { label: "Register Free — Limited Seats →", href: "/webinar" },
+  //   secondaryBtn: { label: "See What We'll Cover", href: "/webinar#topics" },
+  //   right: "webinar-cta" as const,
+  // },
+] as const;
+
+type EyebrowKey = (typeof slides)[number]["eyebrow"];
+type RightKey = (typeof slides)[number]["right"];
+
+const eyebrowMap: Record<EyebrowKey, { cls: string; label: string; dot?: string }> = {
   platform: { cls: "border-amber-400/60 bg-amber-950/60 text-amber-300", label: "India's #1 MCA End-to-End Platform" },
-  guidance: { cls: "border-amber-400/60 bg-amber-950/60 text-amber-300", label: "Free MCA Guidance" },
+  session: { cls: "border-cyan-400/60 bg-cyan-950/60 text-cyan-300", label: "1-on-1 Session · Limited Slots" },
+  // webinar: { cls: "border-red-400/60 bg-red-950/60 text-red-300", label: "Upcoming Free Webinar", dot: "red" },
 };
 
 /* ─────────────────────────────────────────────────────
-   SlideTitle — pure, no state
+   SlideTitle
 ───────────────────────────────────────────────────── */
 const SlideTitle = memo(function SlideTitle({ title, accent }: { title: string; accent: string }) {
   const parts = title.split(accent);
@@ -402,22 +424,72 @@ const SlideTitle = memo(function SlideTitle({ title, accent }: { title: string; 
 });
 
 /* ─────────────────────────────────────────────────────
-   Slide state reducer — batches visible + exiting
-   into one dispatch, eliminating double re-renders
+   RightPanel
+───────────────────────────────────────────────────── */
+const RightPanel = memo(function RightPanel({ type }: { type: RightKey }) {
+  if (type === "orbit") {
+    return (
+      <div className="w-full flex justify-center mt-4 sm:mt-6 lg:mt-0">
+        <ThreeRingOrbit />
+      </div>
+    );
+  }
+  if (type === "college-mentor") {
+    return (
+      <MentorCard
+        name="Azad Sir"
+        role="MCA College Selection Expert · 6+ yrs mentoring"
+        photoSrc="/Azad.jpeg"
+        photoAlt="Azad Sir"
+        badge="Top Rated Mentor"
+        features={[
+          "Personalised college shortlist",
+          "Score vs cutoff analysis",
+          "Budget & ROI guidance",
+          "NIT / IIIT vs private colleges",
+          "Placement record deep-dive",
+          "Application strategy",
+        ]}
+        bookHref="/book/college-selection"
+      />
+    );
+  }
+  if (type === "guidance-mentor") {
+    return (
+      <MentorCard
+        name="Mitesh Gandhi"
+        role="MCA Career Counsellor · BCA → MCA pathway expert"
+        photoSrc="/Mitesh.jpeg"
+        photoAlt="Mitesh Gandhi"
+        badge="Career Clarity Expert"
+        features={[
+          "MCA vs MTech comparison",
+          "Right specialisation for you",
+          "Exam selection strategy",
+          "Study roadmap (0 to D-day)",
+          "College tier planning",
+          "Post-MCA career paths",
+        ]}
+        bookHref="/book/mca-guidance"
+      />
+    );
+  }
+  if (type === "webinar-cta") {
+    return <WebinarCTACard />;
+  }
+  return null;
+});
+
+/* ─────────────────────────────────────────────────────
+   Slide state reducer
 ───────────────────────────────────────────────────── */
 type SlideState = { visible: number; exiting: number | null; dir: "left" | "right" };
-type SlideAction =
-  | { type: "GO"; next: number }
-  | { type: "CLEAR_EXIT" };
+type SlideAction = { type: "GO"; next: number } | { type: "CLEAR_EXIT" };
 
 function slideReducer(state: SlideState, action: SlideAction): SlideState {
   switch (action.type) {
     case "GO":
-      return {
-        visible: action.next,
-        exiting: state.visible,
-        dir: action.next > state.visible ? "left" : "right",
-      };
+      return { visible: action.next, exiting: state.visible, dir: action.next > state.visible ? "left" : "right" };
     case "CLEAR_EXIT":
       return { ...state, exiting: null };
     default:
@@ -426,38 +498,20 @@ function slideReducer(state: SlideState, action: SlideAction): SlideState {
 }
 
 /* ─────────────────────────────────────────────────────
-   RightPanel — stable reference, prevents re-render
-   of the panel that is NOT transitioning
-───────────────────────────────────────────────────── */
-const RightPanel = memo(function RightPanel({ type }: { type: "batch" | "orbit" | "guidance" }) {
-  if (type === "batch") return <LiveBatchCard />;
-  if (type === "guidance") return <GuidanceCard />;
-  return (
-    <div className="w-full flex justify-center mt-4 sm:mt-6 lg:mt-0">
-      <ThreeRingOrbit />
-    </div>
-  );
-});
-
-/* ─────────────────────────────────────────────────────
-   useInterval — stable timer that doesn't recreate
-   on every render
+   useInterval
 ───────────────────────────────────────────────────── */
 function useInterval(callback: () => void, delay: number) {
   const savedCallback = useRef(callback);
   useEffect(() => { savedCallback.current = callback; }, [callback]);
   const idRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
   const reset = useCallback(() => {
     if (idRef.current) clearInterval(idRef.current);
     idRef.current = setInterval(() => savedCallback.current(), delay);
   }, [delay]);
-
   useEffect(() => {
     reset();
     return () => { if (idRef.current) clearInterval(idRef.current); };
   }, [reset]);
-
   return reset;
 }
 
@@ -465,14 +519,9 @@ function useInterval(callback: () => void, delay: number) {
    HeroBanner
 ───────────────────────────────────────────────────── */
 export function HeroBanner() {
-  const [state, dispatch] = useReducer(slideReducer, {
-    visible: 0,
-    exiting: null,
-    dir: "left",
-  });
+  const [state, dispatch] = useReducer(slideReducer, { visible: 0, exiting: null, dir: "left" });
   const { visible, exiting, dir } = state;
 
-  // Debounced isMobile — only triggers resize handler via rAF
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -494,16 +543,15 @@ export function HeroBanner() {
     }
     if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
     dispatch({ type: "GO", next });
-    exitTimeoutRef.current = setTimeout(() => dispatch({ type: "CLEAR_EXIT" }), 1000);
+    exitTimeoutRef.current = setTimeout(() => dispatch({ type: "CLEAR_EXIT" }), 1500);
   }, [visible, isMobile]);
 
-  // Stable auto-advance callback — no closure over stale `visible`
   const advance = useCallback(() => {
     const next = (visible + 1) % slides.length;
     goTo(next);
   }, [visible, goTo]);
 
-  const resetTimer = useInterval(advance, 5000);
+  const resetTimer = useInterval(advance, 6000);
 
   const handleDot = useCallback((i: number) => {
     goTo(i);
@@ -516,7 +564,6 @@ export function HeroBanner() {
 
   return (
     <div className="relative w-full overflow-hidden mt-16 bg-[#020817]">
-      {/* ── Background layers — no JS, pure CSS ── */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute inset-0 bg-[#020617]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
@@ -524,10 +571,8 @@ export function HeroBanner() {
         <div className="absolute inset-0 bg-black/30" />
       </div>
 
-      {/* ── Stars on canvas — zero DOM nodes ── */}
       <StarField />
 
-      {/* ── Slide viewport ── */}
       <div className="relative z-10 lg:min-h-150 max-w-6xl mx-auto lg:px-10 px-5">
         {slides.map((slide, i) => {
           const isVisible = i === visible;
@@ -542,20 +587,19 @@ export function HeroBanner() {
               key={slide.id}
               className={[
                 "lg:absolute lg:inset-0",
-                // GPU-composited: only transform + opacity, no layout
                 "transition-[transform,opacity] duration-[420ms] ease-in-out",
                 "will-change-[transform,opacity]",
                 isExiting ? exitCls : "translate-x-0 opacity-100",
               ].join(" ")}
             >
               <div className="w-full h-full flex flex-col lg:flex-row items-center px-5 sm:px-0 pt-9 sm:pt-12 lg:pt-14 pb-7 sm:pb-10 lg:pb-16 gap-6 sm:gap-8 lg:gap-8">
-                {/* LEFT — text */}
+                {/* LEFT */}
                 <div className="w-full lg:w-[50%] flex flex-col items-center lg:items-start">
                   <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase mb-3 sm:mb-4 backdrop-blur-sm ${eb.cls}`}>
-                    {slide.eyebrow === "live" && (
+                    {eb.dot === "red" && (
                       <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                        <span className="relative inline-flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-green-400" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                        <span className="relative inline-flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-red-400" />
                       </span>
                     )}
                     {eb.label}

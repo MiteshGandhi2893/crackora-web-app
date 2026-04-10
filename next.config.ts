@@ -17,6 +17,11 @@ const nextConfig: NextConfig = withBundleAnalyzer({
         hostname: "api.crackora.com",
         pathname: "/**",
       },
+       {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "images.unsplash.com",

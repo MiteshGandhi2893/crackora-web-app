@@ -1,12 +1,9 @@
 import { Menu } from "@/interfaces/menu.interface";
-import {
-  BiSolidNews,
-  BiSolidSpreadsheet,
-  BiUser,
-} from "react-icons/bi";
+import { BiSolidSpreadsheet, BiUser } from "react-icons/bi";
 import { TbToolsOff } from "react-icons/tb";
 import { RiMindMap } from "react-icons/ri";
 import { BsChatLeftText } from "react-icons/bs";
+import { MdOutlineOndemandVideo } from "react-icons/md"; // 👈 new icon
 
 export const baseMenu: Menu[] = [
   {
@@ -27,6 +24,12 @@ export const baseMenu: Menu[] = [
     href: "/tools/college",
     icon: TbToolsOff,
   },
+  // {
+  //   id: "webinars",             // 👈 NEW
+  //   label: "Webinars",
+  //   href: "/webinar",
+  //   icon: MdOutlineOndemandVideo,
+  // },
   {
     id: "blogs",
     label: "Blogs",
@@ -35,10 +38,6 @@ export const baseMenu: Menu[] = [
   },
 ];
 
-// 👇 Optional grouped menu (clean UX)
-
-
-// 👇 Dashboard config
 export const dashboardMenu: Menu = {
   id: "dashboard",
   label: "Dashboard",
