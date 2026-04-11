@@ -255,51 +255,46 @@ function CollegeCard({
 }: CollegeCardProps) {
   const cutoff = (c.cutoffs?.[cat] as any)?.[year] ?? null;
 
+  // alternating card bg: even = cyan-tinted, odd = purple-tinted
+
   return (
     <div
       onClick={() => onToggleCompare(globalIndex)}
-      className={`group relative rounded-2xl border p-4 transition-all duration-200 cursor-pointer
-      ${
+      className={`rounded-2xl border p-3.5 transition-all hover:scale-105 shadow cursor-pointer ${
         isSelected
-          ? "border-blue-500 ring-2 ring-blue-500/30 bg-white shadow-md"
-          : "border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg hover:-translate-y-0.5"
+          ? "border-blue-400 ring-1 ring-blue-400/40 shadow-sm bg-white"
+          : ` hover:border-gray-300`
       }`}
     >
-      {/* ───────── HEADER ───────── */}
-      <div className="flex items-start justify-between gap-3">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex-1 min-w-0">
-          {/* badges */}
           <div className="flex items-center gap-1.5 flex-wrap mb-1">
             <TierBadge tier={c.tier} />
             <TypeBadge type={c.college_type} />
             {c.naac_grade && <NaacBadge grade={c.naac_grade} />}
           </div>
-
-          {/* name */}
-          <h3 className="text-[14px] font-semibold text-gray-900 leading-snug line-clamp-2">
+          <p className="text-[13px] font-semibold text-gray-900 leading-tight">
             {c.name}
-          </h3>
-
-          {/* location */}
-          <p className="text-[11px] text-gray-500 mt-0.5">
-            {c.city ? `${c.city}, ` : ""}
-            {c.state}
+          </p>
+          <p className="text-[11px] text-gray-600 mt-0.5">
+            {c.city ? `${c.city} ` : ""}
           </p>
         </div>
 
-        {/* compare checkbox */}
+        {/* Compare checkbox */}
         {canSelect ? (
           <button
             onClick={(e) => {
-              e.stopPropagation();
+              e.stopPropagation(); // 👈 prevents card click
               onToggleCompare(globalIndex);
             }}
-            className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all
-            ${
+            className={`shrink-0 mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
               isSelected
                 ? "bg-blue-600 border-blue-600"
-                : "border-gray-300 group-hover:border-blue-400"
+                : "border-gray-300 hover:border-blue-400"
             }`}
+            title={isSelected ? "Remove from compare" : "Add to compare"}
           >
             {isSelected && (
               <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
@@ -314,60 +309,56 @@ function CollegeCard({
             )}
           </button>
         ) : (
-          <div className="w-5 h-5 rounded-md border-2 border-gray-200 opacity-30" />
+          <div className="shrink-0 mt-0.5 w-5 h-5 rounded border-2 border-gray-200 opacity-30" />
         )}
       </div>
 
-      {/* ───────── STATS STRIP ───────── */}
-      <div className="grid grid-cols-4 mt-4 rounded-xl overflow-hidden border border-gray-100">
+      {/* Stats strip */}
+      <div className="grid grid-cols-4 gap-px bg-gray-100 rounded-xl overflow-hidden mt-3">
         {[
-          { label: "Fees", value: fmtFees(c.fees) },
-          { label: "Avg", value: c.avg_lpa ? `${c.avg_lpa}L` : "—" },
+          { label: "Total Fees", value: fmtFees(c.fees) },
+          { label: "Avg Package", value: c.avg_lpa ? `${c.avg_lpa}L` : "—" },
           {
-            label: "Placed",
+            label: "Placement",
             value: c.placement_perc ? `${c.placement_perc}%` : "—",
           },
           {
-            label: "Cutoff",
+            label: `${year} cutoff`,
             value: cutoff != null ? Number(cutoff).toFixed(1) : "—",
           },
-        ].map(({ label, value }, i) => (
+        ].map(({ label, value }) => (
           <div
             key={label}
-            className={`flex flex-col items-center py-2.5 text-center
-            ${i !== 3 ? "border-r border-gray-100" : ""} bg-white`}
+            className="bg-cyan-900 py-2 flex flex-col items-center"
           >
-            <span className="text-[13px] font-semibold text-gray-900">
+            <span className="text-[12px] font-semibold text-gray-200">
               {value}
             </span>
-            <span className="text-[9px] text-gray-400 mt-0.5 uppercase tracking-wide">
+            <span className="text-[9px] text-amber-500 mt-0.5 text-center leading-tight">
               {label}
             </span>
           </div>
         ))}
       </div>
 
-      {/* ───────── FOOTER ───────── */}
-      <div className="flex items-center justify-between mt-3.5 flex-wrap gap-2">
-        {/* left tags */}
-        <div className="flex items-center gap-1.5 flex-wrap">
+      {/* Bottom tags */}
+      {(c.admission_process || c.seats) && (
+        <div className="flex items-center gap-2 mt-2.5 flex-wrap">
           {c.admission_process && (
-            <span className="text-[10px] text-gray-600 bg-gray-100 px-2 py-0.5 rounded-md">
+            <span className="text-[10px] text-gray-500 bg-white/70 border border-gray-100 px-2 py-0.5 rounded-lg">
               via {c.admission_process}
             </span>
           )}
           {c.seats && (
-            <span className="text-[10px] font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md">
+            <span className="text-[12px] text-amber-700 bg-amber-100/70 border border-gray-100 px-2 py-0.5 rounded-lg">
               {c.seats} seats
             </span>
           )}
         </div>
-
-        {/* right subtle CTA */}
-        <span className="text-[10px] text-blue-600 font-medium opacity-0 group-hover:opacity-100 transition">
-          Compare →
-        </span>
-      </div>
+      )}
+      <p className="text-[12px] text-amber-700/80 mt-5 leading-tight mb-0">
+        {c.college_type}
+      </p>
     </div>
   );
 }
@@ -491,21 +482,27 @@ function ComparePanel({ ca, cb, cat, year, onClose }: ComparePanelProps) {
     <div className="rounded-2xl border border-gray-200 overflow-hidden bg-white shadow-sm">
       {/* Sticky header */}
       <div className="grid grid-cols-[130px_1fr_1fr] border-b-2 border-gray-100 bg-gray-50 sticky top-0 z-10">
-        <div className={`px-3 py-3 text-xs flex items-center justify-center  border-r border-gray-300 text-cyan-900/70`}> Comparision Parameters</div>
+        <div
+          className={`px-3 py-3 text-xs flex items-center justify-center  border-r border-gray-300 text-cyan-900/80`}
+        >
+          {" "}
+          Comparision Parameters
+        </div>
         {[ca, cb].map((col, idx) => (
           <div
             key={idx}
             className={`px-3 py-3 ${idx === 0 ? "border-r border-gray-100" : ""}`}
           >
             <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
+              <TierBadge tier={col.tier} />
               <NaacBadge grade={col.naac_grade} />
             </div>
             <p className="text-[13px] font-semibold text-gray-800 leading-tight mt-0.5">
               {col.name}
             </p>
             <p className="text-[10px] text-gray-400 mt-0.5">
-              {col.city ? `${col.city} ` : ""}
-             
+              {col.city ? `${col.city}, ` : ""}
+              {col.state}
             </p>
           </div>
         ))}
