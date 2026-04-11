@@ -1,47 +1,49 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState, useEffect, useMemo } from "react";
+
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
   mcaToolsService,
-  type ExamMeta,
   type AnalyserCollege,
   type Category,
-  type CutoffMap,
 } from "@/services/mca-tools.service";
 import { TierBadge } from "./tools-util";
+import { useAuth } from "@/providers/AuthProvider";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Constants ─────────────────────────────────────────────────────────────────
 
-interface CollegeOption {
-  name: string;
-  city: string | null;
-  state: string;
-  tier: string;
-  fees: string | null;
-  seats: number | null;
-  cutoffs: CutoffMap;
+const FREE_LIMIT = 10;
+const CATEGORIES: Category[] = ["General", "OBC", "SC", "ST"];
+const EXAM_KEY = "mah" as const;
+
+const SORT_OPTIONS = [
+  { value: "default", label: "Default" },
+  { value: "fees_asc", label: "Fees Low - High" },
+  { value: "fees_desc", label: "Fees High - Low" },
+  { value: "avg_desc", label: "Avg pkg High - Low" },
+  { value: "cutoff_asc", label: "Cutoff Low - High" },
+  { value: "seats_desc", label: "Seats High - Low" },
+] as const;
+type SortKey = (typeof SORT_OPTIONS)[number]["value"];
+
+// ─── Types ──────────────────────────────────────────────────────────────────────
+
+interface CollegeRow extends AnalyserCollege {
   avg_lpa?: number | null;
   highest_lpa?: number | null;
   placement_perc?: number | null;
   top_companies?: string | null;
-  admission_process?: string | null;
   naac_grade?: string | null;
   college_type?: string | null;
+  admission_process?: string | null;
   duration_years?: number | null;
-  syllabus_overview?: string | null;
 }
 
 type CompareResult = "win" | "lose" | "tie";
+type FilterKey = "all" | "govt" | "private" | "tier_a" | "tier_b" | "naac_a";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const COMPARE_YEARS: number[] = [2025];
-const CATEGORIES: Category[]  = ["General", "OBC", "SC", "ST", "EWS"];
-const EXAM_KEY                 = "mah" as const;
-const IS_RANK                  = false; // MAH is percentile-based
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ────────────────────────────────────────────────────────────────────
 
 function parseFees(fees: string | null): number | null {
   if (!fees) return null;
@@ -53,63 +55,116 @@ function fmtFees(fees: string | null): string {
   if (!fees) return "—";
   const n = parseFees(fees);
   if (!n) return fees;
-  if (n >= 100000) return `₹${(n / 100000).toFixed(2)}L`;
-  if (n >= 1000)   return `₹${(n / 1000).toFixed(0)}K`;
+  if (n >= 100000) return `₹${(n / 100000).toFixed(1)}L`;
+  if (n >= 1000) return `₹${(n / 1000).toFixed(0)}K`;
   return `₹${n}`;
 }
 
 function cmp(
-  aVal: number | null | undefined,
-  bVal: number | null | undefined,
-  lowerBetter = false
+  a: number | null | undefined,
+  b: number | null | undefined,
+  lowerBetter = false,
 ): [CompareResult, CompareResult] {
-  if (aVal == null || bVal == null || aVal === bVal) return ["tie", "tie"];
-  const aWins = lowerBetter ? aVal < bVal : aVal > bVal;
+  if (a == null || b == null || a === b) return ["tie", "tie"];
+  const aWins = lowerBetter ? a < b : a > b;
   return aWins ? ["win", "lose"] : ["lose", "win"];
 }
 
-function diff(a: number | null | undefined, b: number | null | undefined): number | null {
+function diff(
+  a: number | null | undefined,
+  b: number | null | undefined,
+): number | null {
   if (a == null || b == null) return null;
   return Math.abs(a - b);
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+function matchesFilter(c: CollegeRow, filter: FilterKey): boolean {
+  if (filter === "all") return true;
+  if (filter === "govt")
+    return c.college_type?.toLowerCase().includes("gov") ?? false;
+  if (filter === "private")
+    return !(c.college_type?.toLowerCase().includes("gov") ?? false);
+  if (filter === "tier_a") return c.tier?.toUpperCase() === "A";
+  if (filter === "tier_b") return c.tier?.toUpperCase() === "B";
+  if (filter === "naac_a") return ["A+", "A++"].includes(c.naac_grade ?? "");
+  return true;
+}
+
+function applySorting(
+  list: CollegeRow[],
+  sort: SortKey,
+  cat: Category,
+  year: number,
+): CollegeRow[] {
+  const arr = [...list];
+  if (sort === "fees_asc")
+    arr.sort(
+      (a, b) =>
+        (parseFees(a.fees) ?? Infinity) - (parseFees(b.fees) ?? Infinity),
+    );
+  else if (sort === "fees_desc")
+    arr.sort((a, b) => (parseFees(b.fees) ?? 0) - (parseFees(a.fees) ?? 0));
+  else if (sort === "avg_desc")
+    arr.sort((a, b) => (b.avg_lpa ?? 0) - (a.avg_lpa ?? 0));
+  else if (sort === "cutoff_asc")
+    arr.sort((a, b) => {
+      const ac = (a.cutoffs?.[cat] as any)?.[year] ?? Infinity;
+      const bc = (b.cutoffs?.[cat] as any)?.[year] ?? Infinity;
+      return ac - bc;
+    });
+  else if (sort === "seats_desc")
+    arr.sort((a, b) => (b.seats ?? 0) - (a.seats ?? 0));
+  return arr;
+}
+
+// ─── Sub-components ─────────────────────────────────────────────────────────────
+
+function NaacBadge({ grade }: { grade: string | null | undefined }) {
+  if (!grade) return null;
+  const map: Record<string, string> = {
+    "A++": "bg-purple-100 text-purple-700",
+    "A+": "bg-indigo-100 text-indigo-700",
+    A: "bg-blue-100 text-blue-700",
+    "B++": "bg-cyan-100 text-cyan-700",
+    "B+": "bg-teal-100 text-teal-700",
+    B: "bg-gray-100 text-gray-500",
+  };
+  return (
+    <span
+      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${map[grade] ?? "bg-gray-100 text-gray-500"}`}
+    >
+      NAAC {grade}
+    </span>
+  );
+}
+
+function TypeBadge({ type }: { type: string | null | undefined }) {
+  if (!type) return null;
+  const isGovt = type.toLowerCase().includes("gov");
+  return (
+    <span
+      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+        isGovt ? "bg-emerald-100 text-emerald-700" : "bg-pink-100 text-pink-700"
+      }`}
+    >
+      {isGovt ? "Govt" : "Private"}
+    </span>
+  );
+}
 
 function ResultDot({ result }: { result: CompareResult }) {
   if (result === "win")
-    return <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1.5 shrink-0" />;
+    return (
+      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1" />
+    );
   if (result === "lose")
-    return <span className="inline-block w-1.5 h-1.5 rounded-full bg-rose-400 ml-1.5 shrink-0" />;
+    return (
+      <span className="inline-block w-1.5 h-1.5 rounded-full bg-rose-400 ml-1" />
+    );
   return null;
 }
 
-function WinTag({ text }: { text: string }) {
-  return (
-    <span className="block text-[10px] font-semibold text-emerald-600 mt-0.5 leading-tight">
-      {text}
-    </span>
-  );
-}
-
-function LoseTag({ text }: { text: string }) {
-  return (
-    <span className="block text-[10px] text-rose-400 mt-0.5 leading-tight">
-      {text}
-    </span>
-  );
-}
-
-function SectionHead({ label }: { label: string }) {
-  return (
-    <div className="grid grid-cols-[160px_1fr_1fr] bg-cyan-900 border-b border-gray-100">
-      <div className="col-span-3 px-4 py-2 text-[10px] font-semibold text-white uppercase tracking-widest">
-        {label}
-      </div>
-    </div>
-  );
-}
-
-interface RowProps {
+interface CompareRowProps {
   label: string;
   aContent: React.ReactNode;
   bContent: React.ReactNode;
@@ -121,26 +176,44 @@ interface RowProps {
 }
 
 function CompareRow({
-  label, aContent, bContent,
-  aResult = "tie", bResult = "tie",
-  aTag, bTag, noBorder,
-}: RowProps) {
-  const aClass = aResult === "win" ? "bg-emerald-50/60" : aResult === "lose" ? "bg-rose-50/40" : "";
-  const bClass = bResult === "win" ? "bg-emerald-50/60" : bResult === "lose" ? "bg-rose-50/40" : "";
-
+  label,
+  aContent,
+  bContent,
+  aResult = "tie",
+  bResult = "tie",
+  aTag,
+  bTag,
+  noBorder,
+}: CompareRowProps) {
+  const aClass =
+    aResult === "win"
+      ? "bg-emerald-50/60"
+      : aResult === "lose"
+        ? "bg-rose-50/40"
+        : "";
+  const bClass =
+    bResult === "win"
+      ? "bg-emerald-50/60"
+      : bResult === "lose"
+        ? "bg-rose-50/40"
+        : "";
   return (
-    <div className={`grid grid-cols-[160px_1fr_1fr] ${noBorder ? "" : "border-b border-gray-200"}`}>
-      <div className="px-4 py-3 text-[12px] text-cyan-900 flex items-center pt-3 border-r border-gray-200 ">
+    <div
+      className={`grid grid-cols-[130px_1fr_1fr] ${noBorder ? "" : "border-b border-gray-100"}`}
+    >
+      <div className="px-3 py-2.5 text-[11px] text-cyan-900 flex items-center border-r border-gray-100">
         {label}
       </div>
-      <div className={`px-4 py-3 text-[13px] text-gray-800 border-r border-gray-100 ${aClass}`}>
+      <div
+        className={`px-3 py-2.5 text-[12px] text-gray-800 border-r border-gray-100 ${aClass}`}
+      >
         <div className="flex items-start gap-1">
           <div className="flex-1 min-w-0">{aContent}</div>
           <ResultDot result={aResult} />
         </div>
         {aTag}
       </div>
-      <div className={`px-4 py-3 text-[13px] text-gray-800 ${bClass}`}>
+      <div className={`px-3 py-2.5 text-[12px] text-gray-800 ${bClass}`}>
         <div className="flex items-start gap-1">
           <div className="flex-1 min-w-0">{bContent}</div>
           <ResultDot result={bResult} />
@@ -151,520 +224,843 @@ function CompareRow({
   );
 }
 
-function NaacBadge({ grade }: { grade: string | null | undefined }) {
-  if (!grade) return <span className="text-gray-400">—</span>;
-  const colors: Record<string, string> = {
-    "A++": "bg-purple-100 text-purple-700",
-    "A+":  "bg-indigo-100 text-indigo-700",
-    "A":   "bg-blue-100 text-blue-700",
-    "B++": "bg-cyan-100 text-cyan-700",
-    "B+":  "bg-teal-100 text-teal-700",
-    "B":   "bg-gray-100 text-gray-600",
-  };
+function SectionHead({ label }: { label: string }) {
   return (
-    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${colors[grade] ?? "bg-gray-100 text-gray-600"}`}>
-      NAAC {grade}
-    </span>
+    <div className="px-3 py-1.5 text-[9px] font-semibold text-white uppercase tracking-widest bg-cyan-900">
+      {label}
+    </div>
   );
 }
 
-function TypeBadge({ type }: { type: string | null | undefined }) {
-  if (!type) return <span className="text-gray-400">—</span>;
-  const isGovt = type.toLowerCase().includes("gov");
+// ─── College Card ────────────────────────────────────────────────────────────────
+
+interface CollegeCardProps {
+  college: CollegeRow;
+  globalIndex: number;
+  isSelected: boolean;
+  canSelect: boolean;
+  cat: Category;
+  year: number;
+  onToggleCompare: (idx: number) => void;
+}
+
+function CollegeCard({
+  college: c,
+  globalIndex,
+  isSelected,
+  canSelect,
+  cat,
+  year,
+  onToggleCompare,
+}: CollegeCardProps) {
+  const cutoff = (c.cutoffs?.[cat] as any)?.[year] ?? null;
+
+  // alternating card bg: even = cyan-tinted, odd = purple-tinted
+
   return (
-    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${isGovt ? "bg-emerald-100 text-emerald-700" : "bg-pink-100 text-pink-700"}`}>
-      {type}
-    </span>
+    <div
+      onClick={() => onToggleCompare(globalIndex)}
+      className={`rounded-2xl border p-3.5 transition-all hover:scale-105 shadow cursor-pointer ${
+        isSelected
+          ? "border-blue-400 ring-1 ring-blue-400/40 shadow-sm bg-white"
+          : ` hover:border-gray-300`
+      }`}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap mb-1">
+            <TierBadge tier={c.tier} />
+            <TypeBadge type={c.college_type} />
+            {c.naac_grade && <NaacBadge grade={c.naac_grade} />}
+          </div>
+          <p className="text-[13px] font-semibold text-gray-900 leading-tight">
+            {c.name}
+          </p>
+          <p className="text-[11px] text-gray-600 mt-0.5">
+            {c.city ? `${c.city} ` : ""}
+          </p>
+        </div>
+
+        {/* Compare checkbox */}
+        {canSelect ? (
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // 👈 prevents card click
+              onToggleCompare(globalIndex);
+            }}
+            className={`shrink-0 mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+              isSelected
+                ? "bg-blue-600 border-blue-600"
+                : "border-gray-300 hover:border-blue-400"
+            }`}
+            title={isSelected ? "Remove from compare" : "Add to compare"}
+          >
+            {isSelected && (
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                <path
+                  d="M1 4l3 3 5-6"
+                  stroke="#fff"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </button>
+        ) : (
+          <div className="shrink-0 mt-0.5 w-5 h-5 rounded border-2 border-gray-200 opacity-30" />
+        )}
+      </div>
+
+      {/* Stats strip */}
+      <div className="grid grid-cols-4 gap-px bg-gray-100 rounded-xl overflow-hidden mt-3">
+        {[
+          { label: "Total Fees", value: fmtFees(c.fees) },
+          { label: "Avg Package", value: c.avg_lpa ? `${c.avg_lpa}L` : "—" },
+          {
+            label: "Placement",
+            value: c.placement_perc ? `${c.placement_perc}%` : "—",
+          },
+          {
+            label: `${year} cutoff`,
+            value: cutoff != null ? Number(cutoff).toFixed(1) : "—",
+          },
+        ].map(({ label, value }) => (
+          <div
+            key={label}
+            className="bg-cyan-900 py-2 flex flex-col items-center"
+          >
+            <span className="text-[12px] font-semibold text-gray-200">
+              {value}
+            </span>
+            <span className="text-[9px] text-amber-500 mt-0.5 text-center leading-tight">
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom tags */}
+      {(c.admission_process || c.seats) && (
+        <div className="flex items-center gap-2 mt-2.5 flex-wrap">
+          {c.admission_process && (
+            <span className="text-[10px] text-gray-500 bg-white/70 border border-gray-100 px-2 py-0.5 rounded-lg">
+              via {c.admission_process}
+            </span>
+          )}
+          {c.seats && (
+            <span className="text-[12px] text-amber-700 bg-amber-100/70 border border-gray-100 px-2 py-0.5 rounded-lg">
+              {c.seats} seats
+            </span>
+          )}
+        </div>
+      )}
+      <p className="text-[12px] text-amber-700/80 mt-5 leading-tight mb-0">
+        {c.college_type}
+      </p>
+    </div>
   );
 }
 
-// ─── Tradeoff engine ──────────────────────────────────────────────────────────
+// ─── Gate Overlay ────────────────────────────────────────────────────────────────
+// Sits after the FREE_LIMIT cards with a gradient fade + unlock card.
+// No per-card blurring.
 
-interface Tradeoff {
-  color: "green" | "amber" | "blue" | "rose";
-  html: string;
+interface GateOverlayProps {
+  lockedCount: number;
+  totalCount: number;
+  onUnlock: () => void;
+  justUnlocked: boolean;
 }
 
-function buildTradeoffs(
-  ca: CollegeOption,
-  cb: CollegeOption,
-  selectedYear: number,
-  selectedCat: Category
-): Tradeoff[] {
-  const items: Tradeoff[] = [];
+function GateOverlay({
+  lockedCount,
+  totalCount,
+  onUnlock,
+  justUnlocked,
+}: GateOverlayProps) {
+  if (justUnlocked) {
+    return (
+      <div className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 mt-2">
+        <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#059669"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          >
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+        </div>
+        <p className="text-[12px] text-emerald-700 font-medium">
+          All <strong>{totalCount} colleges</strong> unlocked — scroll down to
+          explore them all.
+        </p>
+      </div>
+    );
+  }
 
+  return (
+    <div className="relative mt-2">
+      {/* Gradient fade that bleeds up over the last visible cards */}
+      <div
+        className="absolute -top-28 left-0 right-0 h-28 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent, rgba(248,247,244,0.92) 70%, #f8f7f4)",
+        }}
+      />
+
+      {/* Gate card */}
+      <div className="relative z-10 flex flex-col items-center text-center px-4 py-6 rounded-2xl border border-gray-100 bg-white/95 shadow-sm">
+        <div className="w-10 h-10 rounded-full bg-cyan-50 border border-cyan-100 flex items-center justify-center mb-3">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#0e7490"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </div>
+        <p className="text-[14px] font-semibold text-gray-800 mb-1">
+          Unlock {lockedCount} more colleges
+        </p>
+        <p className="text-[12px] text-gray-400 leading-relaxed mb-4 max-w-xs">
+          Free account — full cutoffs, placements & comparisons for all{" "}
+          <strong className="text-gray-600">{totalCount} MCA colleges</strong>{" "}
+          in Maharashtra.
+        </p>
+        <button
+          onClick={onUnlock}
+          className="text-[13px] font-semibold text-white bg-cyan-900 hover:bg-cyan-800 transition-colors px-6 py-2 rounded-xl"
+        >
+          Sign in free — unlock all →
+        </button>
+        <p className="text-[10px] text-gray-400 mt-2">
+          No credit card. Takes 30 seconds.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Compare Panel ───────────────────────────────────────────────────────────────
+
+interface ComparePanelProps {
+  ca: CollegeRow;
+  cb: CollegeRow;
+  cat: Category;
+  year: number;
+  onClose: () => void;
+}
+
+function ComparePanel({ ca, cb, cat, year, onClose }: ComparePanelProps) {
   const aFees = parseFees(ca.fees);
   const bFees = parseFees(cb.fees);
-  if (aFees && bFees && Math.abs(aFees - bFees) > 20000) {
-    const cheaper  = aFees < bFees ? ca : cb;
-    const feeDiff  = Math.abs(aFees - bFees);
-    const avgLpa   = ca.avg_lpa ?? cb.avg_lpa ?? 8;
-    const months   = Math.round((feeDiff / (avgLpa * 100000)) * 12);
-    items.push({
-      color: "green",
-      html : `<strong>${cheaper.name}</strong> is ₹${(feeDiff / 1000).toFixed(0)}K cheaper in total fees — roughly <strong>${months} months</strong> of average salary you don't need to recover.`,
-    });
-  }
+  const [aFC, bFC] = cmp(aFees, bFees, true);
+  const feeDiff = diff(aFees, bFees);
+  const [aAC, bAC] = cmp(ca.avg_lpa, cb.avg_lpa);
+  const [aHC, bHC] = cmp(ca.highest_lpa, cb.highest_lpa);
+  const [aPC, bPC] = cmp(ca.placement_perc, cb.placement_perc);
+  const [aTC, bTC] = cmp(ca.seats, cb.seats);
+  const aCutoff = (ca.cutoffs?.[cat] as any)?.[year] ?? null;
+  const bCutoff = (cb.cutoffs?.[cat] as any)?.[year] ?? null;
+  const [aCC, bCC] = cmp(aCutoff, bCutoff, true);
+  const avgDiff = diff(ca.avg_lpa, cb.avg_lpa);
+  const placDiff = diff(ca.placement_perc, cb.placement_perc);
 
-  if (ca.avg_lpa != null && cb.avg_lpa != null) {
-    const d = Math.abs(ca.avg_lpa - cb.avg_lpa);
-    if (d >= 0.5) {
-      const winner = ca.avg_lpa > cb.avg_lpa ? ca : cb;
-      items.push({
-        color: "blue",
-        html : `<strong>${winner.name}</strong> has ₹${d.toFixed(1)}L higher avg package — over 5 years that's <strong>₹${(d * 5).toFixed(0)}L+</strong> extra cumulative earnings.`,
-      });
-    }
-  }
+  return (
+    <div className="rounded-2xl border border-gray-200 overflow-hidden bg-white shadow-sm">
+      {/* Sticky header */}
+      <div className="grid grid-cols-[130px_1fr_1fr] border-b-2 border-gray-100 bg-gray-50 sticky top-0 z-10">
+        {/* <div className="px-3 py-3 border-r border-gray-100">
+          <button
+            onClick={onClose}
+            className="text-[11px] text-blue-600 hover:underline flex items-center gap-1"
+          >
+            ← Back to list
+          </button>
+        </div> */}
+        {[ca, cb].map((col, idx) => (
+          <div
+            key={idx}
+            className={`px-3 py-3 ${idx === 0 ? "border-r border-gray-100" : ""}`}
+          >
+            <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
+              <TierBadge tier={col.tier} />
+              <NaacBadge grade={col.naac_grade} />
+            </div>
+            <p className="text-[13px] font-semibold text-gray-800 leading-tight mt-0.5">
+              {col.name}
+            </p>
+            <p className="text-[10px] text-gray-400 mt-0.5">
+              {col.city ? `${col.city}, ` : ""}
+              {col.state}
+            </p>
+          </div>
+        ))}
+      </div>
 
-  if (ca.college_type && cb.college_type && ca.college_type !== cb.college_type) {
-    const govt = ca.college_type?.toLowerCase().includes("gov") ? ca : cb;
-    const pvt  = ca.college_type?.toLowerCase().includes("gov") ? cb : ca;
-    items.push({
-      color: "amber",
-      html : `<strong>${govt.name}</strong> is government-funded — lower fees, reservation seats, stronger brand. <strong>${pvt.name}</strong> may offer better facilities or industry connections.`,
-    });
-  }
+      <SectionHead label="Institution" />
+      <CompareRow
+        label="Type"
+        aContent={<TypeBadge type={ca.college_type} />}
+        bContent={<TypeBadge type={cb.college_type} />}
+      />
+      <CompareRow
+        label="NAAC"
+        aContent={<NaacBadge grade={ca.naac_grade} />}
+        bContent={<NaacBadge grade={cb.naac_grade} />}
+      />
+      <CompareRow
+        label="Admission"
+        aContent={ca.admission_process ?? "—"}
+        bContent={cb.admission_process ?? "—"}
+      />
+      <CompareRow
+        label="Duration"
+        aContent={`${ca.duration_years ?? 2} years`}
+        bContent={`${cb.duration_years ?? 2} years`}
+      />
 
-  if (ca.city !== cb.city) {
-    items.push({
-      color: "amber",
-      html : `You're comparing <strong>${ca.city ?? ca.state}</strong> vs <strong>${cb.city ?? cb.state}</strong>. Factor in cost of living, proximity to IT hubs, and city preference.`,
-    });
-  }
+      <SectionHead label="Fees" />
+      <CompareRow
+        label="Total fees"
+        aContent={<strong>{fmtFees(ca.fees)}</strong>}
+        bContent={<strong>{fmtFees(cb.fees)}</strong>}
+        aResult={aFC}
+        bResult={bFC}
+        aTag={
+          feeDiff != null && aFC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              ₹{(feeDiff / 1000).toFixed(0)}K cheaper
+            </span>
+          ) : feeDiff != null && aFC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              ₹{(feeDiff / 1000).toFixed(0)}K costlier
+            </span>
+          ) : null
+        }
+        bTag={
+          feeDiff != null && bFC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              ₹{(feeDiff / 1000).toFixed(0)}K cheaper
+            </span>
+          ) : feeDiff != null && bFC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              ₹{(feeDiff / 1000).toFixed(0)}K costlier
+            </span>
+          ) : null
+        }
+      />
 
-  if (ca.placement_perc != null && cb.placement_perc != null) {
-    const placDiff = Math.abs(ca.placement_perc - cb.placement_perc);
-    if (placDiff >= 5) {
-      const winner      = ca.placement_perc > cb.placement_perc ? ca : cb;
-      const extraStudents = Math.round((winner.seats ?? 60) * placDiff / 100);
-      items.push({
-        color: "blue",
-        html : `<strong>${winner.name}</strong> places ${placDiff.toFixed(0)}% more students — in a batch of ${winner.seats ?? "~60"}, that's roughly <strong>${extraStudents} more placed</strong> per year.`,
-      });
-    }
-  }
+      <SectionHead label="Seats" />
+      <CompareRow
+        label="Total seats"
+        aContent={ca.seats ?? "—"}
+        bContent={cb.seats ?? "—"}
+        aResult={aTC}
+        bResult={bTC}
+      />
 
-  const aCutoff = (ca.cutoffs?.[selectedCat] as any)?.[selectedYear];
-  const bCutoff = (cb.cutoffs?.[selectedCat] as any)?.[selectedYear];
-  if (aCutoff != null && bCutoff != null) {
-    // MAH is percentile — lower percentile needed = easier entry
-    const easier = aCutoff < bCutoff ? ca : cb;
-    items.push({
-      color: "rose",
-      html : `<strong>${easier.name}</strong> requires a lower percentile for ${selectedCat} in ${selectedYear} — entry here is less competitive with the same score.`,
-    });
-  }
+      <SectionHead label={`${year} cutoff — ${cat}`} />
+      <CompareRow
+        label="Min. percentile"
+        aContent={
+          aCutoff != null ? <strong>{Number(aCutoff).toFixed(2)}</strong> : "—"
+        }
+        bContent={
+          bCutoff != null ? <strong>{Number(bCutoff).toFixed(2)}</strong> : "—"
+        }
+        aResult={aCC}
+        bResult={bCC}
+        aTag={
+          aCutoff != null && aCC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              Lower bar — easier entry
+            </span>
+          ) : aCutoff != null && aCC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              Higher score needed
+            </span>
+          ) : null
+        }
+        bTag={
+          bCutoff != null && bCC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              Lower bar — easier entry
+            </span>
+          ) : bCutoff != null && bCC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              Higher score needed
+            </span>
+          ) : null
+        }
+      />
 
-  if (!items.length) {
-    items.push({
-      color: "amber",
-      html : "These colleges are closely matched. Your decision should hinge on location preference, campus culture, and your category-specific cutoff.",
-    });
-  }
-
-  return items;
+      <SectionHead label="Placements" />
+      <CompareRow
+        label="Avg package"
+        aContent={ca.avg_lpa != null ? <strong>{ca.avg_lpa} LPA</strong> : "—"}
+        bContent={cb.avg_lpa != null ? <strong>{cb.avg_lpa} LPA</strong> : "—"}
+        aResult={aAC}
+        bResult={bAC}
+        aTag={
+          avgDiff != null && aAC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              +{avgDiff.toFixed(1)} LPA
+            </span>
+          ) : avgDiff != null && aAC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              {avgDiff.toFixed(1)} LPA lower
+            </span>
+          ) : null
+        }
+        bTag={
+          avgDiff != null && bAC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              +{avgDiff.toFixed(1)} LPA
+            </span>
+          ) : avgDiff != null && bAC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              {avgDiff.toFixed(1)} LPA lower
+            </span>
+          ) : null
+        }
+      />
+      <CompareRow
+        label="Highest pkg"
+        aContent={ca.highest_lpa != null ? `${ca.highest_lpa} LPA` : "—"}
+        bContent={cb.highest_lpa != null ? `${cb.highest_lpa} LPA` : "—"}
+        aResult={aHC}
+        bResult={bHC}
+      />
+      <CompareRow
+        label="Placement %"
+        aContent={ca.placement_perc != null ? `${ca.placement_perc}%` : "—"}
+        bContent={cb.placement_perc != null ? `${cb.placement_perc}%` : "—"}
+        aResult={aPC}
+        bResult={bPC}
+        aTag={
+          placDiff != null && aPC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              +{placDiff.toFixed(0)}% better
+            </span>
+          ) : placDiff != null && aPC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              {placDiff.toFixed(0)}% lower
+            </span>
+          ) : null
+        }
+        bTag={
+          placDiff != null && bPC === "win" ? (
+            <span className="text-[10px] text-emerald-600 font-semibold">
+              +{placDiff.toFixed(0)}% better
+            </span>
+          ) : placDiff != null && bPC === "lose" ? (
+            <span className="text-[10px] text-rose-400">
+              {placDiff.toFixed(0)}% lower
+            </span>
+          ) : null
+        }
+      />
+      {(ca.top_companies || cb.top_companies) && (
+        <CompareRow
+          label="Top recruiters"
+          aContent={
+            <span className="text-[11px] text-gray-500 leading-relaxed">
+              {ca.top_companies ?? "—"}
+            </span>
+          }
+          bContent={
+            <span className="text-[11px] text-gray-500 leading-relaxed">
+              {cb.top_companies ?? "—"}
+            </span>
+          }
+          noBorder
+        />
+      )}
+    </div>
+  );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── Main Component ──────────────────────────────────────────────────────────────
 
 export function CollegeCompareTool() {
-  const [allColleges, setAllColleges] = useState<AnalyserCollege[]>([]);
-  const [loading, setLoading]         = useState(false);
-  const [idxA, setIdxA]               = useState<number | null>(null);
-  const [idxB, setIdxB]               = useState<number | null>(null);
-  const [selectedCat, setSelectedCat]     = useState<Category>("General");
-  const [selectedYear, setSelectedYear]   = useState<number>(2025);
-  const [showYearPicker, setShowYearPicker] = useState(false);
+  const { user, openAuth, setPostAuthAction } = useAuth();
+  const isLoggedIn = !!user;
 
-  // MAH accent colour
-  const PRIMARY = "#2563eb";
-  const BORDER  = "#93c5fd";
+  const [allColleges, setAllColleges] = useState<CollegeRow[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQ, setSearchQ] = useState("");
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
+  const [sortKey, setSortKey] = useState<SortKey>("default");
+  const [selectedCat, setSelectedCat] = useState<Category>("General");
+  const [selectedYear] = useState<number>(2025);
+  const [compareSet, setCompareSet] = useState<number[]>([]);
+  const [compareView, setCompareView] = useState(false);
+  const [justUnlocked, setJustUnlocked] = useState(false);
 
-  // ── Data fetch — always MAH ──────────────────────────────────────────────
+  // Track previous login state to detect fresh login within this session
+  const prevLoggedIn = useRef(isLoggedIn);
+
   useEffect(() => {
     setLoading(true);
-    setIdxA(null);
-    setIdxB(null);
     mcaToolsService
-      .getCompareColleges(EXAM_KEY)          // ← enriched colleges_mca path
-      .then((res) => setAllColleges(res.colleges))
+      .getCompareColleges(EXAM_KEY)
+      .then((res) => setAllColleges(res.colleges as CollegeRow[]))
       .catch(() => setAllColleges([]))
       .finally(() => setLoading(false));
   }, []);
 
-  // ── Dropdown options (mutual exclusion) ──────────────────────────────────
-  const optionsA = useMemo(
-    () => allColleges.map((c, i) => ({ c, i, disabled: i === idxB })),
-    [allColleges, idxB]
-  );
-  const optionsB = useMemo(
-    () => allColleges.map((c, i) => ({ c, i, disabled: i === idxA })),
-    [allColleges, idxA]
-  );
+  // Detect login happening while tool is open → show inline unlock success
+  useEffect(() => {
+    if (!prevLoggedIn.current && isLoggedIn) {
+      setJustUnlocked(true);
+    }
+    prevLoggedIn.current = isLoggedIn;
+  }, [isLoggedIn]);
 
-  const ca = idxA !== null ? (allColleges[idxA] as CollegeOption) : null;
-  const cb = idxB !== null ? (allColleges[idxB] as CollegeOption) : null;
+  const toggleCompare = useCallback((idx: number) => {
+    setCompareSet((prev) => {
+      if (prev.includes(idx)) return prev.filter((i) => i !== idx);
+      if (prev.length >= 2) return prev;
+      return [...prev, idx];
+    });
+  }, []);
 
-  const getCutoff = (college: CollegeOption | null) => {
-    if (!college) return null;
-    const catMap = college.cutoffs?.[selectedCat] as any;
-    return catMap?.[selectedYear] ?? null;
+  const handleUnlock = () => {
+    // Register post-auth action so gate dismisses inline after login
+    setPostAuthAction(() => () => setJustUnlocked(true));
+    openAuth();
   };
 
-  const tradeoffs = useMemo(() => {
-    if (!ca || !cb) return [];
-    return buildTradeoffs(ca, cb, selectedYear, selectedCat);
-  }, [ca, cb, selectedYear, selectedCat]);
+  // Filtered + sorted list
+  const displayList = useMemo(() => {
+    const list = allColleges.filter((c) => {
+      if (!matchesFilter(c, activeFilter)) return false;
+      if (searchQ) {
+        const q = searchQ.toLowerCase();
+        return (
+          c.name.toLowerCase().includes(q) ||
+          (c.city ?? "").toLowerCase().includes(q) ||
+          c.state.toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+    return applySorting(list, sortKey, selectedCat, selectedYear);
+  }, [allColleges, activeFilter, searchQ, sortKey, selectedCat, selectedYear]);
 
-  // ── Tradeoff card colours ────────────────────────────────────────────────
-  const tradeoffColors = {
-    green: "bg-emerald-50 border-emerald-100",
-    blue:  "bg-sky-50 border-sky-100",
-    amber: "bg-amber-50 border-amber-100",
-    rose:  "bg-rose-50 border-rose-100",
-  } as const;
-  const tradeoffDot = {
-    green: "bg-emerald-500",
-    blue:  "bg-sky-500",
-    amber: "bg-amber-400",
-    rose:  "bg-rose-400",
-  } as const;
-  const tradeoffText = {
-    green: "text-emerald-800",
-    blue:  "text-sky-800",
-    amber: "text-amber-800",
-    rose:  "text-rose-800",
-  } as const;
+  const visibleCards = isLoggedIn
+    ? displayList
+    : displayList.slice(0, FREE_LIMIT);
+  const lockedCount = isLoggedIn
+    ? 0
+    : Math.max(0, displayList.length - FREE_LIMIT);
+  const showGate = !isLoggedIn && lockedCount > 0;
 
-  // ── Comparison table ─────────────────────────────────────────────────────
-  const renderComparison = () => {
-    if (!ca || !cb) return null;
+  const FILTERS: { key: FilterKey; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "govt", label: "Govt" },
+    { key: "private", label: "Private" },
+    { key: "tier_a", label: "Tier A" },
+    { key: "tier_b", label: "Tier B" },
+    { key: "naac_a", label: "NAAC A+/A++" },
+  ];
 
-    const aFees = parseFees(ca.fees);
-    const bFees = parseFees(cb.fees);
-    const [aFC, bFC] = cmp(aFees, bFees, true);
-    const feeDiff    = diff(aFees, bFees);
-
-    const [aAC, bAC] = cmp(ca.avg_lpa, cb.avg_lpa);
-    const [aHC, bHC] = cmp(ca.highest_lpa, cb.highest_lpa);
-    const [aPC, bPC] = cmp(ca.placement_perc, cb.placement_perc);
-    const [aTC, bTC] = cmp(ca.seats, cb.seats);
-
-    const aCutoff = getCutoff(ca);
-    const bCutoff = getCutoff(cb);
-    // MAH: percentile — higher cutoff = harder to enter = "lose" for the student
-    const [aCC, bCC] = cmp(aCutoff, bCutoff, true); // lower percentile needed = better
-
-    const avgDiff  = diff(ca.avg_lpa, cb.avg_lpa);
-    const placDiff = diff(ca.placement_perc, cb.placement_perc);
-
+  // ── Compare view ─────────────────────────────────────────────────────────────
+  if (compareView && compareSet.length === 2) {
+    const ca = allColleges[compareSet[0]];
+    const cb = allColleges[compareSet[1]];
     return (
-      <div className="rounded-2xl border border-gray-200 overflow-hidden bg-white">
-        {/* Sticky column headers */}
-        <div className="grid grid-cols-[160px_1fr_1fr] border-b-2 border-gray-200 bg-white sticky top-0 z-10">
-          <div className="px-4 py-3 text-[11px] text-gray-400 uppercase tracking-widest font-semibold border-r border-gray-100">
-            Parameter
-          </div>
-          {[ca, cb].map((col, idx) => (
-            <div key={idx} className={`px-4 py-3 ${idx === 0 ? "border-r border-gray-100" : ""}`}>
-              <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-                <TierBadge tier={col.tier} />
-                {col.naac_grade && <NaacBadge grade={col.naac_grade} />}
-              </div>
-              <p className="text-[13px] font-semibold text-gray-800 leading-tight mt-1">{col.name}</p>
-              <p className="text-[11px] text-gray-400 mt-0.5">
-                {col.city ? `${col.city}, ` : ""}{col.state}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Institution */}
-        <SectionHead label="Institution" />
-        <CompareRow
-          label="Type"
-          aContent={<TypeBadge type={ca.college_type} />}
-          bContent={<TypeBadge type={cb.college_type} />}
-        />
-        <CompareRow
-          label="NAAC grade"
-          aContent={<NaacBadge grade={ca.naac_grade} />}
-          bContent={<NaacBadge grade={cb.naac_grade} />}
-        />
-        <CompareRow
-          label="Admission via"
-          aContent={ca.admission_process ?? "—"}
-          bContent={cb.admission_process ?? "—"}
-        />
-        <CompareRow
-          label="Duration"
-          aContent={ca.duration_years ? `${ca.duration_years} years` : "2 years"}
-          bContent={cb.duration_years ? `${cb.duration_years} years` : "2 years"}
-        />
-
-        {/* Fees */}
-        <SectionHead label="Fees" />
-        <CompareRow
-          label="Total fees"
-          aContent={<strong>{fmtFees(ca.fees)}</strong>}
-          bContent={<strong>{fmtFees(cb.fees)}</strong>}
-          aResult={aFC}
-          bResult={bFC}
-          aTag={
-            feeDiff != null && aFC === "win" ? <WinTag text={`₹${(feeDiff / 1000).toFixed(0)}K cheaper`} /> :
-            feeDiff != null && aFC === "lose" ? <LoseTag text={`₹${(feeDiff / 1000).toFixed(0)}K costlier`} /> : null
-          }
-          bTag={
-            feeDiff != null && bFC === "win" ? <WinTag text={`₹${(feeDiff / 1000).toFixed(0)}K cheaper`} /> :
-            feeDiff != null && bFC === "lose" ? <LoseTag text={`₹${(feeDiff / 1000).toFixed(0)}K costlier`} /> : null
-          }
-        />
-
-        {/* Seats — total only, no category breakdown */}
-        <SectionHead label="Seats" />
-        <CompareRow
-          label="Total seats"
-          aContent={ca.seats ?? "—"}
-          bContent={cb.seats ?? "—"}
-          aResult={aTC}
-          bResult={bTC}
-        />
-
-        {/* Cutoffs */}
-        <SectionHead label={`${selectedYear} cutoff — ${selectedCat}`} />
-        <CompareRow
-          label="Min. percentile"
-          aContent={
-            aCutoff != null
-              ? <strong>{Number(aCutoff).toFixed(2)}</strong>
-              : "—"
-          }
-          bContent={
-            bCutoff != null
-              ? <strong>{Number(bCutoff).toFixed(2)}</strong>
-              : "—"
-          }
-          aResult={aCC}
-          bResult={bCC}
-          aTag={
-            aCutoff != null && aCC === "win"  ? <WinTag  text="Lower bar — easier entry" /> :
-            aCutoff != null && aCC === "lose" ? <LoseTag text="Higher bar needed"         /> : null
-          }
-          bTag={
-            bCutoff != null && bCC === "win"  ? <WinTag  text="Lower bar — easier entry" /> :
-            bCutoff != null && bCC === "lose" ? <LoseTag text="Higher bar needed"         /> : null
-          }
-        />
-
-        {/* Placements */}
-        <SectionHead label="Placements" />
-        <CompareRow
-          label="Avg package"
-          aContent={ca.avg_lpa != null ? <strong>{ca.avg_lpa} LPA</strong> : "—"}
-          bContent={cb.avg_lpa != null ? <strong>{cb.avg_lpa} LPA</strong> : "—"}
-          aResult={aAC}
-          bResult={bAC}
-          aTag={
-            avgDiff != null && aAC === "win"  ? <WinTag  text={`+${avgDiff.toFixed(1)} LPA higher`} /> :
-            avgDiff != null && aAC === "lose" ? <LoseTag text={`${avgDiff.toFixed(1)} LPA lower`}   /> : null
-          }
-          bTag={
-            avgDiff != null && bAC === "win"  ? <WinTag  text={`+${avgDiff.toFixed(1)} LPA higher`} /> :
-            avgDiff != null && bAC === "lose" ? <LoseTag text={`${avgDiff.toFixed(1)} LPA lower`}   /> : null
-          }
-        />
-        <CompareRow
-          label="Highest package"
-          aContent={ca.highest_lpa != null ? `${ca.highest_lpa} LPA` : "—"}
-          bContent={cb.highest_lpa != null ? `${cb.highest_lpa} LPA` : "—"}
-          aResult={aHC}
-          bResult={bHC}
-        />
-        <CompareRow
-          label="Placement %"
-          aContent={ca.placement_perc != null ? `${ca.placement_perc}%` : "—"}
-          bContent={cb.placement_perc != null ? `${cb.placement_perc}%` : "—"}
-          aResult={aPC}
-          bResult={bPC}
-          aTag={
-            placDiff != null && aPC === "win"  ? <WinTag  text={`+${placDiff.toFixed(0)}% better`} /> :
-            placDiff != null && aPC === "lose" ? <LoseTag text={`${placDiff.toFixed(0)}% lower`}   /> : null
-          }
-          bTag={
-            placDiff != null && bPC === "win"  ? <WinTag  text={`+${placDiff.toFixed(0)}% better`} /> :
-            placDiff != null && bPC === "lose" ? <LoseTag text={`${placDiff.toFixed(0)}% lower`}   /> : null
-          }
-        />
-        {(ca.top_companies || cb.top_companies) && (
-          <CompareRow
-            label="Top recruiters"
-            aContent={<span className="text-[11px] text-gray-500 leading-relaxed">{ca.top_companies ?? "—"}</span>}
-            bContent={<span className="text-[11px] text-gray-500 leading-relaxed">{cb.top_companies ?? "—"}</span>}
-            noBorder
-          />
-        )}
-
-        {/* Curriculum */}
-        {(ca.syllabus_overview || cb.syllabus_overview) && (
-          <>
-            <SectionHead label="Curriculum" />
-            <CompareRow
-              label="Highlights"
-              aContent={<span className="text-[11px] text-gray-500 leading-relaxed">{ca.syllabus_overview ?? "—"}</span>}
-              bContent={<span className="text-[11px] text-gray-500 leading-relaxed">{cb.syllabus_overview ?? "—"}</span>}
-              noBorder
-            />
-          </>
-        )}
-      </div>
-    );
-  };
-
-  // ── Render ───────────────────────────────────────────────────────────────
-  return (
-    <div className="space-y-4">
-
-      {/* Controls row */}
-      <div className="flex flex-wrap gap-2 items-center">
-        {/* Category */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-gray-400 font-semibold">Category:</span>
-          <div className="flex gap-1">
+      <div className="space-y-4">
+        {/* Category row */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] text-gray-400 font-semibold shrink-0">
+            Category:
+          </span>
+          <div className="flex gap-1 flex-wrap">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCat(cat)}
-                className="text-[11px] px-2.5 py-1 rounded-lg border font-bold transition-all cursor-pointer"
-                style={
+                className={`text-[11px] px-2.5 py-1 rounded-lg border font-bold transition-all cursor-pointer ${
                   selectedCat === cat
-                    ? { backgroundColor: PRIMARY, color: "#fff", borderColor: "transparent" }
-                    : { backgroundColor: "#f9fafb", color: "#6b7280", borderColor: "#e5e7eb" }
-                }
+                    ? "bg-blue-600 text-white border-transparent"
+                    : "bg-gray-50 text-gray-500 border-gray-200"
+                }`}
               >
                 {cat}
               </button>
             ))}
           </div>
         </div>
+        {/* Back button - always visible */}
 
-        {/* Year */}
-     
-      </div>
-
-      {/* College selectors */}
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: "College A", options: optionsA, value: idxA, onChange: setIdxA },
-          { label: "College B", options: optionsB, value: idxB, onChange: setIdxB },
-        ].map(({ label, options, value, onChange }) => (
-          <div
-            key={label}
-            className="rounded-2xl border-2 bg-white p-3 amber"
-            style={{ borderColor: BORDER }}
+        <div className="sticky top-0 z-30  pb-2">
+          <button
+            onClick={() => setCompareView(false)}
+            className="text-[12px]  hover:underline flex items-center gap-1 bg-amber-600 p-2 rounded shadow cursor-pointer"
           >
-            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-2">
-              {label}
-            </p>
-            <select
-              value={value ?? ""}
-              onChange={(e) => onChange(e.target.value === "" ? null : parseInt(e.target.value))}
-              disabled={loading}
-              className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 bg-white text-gray-800 outline-none cursor-pointer focus:border-gray-400 disabled:opacity-40"
+            ← Back to list
+          </button>
+        </div>
+        {/* Scrollable compare panel */}
+        <div className="max-h-[600px] overflow-y-auto rounded-2xl shadow-sm">
+          <ComparePanel
+            ca={ca}
+            cb={cb}
+            cat={selectedCat}
+            year={selectedYear}
+            onClose={() => setCompareView(false)}
+          />
+        </div>
+        <div className="sticky top-0 z-30  pb-2">
+          <button
+            onClick={() => setCompareView(false)}
+            className="text-[12px]  hover:underline flex items-center gap-1 bg-amber-600 p-2 rounded shadow cursor-pointer"
+          >
+            ← Back to list
+          </button>
+        </div>
+        <p className="text-[10px] text-gray-400 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 leading-relaxed">
+          Cutoffs from MAH MCA CET {selectedYear} actual admissions data.
+          Placement figures are indicative. Verify with colleges directly.
+        </p>
+      </div>
+    );
+  }
+
+  // ── Directory view ────────────────────────────────────────────────────────────
+  return (
+    <div className="flex flex-col gap-0">
+      {/* ── Sticky controls ── */}
+      <div className="sticky top-0 z-20 bg-[#f8f7f4] pb-2 pt-1 space-y-2">
+        {/* Search + Sort — single compact row */}
+        <div className="flex gap-2">
+          <div className="flex-1 relative">
+            <svg
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <option value="">— select a college —</option>
-              {options.map(({ c, i, disabled }) => (
-                <option key={i} value={i} disabled={disabled}>
-                  {c.name} — {c.city ?? c.state}
-                </option>
-              ))}
-            </select>
-            {value !== null && allColleges[value] && (
-              <div className="mt-2 flex items-center gap-2 flex-wrap">
-                <TierBadge tier={allColleges[value].tier} />
-                <span className="text-[11px] text-gray-500">
-                  {allColleges[value].city ?? allColleges[value].state}
-                </span>
-              </div>
-            )}
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input
+              type="text"
+              value={searchQ}
+              onChange={(e) => setSearchQ(e.target.value)}
+              placeholder="Search by name or city…"
+              className="w-full pl-7 pr-2.5 py-1.5 text-[13px] border border-gray-200 rounded-xl bg-white text-gray-800 outline-none focus:border-gray-400 placeholder:text-gray-300"
+            />
           </div>
-        ))}
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as SortKey)}
+            className="text-[12px] px-2 py-1.5 border border-gray-200 rounded-xl bg-white text-gray-500 outline-none cursor-pointer"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Category + filter pills — single scrollable row on mobile */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5">
+          {/* Category pills */}
+          <div className="flex gap-1 shrink-0">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCat(cat)}
+                className={`text-[10px] px-2 py-0.5 rounded-lg border font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  selectedCat === cat
+                    ? "bg-amber-500 text-amber-950 border-transparent"
+                    : "bg-gray-50 text-gray-400 border-gray-200"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Divider */}
+          <div className="w-px h-4 bg-gray-200 shrink-0" />
+
+          {/* Filter pills */}
+          {FILTERS.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setActiveFilter(key)}
+              className={`text-[11px] px-2.5 py-0.5 rounded-xl border transition-all cursor-pointer whitespace-nowrap ${
+                activeFilter === key
+                  ? "bg-cyan-900 text-white border-transparent"
+                  : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Results count */}
+        <p className="text-[11px] text-gray-400 leading-none">
+          {isLoggedIn
+            ? displayList.length
+            : `${FREE_LIMIT} of ${displayList.length}`}{" "}
+          college{displayList.length !== 1 ? "s" : ""}
+          {searchQ ? ` for "${searchQ}"` : ""}
+        </p>
       </div>
 
-      {/* Loading */}
+      {/* ── Loading ── */}
       {loading && (
-        <div className="text-center py-8">
-          <svg className="animate-spin h-5 w-5 text-gray-400 mx-auto" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="31.4" strokeDashoffset="10" />
+        <div className="text-center py-10">
+          <svg
+            className="animate-spin h-5 w-5 text-gray-300 mx-auto"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeDasharray="31.4"
+              strokeDashoffset="10"
+            />
           </svg>
           <p className="text-xs text-gray-400 mt-2">Loading colleges…</p>
         </div>
       )}
 
-      {/* Placeholder */}
-      {!loading && (idxA === null || idxB === null) && (
-        <div className="rounded-2xl border border-dashed border-gray-200 py-10 text-center">
-          <p className="text-sm text-gray-400">
-            {idxA === null && idxB === null
-              ? "Select two colleges above to compare them side by side"
-              : "Now pick a second college to start the comparison"}
-          </p>
+      {/* ── Card grid ── */}
+      {!loading && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
+            {visibleCards.map((college) => {
+              const globalIdx = allColleges.indexOf(college);
+              return (
+                <CollegeCard
+                  key={college.name + globalIdx}
+                  college={college}
+                  globalIndex={globalIdx}
+                  isSelected={compareSet.includes(globalIdx)}
+                  canSelect={
+                    compareSet.includes(globalIdx) || compareSet.length < 2
+                  }
+                  cat={selectedCat}
+                  year={selectedYear}
+                  onToggleCompare={toggleCompare}
+                />
+              );
+            })}
+
+            {displayList.length === 0 && (
+              <div className="col-span-2 text-center py-12 text-sm text-gray-400">
+                No colleges match your filters.
+              </div>
+            )}
+          </div>
+
+          {/* ── Gate overlay ── */}
+          {showGate && (
+            <GateOverlay
+              lockedCount={lockedCount}
+              totalCount={displayList.length}
+              onUnlock={handleUnlock}
+              justUnlocked={justUnlocked}
+            />
+          )}
+
+          {/* ── Post-unlock success banner ── */}
+          {justUnlocked && isLoggedIn && (
+            <div className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 mt-2">
+              <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#059669"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                >
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              </div>
+              <p className="text-[12px] text-emerald-700 font-medium">
+                All <strong>{allColleges.length} colleges</strong> are now
+                unlocked.
+              </p>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── Sticky compare bar ── */}
+      {compareSet.length > 0 && (
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 rounded-b-2xl px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.08)] z-20">
+          <div className="text-[12px] text-gray-500">
+            <span className="font-semibold text-gray-800">
+              {compareSet.length}
+            </span>{" "}
+            of 2 selected
+            {compareSet.length === 1 && (
+              <span className="text-gray-400 ml-1 hidden sm:inline">
+                — pick one more
+              </span>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setCompareSet([]);
+                setCompareView(false);
+              }}
+              className="text-[12px] px-3 py-1.5 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 cursor-pointer"
+            >
+              Clear
+            </button>
+            <button
+              onClick={() => compareSet.length === 2 && setCompareView(true)}
+              disabled={compareSet.length < 2}
+              className={`text-[12px] px-4 py-1.5 rounded-xl text-white font-semibold transition-all cursor-pointer ${
+                compareSet.length === 2
+                  ? "bg-cyan-900 hover:bg-cyan-800"
+                  : "bg-blue-200 cursor-not-allowed"
+              }`}
+            >
+              Compare →
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Comparison table + tradeoffs */}
-      {!loading && idxA !== null && idxB !== null && (
-        <div className="space-y-4">
-          <div className="max-h-[600px] overflow-y-auto rounded-2xl shadow-sm">
-            {renderComparison()}
-          </div>
-
-          {/* Legend */}
-          <div className="flex items-center gap-4 px-1">
-            <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Legend:</span>
-            <span className="flex items-center gap-1 text-[11px] text-emerald-600">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" /> Better
-            </span>
-            <span className="flex items-center gap-1 text-[11px] text-rose-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-400 inline-block" /> Lower
-            </span>
-            <span className="text-[10px] text-gray-300">|</span>
-            <span className="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
-              <span className="w-4 h-3 rounded-sm bg-emerald-50 border border-emerald-200 inline-block" /> Advantage
-            </span>
-            <span className="flex items-center gap-1 text-[11px] text-rose-500">
-              <span className="w-4 h-3 rounded-sm bg-rose-50 border border-rose-100 inline-block" /> Disadvantage
-            </span>
-          </div>
-
-          {/* Tradeoff cards */}
-          {tradeoffs.length > 0 && (
-            <div className="rounded-2xl border border-gray-100 shadow bg-white p-4">
-              <p className="text-[11px] font-semibold text-cyan-900 uppercase tracking-widest mb-3">
-                Key tradeoffs
-              </p>
-              <div className="space-y-2.5">
-                {tradeoffs.map((t, i) => (
-                  <div
-                    key={i}
-                    className={`flex gap-3 items-start rounded-xl border px-3.5 py-2.5 ${tradeoffColors[t.color]}`}
-                  >
-                    <span className={`w-2 h-2 rounded-full shrink-0 mt-1.5 ${tradeoffDot[t.color]}`} />
-                    <p
-                      className={`text-[12px] leading-relaxed ${tradeoffText[t.color]}`}
-                      dangerouslySetInnerHTML={{ __html: t.html }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Disclaimer */}
-          <p className="text-[10px] text-gray-400 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 leading-relaxed">
-            📋 Cutoffs shown are from MAH MCA CET {selectedYear} actual admissions data. Placement figures are indicative and may vary by batch year. Always verify directly with the college before making a decision.
-          </p>
-        </div>
+      {/* ── Disclaimer ── */}
+      {!loading && (
+        <p className="text-[10px] text-gray-400 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 leading-relaxed mt-3">
+          Cutoffs from MAH MCA CET {selectedYear} actual admissions. Placement
+          figures are indicative. Always verify directly with the college.
+        </p>
       )}
     </div>
   );
