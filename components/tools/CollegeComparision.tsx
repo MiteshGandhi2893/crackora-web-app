@@ -147,7 +147,7 @@ function TypeBadge({ type }: { type: string | null | undefined }) {
         isGovt ? "bg-emerald-100 text-emerald-700" : "bg-pink-100 text-pink-700"
       }`}
     >
-      {isGovt ? "Govt" : "Private"}
+      {type}
     </span>
   );
 }
@@ -494,7 +494,6 @@ function ComparePanel({ ca, cb, cat, year, onClose }: ComparePanelProps) {
             className={`px-3 py-3 ${idx === 0 ? "border-r border-gray-100" : ""}`}
           >
             <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-              <TierBadge tier={col.tier} />
               <NaacBadge grade={col.naac_grade} />
             </div>
             <p className="text-[13px] font-semibold text-gray-800 leading-tight mt-0.5">
