@@ -11,7 +11,7 @@ const MENU_ITEMS = [
     id: "dashboard",
     label: "Dashboard",
     icon: BiGridAlt,
-    href: "/dashboard",
+    href: "/dashboard/my-account",
   },
   {
     id: "my-account",

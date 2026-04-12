@@ -450,7 +450,7 @@ const RightPanel = memo(function RightPanel({ type }: { type: RightKey }) {
           "Placement record deep-dive",
           "Application strategy",
         ]}
-        bookHref="/book/college-selection"
+        bookHref="https://learn.crackora.com/learn/fast-checkout/264886?priceId=260251&cpst=1775810584196"
       />
     );
   }
@@ -470,7 +470,7 @@ const RightPanel = memo(function RightPanel({ type }: { type: RightKey }) {
           "College tier planning",
           "Post-MCA career paths",
         ]}
-        bookHref="/book/mca-guidance"
+        bookHref="https://learn.crackora.com/learn/fast-checkout/264897?priceId=260255&cpst=1775810143484"
       />
     );
   }
