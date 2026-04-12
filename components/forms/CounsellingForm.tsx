@@ -29,7 +29,7 @@ export function CounsellingForm() {
     phone: "",
     state: "",
     city: "",
-    category: "", // replaces "entrance" pill selection
+    category: "",
     exam: "",
     message: "",
   });
@@ -37,23 +37,13 @@ export function CounsellingForm() {
   const [errors, setErrors] = useState<any>({});
 
   const resetForm = () => {
-    setFormData({
-      fullname: "",
-      email: "",
-      phone: "",
-      state: "",
-      city: "",
-      category: "",
-      exam: "",
-      message: "",
-    });
+    setFormData({ fullname: "", email: "", phone: "", state: "", city: "", category: "", exam: "", message: "" });
     setSelectedStateIso("");
     setCities([]);
     setExams([]);
     setErrors({});
   };
 
-  /* ------------------ Load states ------------------ */
   useEffect(() => {
     const loadStates = async () => {
       const { State } = await import("india-state-city");
@@ -62,9 +52,7 @@ export function CounsellingForm() {
     loadStates();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -82,21 +70,15 @@ export function CounsellingForm() {
     setFormData((prev) => ({ ...prev, city: e.target.value }));
   };
 
-  /* ------------------ Category pill select ------------------ */
   const handleCategorySelect = async (value: string) => {
     setFormData((prev) => ({
       ...prev,
       category: value,
       exam: value === "MCA Entrance Prep" ? prev.exam : "",
     }));
-
     if (value === "MCA Entrance Prep") {
-      // 🚀 Fetch ONLY when needed
       const entrances = await getCachedExams();
-
-      const allExams =
-        entrances?.flatMap((entrance) => entrance.exams || []) || [];
-
+      const allExams = entrances?.flatMap((entrance) => entrance.exams || []) || [];
       setExams(allExams);
     } else {
       setExams([]);
@@ -107,28 +89,21 @@ export function CounsellingForm() {
     setFormData((prev) => ({ ...prev, exam: e.target.value }));
   };
 
-  /* ------------------ Submit ------------------ */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: any = {};
-
-    if (!formData.fullname.trim())
-      newErrors.fullname = "Full Name is required.";
+    if (!formData.fullname.trim()) newErrors.fullname = "Full Name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
     if (!formData.phone.trim()) newErrors.phone = "Phone is required.";
     if (!formData.state) newErrors.state = "State is required.";
     if (!formData.city) newErrors.city = "City is required.";
     if (!formData.category) newErrors.category = "Please select a category.";
-    if (formData.category === "MCA Entrance" && !formData.exam)
-      newErrors.exam = "Please select an exam.";
-
+    if (formData.category === "MCA Entrance" && !formData.exam) newErrors.exam = "Please select an exam.";
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
-
     showLoader();
     const res = await emailService.sendCounsellingEmail(formData);
     hideLoader();
-
     if (res.data?.success) {
       showMessage(res.data?.message, "success");
       resetForm();
@@ -137,169 +112,143 @@ export function CounsellingForm() {
     }
   };
 
+  /* shared input classes */
+  const inputCls = "w-full border border-gray-200 px-2.5 py-1.5 rounded-lg text-[12px] text-cyan-950 placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition h-8 bg-white";
+  const selectCls = "border border-gray-200 px-2 py-1.5 h-8 text-[12px] text-cyan-950 rounded-lg bg-white w-full focus:outline-none focus:border-amber-400 transition";
+
   return (
-    <div className="w-full border border-gray-200 bg-[#f8f7f4]/80 shadow-lg p-4 rounded-xl text-cyan-950">
-      <h3 className="sm:text-xl text-[18px] font-semibold text-amber-700 mb-4">
-        Free Counselling
-      </h3>
+    <div className="w-full border border-gray-200 bg-[#f8f7f4]/90 shadow-lg rounded-2xl overflow-hidden">
+      {/* Card header */}
+      <div className="h-0.5 bg-gradient-to-r from-amber-500 to-amber-400" />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Name */}
-        <div className="flex flex-col gap-1">
-          <input
-            name="fullname"
-            onChange={handleChange}
-            value={formData.fullname}
-            type="text"
-            className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
-            placeholder="Enter your First and Last name"
-          />
-          {errors.fullname && (
-            <span className="text-red-700 text-xs">{errors.fullname}</span>
-          )}
-        </div>
+      <div className="p-4 sm:p-5">
+        <h3 className="text-[15px] sm:text-base font-semibold text-amber-700 mb-4">
+          Free Counselling
+        </h3>
 
-        {/* Email */}
-        <div className="flex flex-col gap-1">
-          <input
-            name="email"
-            value={formData.email}
-            type="email"
-            onChange={handleChange}
-            className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
-            placeholder="Enter your Email ID"
-          />
-          {errors.email && (
-            <span className="text-red-700 text-xs">{errors.email}</span>
-          )}
-        </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 
-        {/* Phone */}
-        <div className="flex flex-col gap-1">
-          <div className="flex gap-2 items-center">
-            <span className="font-semibold text-sm">+91</span>
+          {/* Name */}
+          <div className="flex flex-col gap-1">
             <input
-              name="phone"
-              value={formData.phone}
+              name="fullname"
               onChange={handleChange}
+              value={formData.fullname}
               type="text"
-              className="w-full border border-gray-200 p-2 rounded bg-gray-50 text-[13px] h-8"
-              placeholder="Enter your phone number"
+              className={inputCls}
+              placeholder="First and Last name"
             />
+            {errors.fullname && <span className="text-red-600 text-[11px]">{errors.fullname}</span>}
           </div>
-          {errors.phone && (
-            <span className="text-red-700 text-xs">{errors.phone}</span>
-          )}
-        </div>
 
-        {/* State + City */}
-        <div className="grid grid-cols-2 gap-3">
+          {/* Email */}
           <div className="flex flex-col gap-1">
-            <select
-              className="border border-gray-200 p-2 h-8 text-[13px] rounded bg-white"
-              value={selectedStateIso}
-              onChange={handleStateChange}
-            >
-              <option value="">Select State</option>
-              {states.map((state) => (
-                <option key={state.isoCode} value={state.isoCode}>
-                  {state.name}
-                </option>
-              ))}
-            </select>
-            {errors.state && (
-              <span className="text-red-700 text-xs">{errors.state}</span>
-            )}
+            <input
+              name="email"
+              value={formData.email}
+              type="email"
+              onChange={handleChange}
+              className={inputCls}
+              placeholder="Email ID"
+            />
+            {errors.email && <span className="text-red-600 text-[11px]">{errors.email}</span>}
           </div>
 
+          {/* Phone */}
           <div className="flex flex-col gap-1">
-            <select
-              className="border border-gray-200 p-2 h-8 text-[13px] rounded bg-white"
-              value={formData.city}
-              onChange={handleCityChange}
-              disabled={!cities.length}
-            >
-              <option value="">Select City</option>
-              {cities.map((city) => (
-                <option key={city.name} value={city.name}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
-            {errors.city && (
-              <span className="text-red-700 text-xs">{errors.city}</span>
-            )}
+            <div className="flex gap-2 items-center">
+              <span className="text-[12px] font-semibold text-cyan-950 shrink-0">+91</span>
+              <input
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                type="text"
+                className={inputCls}
+                placeholder="Phone number"
+              />
+            </div>
+            {errors.phone && <span className="text-red-600 text-[11px]">{errors.phone}</span>}
           </div>
-        </div>
 
-        {/* ── Category pills ── */}
-        <div className="flex flex-col gap-2 mt-5">
-          <span className="text-[12px] text-cyan-900 font-semibold">
-            I need help with
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                type="button"
-                onClick={() => handleCategorySelect(cat.value)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium border transition-all cursor-pointer
-                  ${
-                    formData.category === cat.value
+          {/* State + City */}
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="flex flex-col gap-1">
+              <select className={selectCls} value={selectedStateIso} onChange={handleStateChange}>
+                <option value="">Select State</option>
+                {states.map((state) => (
+                  <option key={state.isoCode} value={state.isoCode}>{state.name}</option>
+                ))}
+              </select>
+              {errors.state && <span className="text-red-600 text-[11px]">{errors.state}</span>}
+            </div>
+            <div className="flex flex-col gap-1">
+              <select className={selectCls} value={formData.city} onChange={handleCityChange} disabled={!cities.length}>
+                <option value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city.name} value={city.name}>{city.name}</option>
+                ))}
+              </select>
+              {errors.city && <span className="text-red-600 text-[11px]">{errors.city}</span>}
+            </div>
+          </div>
+
+          {/* Category pills */}
+          <div className="flex flex-col gap-1.5 pt-1">
+            <span className="text-[11px] text-cyan-900 font-semibold">I need help with</span>
+            <div className="flex flex-wrap gap-1.5">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  type="button"
+                  onClick={() => handleCategorySelect(cat.value)}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all cursor-pointer
+                    ${formData.category === cat.value
                       ? "bg-amber-600 text-white border-amber-600 shadow-sm"
                       : "bg-white text-cyan-900 border-gray-200 hover:border-amber-400"
-                  }`}
-              >
-                <span>{cat.icon}</span>
-                {cat.label}
-              </button>
-            ))}
-          </div>
-          {errors.category && (
-            <span className="text-red-700 text-xs">{errors.category}</span>
-          )}
-        </div>
-
-        {/* ── Exam dropdown — only shown for MCA Entrance ── */}
-        {formData.category === "MCA Entrance" && (
-          <div className="flex flex-col gap-1">
-            <select
-              className="border border-gray-200 p-2 h-8 text-[13px] rounded bg-white w-full"
-              value={formData.exam}
-              onChange={handleExamChange}
-            >
-              <option value="">Select Exam</option>
-              {exams.map((exam) => (
-                <option key={exam.title} value={exam.title}>
-                  {exam.title}
-                </option>
+                    }`}
+                >
+                  <span className="text-[11px]">{cat.icon}</span>
+                  {cat.label}
+                </button>
               ))}
-            </select>
-            {errors.exam && (
-              <span className="text-red-700 text-xs">{errors.exam}</span>
-            )}
+            </div>
+            {errors.category && <span className="text-red-600 text-[11px]">{errors.category}</span>}
           </div>
-        )}
 
-        {/* Message */}
-        <div className="flex flex-col gap-1">
-          <textarea
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            rows={2}
-            className="border border-gray-200 p-2 rounded bg-gray-50 text-[13px] resize-none"
-            placeholder="Anything specific you'd like help with? (optional)"
-          />
-        </div>
+          {/* Exam dropdown */}
+          {formData.category === "MCA Entrance Prep" && (
+            <div className="flex flex-col gap-1">
+              <select className={selectCls} value={formData.exam} onChange={handleExamChange}>
+                <option value="">Select Exam</option>
+                {exams.map((exam) => (
+                  <option key={exam.title} value={exam.title}>{exam.title}</option>
+                ))}
+              </select>
+              {errors.exam && <span className="text-red-600 text-[11px]">{errors.exam}</span>}
+            </div>
+          )}
 
-        <button
-          type="submit"
-          className="w-full bg-amber-600 text-white rounded py-1.5 hover:bg-amber-700 transition cursor-pointer text-sm font-medium"
-        >
-          Submit
-        </button>
-      </form>
+          {/* Message */}
+          <div className="flex flex-col gap-1">
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows={2}
+              className="w-full border border-gray-200 px-2.5 py-1.5 rounded-lg bg-gray-50 text-[12px] text-cyan-950 placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition resize-none"
+              placeholder="Anything specific you'd like help with? (optional)"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-amber-600 text-white rounded-xl py-2 hover:bg-amber-700 transition cursor-pointer text-[12px] sm:text-[13px] font-semibold mt-0.5"
+          >
+            Submit →
+          </button>
+
+        </form>
+      </div>
     </div>
   );
 }

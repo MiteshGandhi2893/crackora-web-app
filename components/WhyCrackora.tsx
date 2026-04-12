@@ -53,31 +53,30 @@ const accentMap: Record<string, { card: string; icon: string; bar: string }> = {
 
 export function WhyCrackora() {
   return (
-    <section className="w-full bg-[#f8f7f4] px-5 sm:px-10 lg:px-16 xl:px-24 py-14 sm:py-20 lg:py-28 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto">
+    <section className="w-full bg-[#f8f7f4] py-14 sm:py-18 lg:py-24 relative overflow-hidden">
+      {/* glows */}
+      <div className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
+      <div className="pointer-events-none absolute -top-10 right-0 w-[35vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.05),transparent_65%)]" />
 
-        {/* glows */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
-        <div className="pointer-events-none absolute -top-10 right-0 w-[35vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.05),transparent_65%)]" />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── Header ───────────────────────────────────────────────────── */}
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 xl:gap-24 items-start lg:items-center mb-12 sm:mb-16 lg:mb-20">
+        {/* ── Header ── */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 xl:gap-20 items-start lg:items-center mb-10 sm:mb-14 lg:mb-16">
 
           {/* Left copy */}
-          <div className="lg:w-1/2 flex flex-col gap-4 sm:gap-5">
-
-            <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.22em] uppercase text-amber-600 font-sans">
+          <div className="lg:w-1/2 flex flex-col gap-3 sm:gap-4">
+            <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-amber-600 font-sans">
               Why Crackora
             </span>
 
-            <h2 className="font-serif text-[1.75rem] sm:text-4xl lg:text-[2.6rem] xl:text-5xl text-cyan-900 leading-[1.2] sm:leading-[1.15] tracking-tight">
+            <h2 className="font-serif text-[1.6rem] sm:text-[2rem] lg:text-[2.2rem] xl:text-[2.6rem] text-cyan-900 leading-[1.2] tracking-tight">
               Best platform for{" "}
               <span className="text-amber-600">MCA Entrance Preparation</span>
             </h2>
 
-            <div className="h-0.5 w-10 sm:w-12 bg-amber-500 rounded-full" />
+            <div className="h-0.5 w-10 bg-amber-500 rounded-full" />
 
-            <p className="text-[#05101f]/65 text-[0.9rem] sm:text-[0.95rem] lg:text-base leading-[1.75] sm:leading-relaxed max-w-lg font-sans">
+            <p className="text-[#05101f]/65 text-[0.875rem] sm:text-[0.9rem] lg:text-[0.9rem] leading-[1.75] max-w-lg font-sans">
               Crackora helps MCA aspirants at every stage — entrance exam
               preparation, college selection, MCA studies, and placement
               guidance. Instead of figuring everything alone, you get a clear
@@ -86,17 +85,17 @@ export function WhyCrackora() {
             </p>
 
             {/* Stats */}
-            <div className="flex gap-6 sm:gap-10 pt-1 sm:pt-2">
+            <div className="flex gap-6 sm:gap-8 pt-1">
               {[
                 ["10K+", "Students"],
                 ["50+", "Mock Tests"],
                 ["40+", "Colleges"],
               ].map(([num, label]) => (
                 <div key={label} className="flex flex-col gap-0.5">
-                  <span className="font-serif text-2xl sm:text-3xl text-[#05101f] font-bold leading-none">
+                  <span className="font-serif text-xl sm:text-2xl text-[#05101f] font-bold leading-none">
                     {num}
                   </span>
-                  <span className="text-[10px] sm:text-[11px] text-[#05101f]/40 font-sans tracking-widest uppercase mt-1">
+                  <span className="text-[10px] text-[#05101f]/40 font-sans tracking-widest uppercase mt-1">
                     {label}
                   </span>
                 </div>
@@ -117,27 +116,27 @@ export function WhyCrackora() {
           </div>
         </div>
 
-        {/* ── Feature cards ─────────────────────────────────────────────── */}
+        {/* ── Feature cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {features.map((f, i) => {
             const a = accentMap[f.accent];
             return (
               <div
                 key={i}
-                className={`${a.card} rounded-2xl p-5 sm:p-6 flex flex-col gap-3 sm:gap-4 transition-all duration-300 shadow-[0_2px_16px_rgba(5,16,31,0.07)] hover:shadow-[0_8px_40px_rgba(5,16,31,0.13)] hover:-translate-y-1 group`}
+                className={`${a.card} rounded-2xl p-4 sm:p-5 flex flex-col gap-3 transition-all duration-300 shadow-[0_2px_16px_rgba(5,16,31,0.07)] hover:shadow-[0_8px_40px_rgba(5,16,31,0.13)] hover:-translate-y-1 group`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${a.icon} flex items-center justify-center shrink-0`}>
+                  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${a.icon} flex items-center justify-center shrink-0`}>
                     {f.icon}
                   </div>
                   <div className={`h-0.5 flex-1 rounded-full ${a.bar} opacity-30 group-hover:opacity-60 transition-opacity duration-300`} />
                 </div>
 
-                <h3 className="text-cyan-900 text-[0.85rem] sm:text-sm font-semibold leading-snug">
+                <h3 className="text-cyan-900 text-[0.8rem] sm:text-[0.825rem] font-semibold leading-snug">
                   {f.title}
                 </h3>
 
-                <p className="text-cyan-950/55 text-[0.8rem] sm:text-xs leading-[1.7] sm:leading-relaxed">
+                <p className="text-cyan-950/55 text-[0.75rem] sm:text-[0.775rem] leading-[1.7]">
                   {f.description}
                 </p>
               </div>

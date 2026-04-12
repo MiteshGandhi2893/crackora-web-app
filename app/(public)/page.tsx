@@ -11,7 +11,7 @@ const McaJourneySection = dynamic(() =>
 );
 
 const ToolsSection = dynamic(() =>
-  import("@/components/study-plan/ToolsSection").then(
+  import("@/components/tools/ToolsSection").then(
     (mod) => mod.ToolsSection
   )
 );

@@ -64,7 +64,7 @@ const StarField = memo(function StarField() {
 });
 
 /* ─────────────────────────────────────────────────────
-   Orbit constants (unchanged from original)
+   Orbit constants
 ───────────────────────────────────────────────────── */
 const CX = 210, CY = 210;
 const R_OUTER = 175;
@@ -112,8 +112,9 @@ const OrbitBubble = memo(function OrbitBubble({
 
 const ThreeRingOrbit = memo(function ThreeRingOrbit() {
   return (
-    <div className="w-full flex items-center justify-center select-none">
-      <div className="w-[310px] h-[310px] sm:w-[370px] sm:h-[370px] md:w-[415px] md:h-[415px] lg:w-[455px] lg:h-[455px]">
+    <div className="w-full flex items-center justify-end select-none">
+      {/* Tightened sizes so it doesn't overflow the 40% right column */}
+      <div className="w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[360px] md:h-[360px] lg:w-[380px] lg:h-[380px] xl:w-[400px] xl:h-[400px]">
         <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg" className="w-full h-full overflow-visible">
           <defs>
             <radialGradient id="outerFill" cx="50%" cy="50%" r="50%">
@@ -175,7 +176,7 @@ const ThreeRingOrbit = memo(function ThreeRingOrbit() {
 });
 
 /* ─────────────────────────────────────────────────────
-   MentorCard — beautiful photo + pricing card
+   MentorCard
 ───────────────────────────────────────────────────── */
 const MentorCard = memo(function MentorCard({
   name,
@@ -195,19 +196,20 @@ const MentorCard = memo(function MentorCard({
   badge?: string;
 }) {
   return (
-    <div className="w-full max-w-[340px] sm:max-w-[390px] lg:max-w-[420px] mx-auto lg:mx-0 lg:ml-auto">
+    /* Constrained max-width so it fits snugly in the 40% right column */
+    <div className="w-full max-w-[300px] sm:max-w-[340px] lg:max-w-[320px] xl:max-w-[340px] ">
       <div className="rounded-2xl bg-[#f8f7f4] shadow-2xl shadow-black/50 overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-amber-500 to-amber-400" />
+        <div className="h-0.5 bg-linear-to-r from-amber-500 to-amber-400" />
 
-        <div className="p-4 sm:p-5 lg:p-6">
+        <div className="p-4 sm:p-5">
           {/* Mentor identity row */}
-          <div className="flex items-center gap-3 sm:gap-4 mb-4">
-            {/* Photo container */}
+          <div className="flex items-center gap-3 mb-3.5">
+            {/* Photo */}
             <div className="relative shrink-0">
-              {/* Decorative ring */}
-              <div className="absolute -inset-0.75 rounded-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 z-0" />
-              <div className="absolute -inset-[6px] rounded-full bg-amber-500/20 z-[-1]" />
-              <div className="relative z-10 w-30 h-30 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2 border-white">
+              <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 z-0" />
+              <div className="absolute -inset-1 rounded-full bg-amber-500/20 z-[-1]" />
+              {/* Smaller photo on lg to avoid overflow */}
+              <div className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 lg:w-40 lg:h-40 xl:w-30 xl:h-30 rounded-full overflow-hidden border-2 border-white">
                 <Image
                   src={photoSrc}
                   alt={photoAlt}
@@ -215,7 +217,6 @@ const MentorCard = memo(function MentorCard({
                   className="object-cover object-center"
                 />
               </div>
-              {/* Verified dot */}
               <div className="absolute bottom-0 right-0 z-20 w-4 h-4 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center">
                 <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -224,46 +225,46 @@ const MentorCard = memo(function MentorCard({
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className="text-gray-900 font-bold text-[15px] sm:text-[17px] leading-tight">{name}</h3>
-              <p className="text-gray-500 text-[11px] sm:text-[12px] mt-0.5 leading-snug">{role}</p>
+              <h3 className="text-gray-900 font-bold text-sm sm:text-[15px] leading-tight">{name}</h3>
+              <p className="text-gray-500 text-[10px] sm:text-[11px] mt-0.5 leading-snug">{role}</p>
               {badge && (
-                <span className="inline-block mt-1 text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+                <span className="inline-block mt-1 text-[9px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
                   {badge}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Features */}
-          <div className="grid grid-cols-2 gap-y-2 gap-x-2 mb-4">
+          {/* Features — single column on small cards, 2-col when wide enough */}
+          <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 mb-3.5">
             {features.map((f) => (
               <div key={f} className="flex items-start gap-1.5">
                 <span className="mt-[5px] w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
-                <span className="text-gray-600 text-[10px] sm:text-[11px] lg:text-[12px] leading-snug">{f}</span>
+                <span className="text-gray-600 text-[10px] sm:text-[11px] leading-snug">{f}</span>
               </div>
             ))}
           </div>
 
-          <div className="w-full h-px bg-gray-100 mb-3 sm:mb-4" />
+          <div className="w-full h-px bg-gray-100 mb-3" />
 
           {/* Pricing */}
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-gray-400 text-xs line-through">₹599</span>
-              <span className="text-amber-600 text-2xl sm:text-3xl font-bold">249</span>
-              <span className="text-gray-400 text-xs">/ session</span>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-baseline gap-1">
+              <span className="text-gray-400 text-[11px] line-through">₹599</span>
+              <span className="text-amber-600 text-xl sm:text-2xl font-bold">₹249</span>
+              <span className="text-gray-400 text-[10px]">/ session</span>
             </div>
-            <span className="text-[11px] text-green-700 border border-green-200 bg-green-50 px-2.5 py-1 rounded-full font-bold">
-              50% OFF
+            <span className="text-[10px] text-green-700 border border-green-200 bg-green-50 px-2 py-0.5 rounded-full font-bold">
+              58% OFF
             </span>
           </div>
 
           <Link href={bookHref}>
-            <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2.5 rounded-xl text-[13px] sm:text-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/30 cursor-pointer">
+            <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2 rounded-xl text-[12px] sm:text-[13px] transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/30 cursor-pointer">
               Book 1-on-1 Session →
             </button>
           </Link>
-          <p className="text-center text-gray-400 text-[10px] sm:text-[11px] mt-2">45 min · Limited slots · Offer ends soon</p>
+          <p className="text-center text-gray-400 text-[10px] mt-1.5">45 min · Limited slots · Offer ends soon</p>
         </div>
       </div>
     </div>
@@ -271,7 +272,7 @@ const MentorCard = memo(function MentorCard({
 });
 
 /* ─────────────────────────────────────────────────────
-   WebinarCTACard — teaser card linking to /webinar
+   WebinarCTACard
 ───────────────────────────────────────────────────── */
 const WebinarCTACard = memo(function WebinarCTACard() {
   const topics = [
@@ -281,38 +282,36 @@ const WebinarCTACard = memo(function WebinarCTACard() {
     "Live Q&A with mentors",
   ];
   return (
-    <div className="w-full max-w-[340px] sm:max-w-[390px] lg:max-w-[420px] mx-auto lg:mx-0 lg:ml-auto">
+    <div className="w-full max-w-[300px] sm:max-w-[340px] lg:max-w-[320px] xl:max-w-[340px] mx-auto">
       <div className="rounded-2xl bg-[#f8f7f4] shadow-2xl shadow-black/50 overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-amber-500 to-amber-400" />
-        <div className="p-4 sm:p-5 lg:p-6">
-          {/* Live badge */}
-          <div className="flex items-center gap-2 mb-3">
+        <div className="h-0.5 bg-gradient-to-r from-amber-500 to-amber-400" />
+        <div className="p-4 sm:p-5">
+          <div className="flex items-center gap-2 mb-2.5">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
             </span>
-            <span className="text-red-600 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase">Upcoming — Free Webinar</span>
+            <span className="text-red-600 text-[10px] font-bold tracking-widest uppercase">Upcoming — Free Webinar</span>
           </div>
 
-          <h2 className="text-gray-900 text-[18px] sm:text-xl font-bold leading-tight mb-1">
+          <h2 className="text-gray-900 text-base sm:text-[17px] font-bold leading-tight mb-1">
             MCA Masterclass
-            <span className="block text-amber-600 text-[15px] sm:text-[17px] font-semibold mt-0.5">Everything You Need to Know</span>
+            <span className="block text-amber-600 text-[13px] sm:text-[14px] font-semibold mt-0.5">Everything You Need to Know</span>
           </h2>
 
-          {/* Date + time */}
-          <div className="flex flex-wrap gap-2 mt-2.5 mb-3">
+          <div className="flex flex-wrap gap-1.5 mt-2 mb-3">
             {[{ icon: "📅", t: "Sunday, 15 Feb" }, { icon: "⏰", t: "11:00 AM IST" }, { icon: "🖥️", t: "Google Meet" }].map((c) => (
-              <span key={c.t} className="flex items-center gap-1 text-[10px] sm:text-[11px] text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
+              <span key={c.t} className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-lg">
                 {c.icon} {c.t}
               </span>
             ))}
           </div>
 
-          <div className="space-y-1.5 mb-4">
+          <div className="space-y-1.5 mb-3.5">
             {topics.map((t) => (
               <div key={t} className="flex items-center gap-2">
-                <span className="text-amber-500 text-[11px]">✓</span>
-                <span className="text-gray-600 text-[11px] sm:text-[12px]">{t}</span>
+                <span className="text-amber-500 text-[10px]">✓</span>
+                <span className="text-gray-600 text-[11px]">{t}</span>
               </div>
             ))}
           </div>
@@ -320,11 +319,11 @@ const WebinarCTACard = memo(function WebinarCTACard() {
           <div className="w-full h-px bg-gray-100 mb-3" />
 
           <Link href="/webinar">
-            <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2.5 rounded-xl text-[13px] sm:text-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/30 cursor-pointer">
+            <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2 rounded-xl text-[12px] sm:text-[13px] transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/30 cursor-pointer">
               Register Free — Seats Limited →
             </button>
           </Link>
-          <p className="text-center text-gray-400 text-[10px] sm:text-[11px] mt-2">No cost · 90 min · Ask doubts live</p>
+          <p className="text-center text-gray-400 text-[10px] mt-1.5">No cost · 90 min · Ask doubts live</p>
         </div>
       </div>
     </div>
@@ -335,19 +334,6 @@ const WebinarCTACard = memo(function WebinarCTACard() {
    Slide definitions
 ───────────────────────────────────────────────────── */
 const slides = [
-  // ── COMMENTED OUT: Live Batch slide ──
-  // {
-  //   id: "batch",
-  //   eyebrow: "live" as const,
-  //   title: "NIMCET 2027 — Live Batch Now Open",
-  //   titleAccent: "Live Batch",
-  //   description: "India's most focused MCA entrance prep...",
-  //   primaryBtn: { label: "Enroll Now — ₹999/month", href: "/live-classes" },
-  //   secondaryBtn: { label: "View Schedule", href: "/live-classes#schedule" },
-  //   right: "batch" as const,
-  // },
-
-  // ── Slide 1: Platform (keep as-is) ──
   {
     id: "platform",
     eyebrow: "platform" as const,
@@ -359,8 +345,6 @@ const slides = [
     secondaryBtn: { label: "Start Free Mock Test", href: "https://learn.crackora.com/learn/Free-MAH-MCA-CET-2026-Mock-Test" },
     right: "orbit" as const,
   },
-
-  // ── Slide 2: College Selection 1-on-1 (Azad Sir) ──
   {
     id: "college-selection",
     eyebrow: "session" as const,
@@ -368,12 +352,10 @@ const slides = [
     titleAccent: "Right College",
     description:
       "One wrong college choice can cost you 2 years and ₹4–10 lakhs. In a 45-minute session with Azad Sir, get a ranked shortlist built around your score, budget, and career goal — so you apply with confidence, not guesswork.",
-    primaryBtn: { label: "Book for 249 — 58% Off →", href: "https://learn.crackora.com/learn/fast-checkout/264886?priceId=260251&cpst=1775810584196" },
+    primaryBtn: { label: "Book for ₹249 — 58% Off →", href: "https://learn.crackora.com/learn/fast-checkout/264886?priceId=260251&cpst=1775810584196" },
     secondaryBtn: { label: "See What's Covered", href: "https://learn.crackora.com/learn/MCA-Counselling-Program--1-1-College-Guidance" },
     right: "college-mentor" as const,
   },
-
-  // ── Slide 3: MCA Guidance 1-on-1 (Mitesh Gandhi) ──
   {
     id: "mca-guidance",
     eyebrow: "session" as const,
@@ -381,23 +363,10 @@ const slides = [
     titleAccent: "Honest Guidance",
     description:
       "Should you do MCA or MTech? Which specialisation fits your goals? Which exam to target? Mitesh Gandhi will cut through the noise and give you a clear, personalised roadmap — no sales pitch, just clarity.",
-    primaryBtn: { label: "Book for 249 — 58% Off →", href: "https://learn.crackora.com/learn/fast-checkout/264897?priceId=260255&cpst=1775810143484" },
+    primaryBtn: { label: "Book for ₹249 — 58% Off →", href: "https://learn.crackora.com/learn/fast-checkout/264897?priceId=260255&cpst=1775810143484" },
     secondaryBtn: { label: "See What's Covered", href: "https://learn.crackora.com/learn/MCA-Success-Blueprint--1-to-1-Career-Mentorship-Program" },
     right: "guidance-mentor" as const,
   },
-
-  // // ── Slide 4: Free Webinar CTA ──
-  // {
-  //   id: "webinar",
-  //   eyebrow: "webinar" as const,
-  //   title: "Free Live Webinar — MCA Masterclass",
-  //   titleAccent: "MCA Masterclass",
-  //   description:
-  //     "90 minutes. Everything about MCA — what it is, who should do it, biggest student mistakes, which entrance exam suits you, and live Q&A. Free, no recording sold. Register before seats fill up.",
-  //   primaryBtn: { label: "Register Free — Limited Seats →", href: "/webinar" },
-  //   secondaryBtn: { label: "See What We'll Cover", href: "/webinar#topics" },
-  //   right: "webinar-cta" as const,
-  // },
 ] as const;
 
 type EyebrowKey = (typeof slides)[number]["eyebrow"];
@@ -406,7 +375,6 @@ type RightKey = (typeof slides)[number]["right"];
 const eyebrowMap: Record<EyebrowKey, { cls: string; label: string; dot?: string }> = {
   platform: { cls: "border-amber-400/60 bg-amber-950/60 text-amber-300", label: "India's #1 MCA End-to-End Platform" },
   session: { cls: "border-cyan-400/60 bg-cyan-950/60 text-cyan-300", label: "1-on-1 Session · Limited Slots" },
-  // webinar: { cls: "border-red-400/60 bg-red-950/60 text-red-300", label: "Upcoming Free Webinar", dot: "red" },
 };
 
 /* ─────────────────────────────────────────────────────
@@ -429,7 +397,7 @@ const SlideTitle = memo(function SlideTitle({ title, accent }: { title: string; 
 const RightPanel = memo(function RightPanel({ type }: { type: RightKey }) {
   if (type === "orbit") {
     return (
-      <div className="w-full flex justify-center mt-4 sm:mt-6 lg:mt-0">
+      <div className="w-full flex justify-end">
         <ThreeRingOrbit />
       </div>
     );
@@ -551,7 +519,7 @@ export function HeroBanner() {
     goTo(next);
   }, [visible, goTo]);
 
-  const resetTimer = useInterval(advance, 6000);
+  const resetTimer = useInterval(advance, 100000);
 
   const handleDot = useCallback((i: number) => {
     goTo(i);
@@ -563,7 +531,8 @@ export function HeroBanner() {
     : "translate-x-12 opacity-0 pointer-events-none";
 
   return (
-    <div className="relative w-full overflow-hidden mt-16 bg-[#020817]">
+    <div className="relative w-full overflow-hidden mt-5 bg-[#020817]">
+      {/* Background layers */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute inset-0 bg-[#020617]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
@@ -573,77 +542,92 @@ export function HeroBanner() {
 
       <StarField />
 
-      <div className="relative z-10 lg:min-h-150 max-w-6xl mx-auto lg:px-10 px-5">
-        {slides.map((slide, i) => {
-          const isVisible = i === visible;
-          const isExiting = i === exiting;
-          if (isMobile && !isVisible) return null;
-          if (!isMobile && !isVisible && !isExiting) return null;
+      {/*
+        Container — matches your header's max-w-6xl + px-4 sm:px-6 lg:px-8 convention.
+        Adjust the px values here to exactly match your <Header /> padding.
+      */}
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Slide stack — min-height keeps it from collapsing */}
+        <div className="relative lg:min-h-[560px] xl:min-h-[580px]">
+          {slides.map((slide, i) => {
+            const isVisible = i === visible;
+            const isExiting = i === exiting;
+            if (isMobile && !isVisible) return null;
+            if (!isMobile && !isVisible && !isExiting) return null;
 
-          const eb = eyebrowMap[slide.eyebrow];
+            const eb = eyebrowMap[slide.eyebrow];
 
-          return (
-            <div
-              key={slide.id}
-              className={[
-                "lg:absolute lg:inset-0",
-                "transition-[transform,opacity] duration-[420ms] ease-in-out",
-                "will-change-[transform,opacity]",
-                isExiting ? exitCls : "translate-x-0 opacity-100",
-              ].join(" ")}
-            >
-              <div className="w-full h-full flex flex-col lg:flex-row items-center px-5 sm:px-0 pt-9 sm:pt-12 lg:pt-14 pb-7 sm:pb-10 lg:pb-16 gap-6 sm:gap-8 lg:gap-8">
-                {/* LEFT */}
-                <div className="w-full lg:w-[50%] flex flex-col items-center lg:items-start">
-                  <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase mb-3 sm:mb-4 backdrop-blur-sm ${eb.cls}`}>
-                    {eb.dot === "red" && (
-                      <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                        <span className="relative inline-flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-red-400" />
-                      </span>
-                    )}
-                    {eb.label}
-                  </span>
+            return (
+              <div
+                key={slide.id}
+                className={[
+                  "lg:absolute lg:inset-0",
+                  "transition-[transform,opacity] duration-[420ms] ease-in-out",
+                  "will-change-[transform,opacity]",
+                  isExiting ? exitCls : "translate-x-0 opacity-100",
+                ].join(" ")}
+              >
+                {/* ── Two-column flex layout ── */}
+                <div className="w-full h-full flex flex-col lg:flex-row lg:items-center lg:pl-4 pt-8 sm:pt-10 lg:pt-12 pb-6 sm:pb-8 lg:pb-14 gap-6 lg:gap-10 xl:gap-14">
 
-                  <h1 className="text-[21px] sm:text-[31px] lg:text-[38px] xl:text-[44px] font-bold leading-[1.22] text-white text-center lg:text-left mb-3 sm:mb-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
-                    <SlideTitle title={slide.title} accent={slide.titleAccent} />
-                  </h1>
+                  {/* ── LEFT — 55% on lg ── */}
+                  <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start">
 
-                  <p className="text-white/60 leading-relaxed text-[12px] sm:text-[14px] lg:text-[15px] text-center lg:text-left max-w-[310px] sm:max-w-lg mx-auto lg:mx-0 mb-5 sm:mb-7 line-clamp-3 sm:line-clamp-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
-                    {slide.description}
-                  </p>
+                    {/* Eyebrow pill */}
+                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-semibold tracking-wider uppercase mb-3 backdrop-blur-sm ${eb.cls}`}>
+                      {eb.dot === "red" && (
+                        <span className="relative flex h-1.5 w-1.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-400" />
+                        </span>
+                      )}
+                      {eb.label}
+                    </span>
 
-                  <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 w-full sm:w-auto justify-center lg:justify-start">
-                    <Link href={slide.primaryBtn.href} className="w-full sm:w-auto" target="_blank">
-                      <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold cursor-pointer px-5 py-3 sm:px-7 sm:py-3 text-[13px] sm:text-[14px] lg:text-[15px] rounded-xl transition-all duration-300 shadow-lg shadow-amber-900/40 hover:scale-105 hover:shadow-amber-500/40">
-                        {slide.primaryBtn.label}
-                      </button>
-                    </Link>
-                    <Link href={slide.secondaryBtn.href} className="w-full sm:w-auto" target="_blank">
-                      <button className="w-full border border-white/25 text-white/85 font-medium cursor-pointer px-5 py-3 sm:px-6 sm:py-3 text-[13px] sm:text-[14px] lg:text-[15px] rounded-xl bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:scale-105">
-                        {slide.secondaryBtn.label}
-                      </button>
-                    </Link>
+                    {/* Headline — scaled down significantly */}
+                    <h1 className="text-[22px] sm:text-[28px] lg:text-[35px] xl:text-[40px] font-bold leading-[1.25] text-white text-center lg:text-left mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+                      <SlideTitle title={slide.title} accent={slide.titleAccent} />
+                    </h1>
+
+                    {/* Description */}
+                    <p className="text-white/60 leading-relaxed text-[12px] sm:text-[13px] lg:text-[13px] xl:text-[14px] text-center lg:text-left max-w-[310px] sm:max-w-md lg:max-w-none mb-5 line-clamp-3 sm:line-clamp-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
+                      {slide.description}
+                    </p>
+
+                    {/* CTAs */}
+                    <div className="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto justify-center lg:justify-start">
+                      <Link href={slide.primaryBtn.href} className="w-full sm:w-auto" target="_blank">
+                        <button className="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold cursor-pointer px-5 py-2.5 text-[12px] sm:text-[13px] lg:text-[13px] xl:text-sm rounded-xl transition-all duration-300 shadow-lg shadow-amber-900/40 hover:scale-105 hover:shadow-amber-500/40">
+                          {slide.primaryBtn.label}
+                        </button>
+                      </Link>
+                      <Link href={slide.secondaryBtn.href} className="w-full sm:w-auto" target="_blank">
+                        <button className="w-full border border-white/25 text-white/85 font-medium cursor-pointer px-5 py-2.5 text-[12px] sm:text-[13px] lg:text-[13px] xl:text-sm rounded-xl bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:scale-105">
+                          {slide.secondaryBtn.label}
+                        </button>
+                      </Link>
+                    </div>
                   </div>
-                </div>
 
-                {/* RIGHT */}
-                <div className="w-full lg:w-[50%] flex items-center justify-center lg:justify-center">
-                  <RightPanel type={slide.right} />
+                  {/* ── RIGHT — 45% on lg ── */}
+                  <div className="w-full lg:w-[45%] flex items-center justify-end">
+                    <RightPanel type={slide.right} />
+                  </div>
+
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
 
-        {/* Dots */}
-        <div className="relative lg:absolute lg:bottom-10 w-full flex justify-center gap-2 z-20 pt-3 pb-5 lg:pt-0 lg:pb-0">
+        {/* Dots navigation */}
+        <div className="relative lg:absolute lg:bottom-5 lg:left-0 lg:right-0 w-full flex justify-center gap-2 z-20 pb-5 lg:pb-0">
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => handleDot(i)}
               aria-label={`Slide ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${i === visible ? "w-7 bg-amber-600" : "w-2 bg-white/20 hover:bg-white/45"}`}
+              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${i === visible ? "w-6 bg-amber-600" : "w-2 bg-white/20 hover:bg-white/45"}`}
             />
           ))}
         </div>

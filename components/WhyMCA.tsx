@@ -55,78 +55,61 @@ const steps = [
 
 export function McaJourneySection() {
   return (
-    <section className="relative w-full overflow-hidden px-6 sm:px-12 lg:px-24 py-16 lg:py-24 isolate">
-      {/* ── background — exact match to StudyPlanSection ── */}
+    <section className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 isolate">
+      {/* ── background ── */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Deep space */}
         <div className="absolute inset-0 bg-[#020617]" />
-        {/* Cyan nebula */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
-        {/* Green nebula */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
-        {/* Soft atmospheric diffusion */}
-        {/* Subtle vignette */}
         <div className="absolute inset-0 bg-black/30" />
       </div>
 
       {/* ── Stars ── */}
-      <div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        aria-hidden="true"
-      >
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         {STARS.map((s) => (
           <span
             key={s.id}
             className={`absolute rounded-full ${s.amber ? "bg-amber-300" : "bg-white"}`}
-            style={{
-              top: s.top,
-              left: s.left,
-              width: s.w,
-              height: s.w,
-              opacity: s.opacity,
-            }}
+            style={{ top: s.top, left: s.left, width: s.w, height: s.w, opacity: s.opacity }}
           />
         ))}
       </div>
+
       {/* ── content ── */}
-      <div className="relative z-20 max-w-6xl mx-auto">
+      <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* header row */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-10 lg:mb-14">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-8 lg:mb-12">
           <div>
-            <p className="flex items-center gap-2 text-md font-bold tracking-[.22em] uppercase text-amber-600 mb-3 font-sans">
-              <span className="w-1.25 h-1.25 rounded-full bg-amber-600 inline-block animate-pulse" />
+            <p className="flex items-center gap-2 text-[10px] font-bold tracking-[.22em] uppercase text-amber-600 mb-2.5 font-sans">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block animate-pulse" />
               The MCA Journey
             </p>
-           <h2 className="font-serif text-3xl lg:text-4xl xl:text-5xl text-white leading-tight tracking-tight mb-3">
-  Confused about MCA?
-  <span className="text-amber-500"> Here is the full journey</span>
-</h2>
-            <div className="h-0.5 w-12 bg-amber-500 rounded-full mb-4" />
-            <p className="text-white/70 text-base leading-relaxed  font-sans">
+            <h2 className="font-serif text-[1.6rem] sm:text-[2rem] lg:text-[2.2rem] xl:text-[2.6rem] text-white leading-tight tracking-tight mb-2.5">
+              Confused about MCA?
+              <span className="text-amber-500"> Here is the full journey</span>
+            </h2>
+            <div className="h-0.5 w-10 bg-amber-500 rounded-full mb-3" />
+            <p className="text-white/70 text-[0.875rem] sm:text-[0.9rem] leading-relaxed max-w-xl font-sans">
               Many students choose MCA after graduation but are unsure about
               exams, colleges, duration, and career options. Here is the
               complete path from eligibility to your first tech job.
             </p>
           </div>
-          {/* <Link href="/why-mca" className="flex-shrink-0">
-            <button className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/[.05] border border-white/[.1] text-white/60 text-[13px] font-semibold hover:bg-amber-600/10 hover:border-amber-600/30 hover:text-amber-400 transition-all duration-200 font-sans">
-              Full MCA Guide <span className="transition-transform group-hover:translate-x-1">→</span>
-            </button>
-          </Link> */}
         </div>
 
         {/* stat pills */}
-        <div className="flex flex-wrap gap-2.5 mb-10 lg:mb-14">
+        <div className="flex flex-wrap gap-2 mb-8 lg:mb-12">
           {stats.map((s) => (
             <div
               key={s.num}
-              className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[.04] border border-white/[.08]"
+              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[.04] border border-white/[.08]"
             >
-              <span className={`font-serif text-[18px] font-bold ${s.color}`}>
+              <span className={`font-serif text-base font-bold ${s.color}`}>
                 {s.num}
               </span>
-              <span className="w-px h-4 bg-white/10" />
-              <span className="text-[12px] text-white/70 font-sans">
+              <span className="w-px h-3.5 bg-white/10" />
+              <span className="text-[11px] text-white/70 font-sans">
                 {s.label}
               </span>
             </div>
@@ -145,22 +128,20 @@ export function McaJourneySection() {
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-amber-600 to-amber-400 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 rounded-full" />
 
                 {/* node */}
-                <div className="relative w-[52px] h-[52px] rounded-full bg-amber-400/20 border border-white/[.09] flex items-center justify-center mb-3 group-hover:bg-amber-400/[.09] group-hover:border-amber-400/30 transition-all duration-200">
-                  <span className="text-[19px]">{s.emoji}</span>
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-600 border border-amber-400/25 text-white text-[12px] font-bold flex items-center justify-center font-sans">
+                <div className="relative w-12 h-12 rounded-full bg-amber-400/20 border border-white/[.09] flex items-center justify-center mb-3 group-hover:bg-amber-400/[.09] group-hover:border-amber-400/30 transition-all duration-200">
+                  <span className="text-[17px]">{s.emoji}</span>
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-600 border border-amber-400/25 text-white text-[10px] font-bold flex items-center justify-center font-sans">
                     {i + 1}
                   </span>
                 </div>
 
-                <p className="text-[11.5px] font-bold text-white/75 leading-snug tracking-widest mb-1 font-sans">
+                <p className="text-[11px] font-bold text-white/75 leading-snug tracking-wide mb-1 font-sans">
                   {s.label}
                 </p>
-                <p className="text-[11px] text-amber-100/60 leading-relaxed mb-2 font-sans">
+                <p className="text-[10px] text-amber-100/60 leading-relaxed mb-2 font-sans">
                   {s.sub}
                 </p>
-                <span
-                  className={`inline-flex items-center px-2 py-[2px] rounded-full text-[8.5px] font-bold tracking-[.06em] uppercase border ${s.badgeStyle} font-sans`}
-                >
+                <span className={`inline-flex items-center px-2 py-[2px] rounded-full text-[8px] font-bold tracking-[.06em] uppercase border ${s.badgeStyle} font-sans`}>
                   {s.badge}
                 </span>
               </div>
@@ -169,9 +150,9 @@ export function McaJourneySection() {
         </div>
 
         {/* CTA */}
-        <div className="mt-10 lg:mt-12 flex justify-center">
+        <div className="mt-8 lg:mt-10 flex justify-center">
           <Link href="/mca-journey">
-            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-8 py-3.5 rounded-xl text-[13px] font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
+            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-xl text-[12px] sm:text-[13px] font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
               <span className="relative z-10">Explore MCA Guide →</span>
               <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent pointer-events-none" />
             </button>
