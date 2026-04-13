@@ -76,7 +76,7 @@ export function McaJourneySection() {
       </div>
 
       {/* ── content ── */}
-      <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-0">
 
         {/* header row */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-8 lg:mb-12">

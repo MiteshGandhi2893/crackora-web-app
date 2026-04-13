@@ -34,7 +34,7 @@ export function ToolsSection() {
         }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-0">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 xl:gap-20 items-center">
 
           {/* LEFT */}

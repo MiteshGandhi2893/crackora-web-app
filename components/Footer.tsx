@@ -49,7 +49,7 @@ export function Footer() {
   }, []);
   return (
     <footer className="relative border-t border-white/5 overflow-hidden">
-      <div className=" mx-auto lg:px-24 px-10">
+      <div className=" mx-auto  px-4 lg:px-0 max-w-6xl">
         <div className="pointer-events-none absolute inset-0">
           {/* Deep space */}
           <div className="absolute inset-0 bg-[#020617]" />

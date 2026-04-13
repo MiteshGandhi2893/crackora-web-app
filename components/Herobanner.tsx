@@ -112,7 +112,7 @@ const OrbitBubble = memo(function OrbitBubble({
 
 const ThreeRingOrbit = memo(function ThreeRingOrbit() {
   return (
-    <div className="w-full flex items-center justify-end select-none">
+    <div className="w-full flex items-center lg:justify-end justify-center select-none">
       {/* Tightened sizes so it doesn't overflow the 40% right column */}
       <div className="w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[360px] md:h-[360px] lg:w-[380px] lg:h-[380px] xl:w-[400px] xl:h-[400px]">
         <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg" className="w-full h-full overflow-visible">
@@ -397,7 +397,7 @@ const SlideTitle = memo(function SlideTitle({ title, accent }: { title: string; 
 const RightPanel = memo(function RightPanel({ type }: { type: RightKey }) {
   if (type === "orbit") {
     return (
-      <div className="w-full flex justify-end">
+      <div className="w-full flex lg:justify-end justify-center">
         <ThreeRingOrbit />
       </div>
     );
@@ -546,7 +546,7 @@ export function HeroBanner() {
         Container — matches your header's max-w-6xl + px-4 sm:px-6 lg:px-8 convention.
         Adjust the px values here to exactly match your <Header /> padding.
       */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 ">
         {/* Slide stack — min-height keeps it from collapsing */}
         <div className="relative lg:min-h-[560px] xl:min-h-[580px]">
           {slides.map((slide, i) => {
@@ -562,13 +562,13 @@ export function HeroBanner() {
                 key={slide.id}
                 className={[
                   "lg:absolute lg:inset-0",
-                  "transition-[transform,opacity] duration-[420ms] ease-in-out",
+                  "transition-[transform,opacity] duration-420 ease-in-out",
                   "will-change-[transform,opacity]",
                   isExiting ? exitCls : "translate-x-0 opacity-100",
                 ].join(" ")}
               >
                 {/* ── Two-column flex layout ── */}
-                <div className="w-full h-full flex flex-col lg:flex-row lg:items-center lg:pl-4 pt-8 sm:pt-10 lg:pt-12 pb-6 sm:pb-8 lg:pb-14 gap-6 lg:gap-10 xl:gap-14">
+                <div className="w-full h-full flex flex-col lg:flex-row lg:items-center pt-15 sm:pt-15 lg:pt-12 pb-6 sm:pb-8 lg:pb-14 gap-6 lg:gap-10 xl:gap-14 ">
 
                   {/* ── LEFT — 55% on lg ── */}
                   <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start">
@@ -585,7 +585,7 @@ export function HeroBanner() {
                     </span>
 
                     {/* Headline — scaled down significantly */}
-                    <h1 className="text-[22px] sm:text-[28px] lg:text-[35px] xl:text-[40px] font-bold leading-[1.25] text-white text-center lg:text-left mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+                    <h1 className="text-[22px] sm:text-[28px] lg:text-[35px] xl:text-[40px] font-bold leading-tight text-white text-center lg:text-left mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
                       <SlideTitle title={slide.title} accent={slide.titleAccent} />
                     </h1>
 
@@ -610,7 +610,7 @@ export function HeroBanner() {
                   </div>
 
                   {/* ── RIGHT — 45% on lg ── */}
-                  <div className="w-full lg:w-[45%] flex items-center justify-end">
+                  <div className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end">
                     <RightPanel type={slide.right} />
                   </div>
 
