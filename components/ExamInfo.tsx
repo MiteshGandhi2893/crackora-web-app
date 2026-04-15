@@ -294,9 +294,10 @@ export function ExamInfo({ exam }: { exam: Exam }) {
         <div className="max-w-6xl mx-auto px-4 lg:px-10 py-8 lg:py-12 flex gap-6 items-start">
           {/* ── Desktop TOC sidebar ── */}
           <aside
-            className="hidden lg:flex w-72 shrink-0 flex-col sticky top-16 h-fit
-                            bg-white border border-gray-200 rounded-2xl p-5 shadow-sm"
-          >
+  className="hidden lg:flex w-72 shrink-0 flex-col sticky top-16
+              bg-white border border-gray-200 rounded-2xl p-5 shadow-sm
+              max-h-[calc(100vh-5rem)] overflow-y-auto"
+>
             {/* TOC header */}
             <div className="mb-4">
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
