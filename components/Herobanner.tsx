@@ -687,7 +687,7 @@ export function HeroBanner() {
     goTo(next);
   }, [visible, goTo]);
 
-  const resetTimer = useInterval(advance, 80000);
+  const resetTimer = useInterval(advance, 6000);
 
   const handleDot = useCallback(
     (i: number) => {
