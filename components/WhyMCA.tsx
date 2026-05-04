@@ -3,7 +3,7 @@ import { STARS } from "@/lib/util";
 import Link from "next/link";
 
 const stats = [
-  { num: "₹3–7L", label: "Starting salary after MCA", color: "text-amber-400" },
+  { num: "₹4 - 10L", label: "Starting salary after MCA", color: "text-amber-400" },
   { num: "1,285", label: "NIT seats via NIMCET", color: "text-cyan-300" },
   { num: "2 yrs", label: "To become job-ready", color: "text-emerald-400" },
 ];
@@ -85,12 +85,12 @@ export function McaJourneySection() {
               <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block animate-pulse" />
               The MCA Journey
             </p>
-            <h2 className="font-serif text-[1.6rem] sm:text-[2rem] lg:text-[2.2rem] xl:text-[2.6rem] text-white leading-tight tracking-tight mb-2.5">
+            <h2 className="font-serif text-[2rem] lg:text-[3rem] text-white leading-tight tracking-tight mb-2.5">
               Confused about MCA?
               <span className="text-amber-500"> Here is the full journey</span>
             </h2>
             <div className="h-0.5 w-10 bg-amber-500 rounded-full mb-3" />
-            <p className="text-white/70 text-[0.875rem] sm:text-[0.9rem] leading-relaxed max-w-xl font-sans">
+            <p className="text-white/70 text-[1.2rem] leading-relaxed  font-sans">
               Many students choose MCA after graduation but are unsure about
               exams, colleges, duration, and career options. Here is the
               complete path from eligibility to your first tech job.
@@ -105,11 +105,11 @@ export function McaJourneySection() {
               key={s.num}
               className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[.04] border border-white/[.08]"
             >
-              <span className={`font-serif text-base font-bold ${s.color}`}>
+              <span className={`font-serif text-xl font-bold ${s.color}`}>
                 {s.num}
               </span>
               <span className="w-px h-3.5 bg-white/10" />
-              <span className="text-[11px] text-white/70 font-sans">
+              <span className="text-lg text-white/70 font-sans">
                 {s.label}
               </span>
             </div>
@@ -135,13 +135,13 @@ export function McaJourneySection() {
                   </span>
                 </div>
 
-                <p className="text-[11px] font-bold text-white/75 leading-snug tracking-wide mb-1 font-sans">
+                <p className="text-lg font-bold text-white/75 leading-snug tracking-wide mb-1 font-sans">
                   {s.label}
                 </p>
-                <p className="text-[10px] text-amber-100/60 leading-relaxed mb-2 font-sans">
+                <p className="text-sm text-amber-100/60 leading-relaxed mb-2 font-sans">
                   {s.sub}
                 </p>
-                <span className={`inline-flex items-center px-2 py-[2px] rounded-full text-[8px] font-bold tracking-[.06em] uppercase border ${s.badgeStyle} font-sans`}>
+                <span className={`inline-flex items-center px-2 py-[2px] rounded-full text-sm font-bold tracking-[.06em] uppercase border ${s.badgeStyle} font-sans`}>
                   {s.badge}
                 </span>
               </div>
@@ -152,7 +152,7 @@ export function McaJourneySection() {
         {/* CTA */}
         <div className="mt-8 lg:mt-10 flex justify-center">
           <Link href="/mca-journey">
-            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-xl text-[12px] sm:text-[13px] font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
+            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-xl text-xl font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
               <span className="relative z-10">Explore MCA Guide →</span>
               <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent pointer-events-none" />
             </button>
