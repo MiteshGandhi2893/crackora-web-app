@@ -1,43 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 /*
-  ToolsPage.tsx — All 6 MCA Tools
-  Place at: app/tools/page.tsx
-  Individual tools at: app/tools/[tool]/page.tsx
-  
-  Uses data from: data/mca-tools-data.ts
+  ToolsPage.tsx
+  Place at: components/tools/ToolsPage.tsx
+
+  SEO fixes (keeping "use client" since TOOL_LIST contains JSX):
+  1. Sidebar buttons → <Link href> (Googlebot can now crawl all 6 tool URLs)
+  2. Mobile <select onChange> → <nav> of <Link> pills (crawlable on mobile too)
+  3. Removed useRouter — no longer needed
 */
 
+import Link from "next/link";
 import { EXAM_META, type ExamKey } from "@/data/mca-tools-data";
 import { STARS } from "@/lib/util";
 import { TOOL_LIST, ToolKey } from "@/components/tools/tools-util";
-import { useRouter } from "next/navigation";
 
 export default function ToolsClient({ slug }: { slug: ToolKey }) {
-  const router = useRouter();
-
-  const activeTool = TOOL_LIST.find((t) => t.id === slug) || TOOL_LIST[0];
-
-  const handleSelect = (id: ToolKey) => {
-    router.push(`/tools/${id}`);
-  };
+  const activeTool = TOOL_LIST.find((t) => t.id === slug) ?? TOOL_LIST[0];
 
   return (
     <main className="min-h-screen bg-gray-50/40 lg:mt-10 mt-8">
       {/* Hero */}
       <div className="bg-white border-b border-gray-100 relative">
         <div className="pointer-events-none absolute inset-0">
-          {/* Deep space */}
           <div className="absolute inset-0 bg-[#020617]" />
-          {/* Cyan nebula */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
-          {/* Green nebula */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
-          {/* Subtle vignette */}
           <div className="absolute inset-0 bg-black/30" />
         </div>
 
-        {/* Stars */}
         <div
           className="absolute inset-0 overflow-hidden pointer-events-none"
           aria-hidden="true"
@@ -127,56 +117,52 @@ export default function ToolsClient({ slug }: { slug: ToolKey }) {
 
       {/* Main content */}
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-10">
-        {/* Mobile selector */}
-        <div className="md:hidden mb-4">
-          <select
-            value={slug}
-            onChange={(e) => handleSelect(e.target.value as ToolKey)}
-            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white text-cyan-900"
-          >
-            {TOOL_LIST.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.title}
-              </option>
-            ))}
-          </select>
-        </div>
+
+        {/* Mobile nav — <Link> pills instead of <select>, so URLs are crawlable */}
+        <nav className="md:hidden mb-4 flex flex-wrap gap-2" aria-label="MCA tools">
+          {TOOL_LIST.map((t) => (
+            <Link
+              key={t.id}
+              href={`/tools/${t.id}`}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                slug === t.id
+                  ? "bg-amber-600 text-white shadow"
+                  : "bg-white border border-gray-200 text-cyan-900 hover:bg-gray-50"
+              }`}
+            >
+              <span>{t.icon}</span>
+              <span>{t.title}</span>
+            </Link>
+          ))}
+        </nav>
 
         <div className="flex gap-6">
-          {/* Sidebar */}
+          {/* Sidebar — <Link href> instead of <button onClick>, so URLs are crawlable */}
           <aside className="hidden md:block w-64 shrink-0">
             <div className="sticky top-24">
-              <div className="bg-white border border-gray-200 rounded-2xl p-2 shadow-sm">
-                {TOOL_LIST.map((t) => {
-                  const isActive = slug === t.id;
-                  return (
-                    <button
-                      key={t.id}
-                      onClick={() => handleSelect(t.id)}
-                      className={`
-                        w-full flex items-center gap-3
-                        px-3 py-3
-                        rounded-xl
-                        text-sm
-                        font-medium
-                        mb-1
-                        transition-all
-                        ${
-                          isActive
-                            ? "bg-amber-600 text-white shadow"
-                            : "text-cyan-900 hover:bg-gray-100"
-                        }
-                      `}
-                    >
-                      <span className="text-lg">{t.icon}</span>
-                      <div className="flex flex-col items-start">
-                        <span>{t.title}</span>
-                        <span className="text-[10px] opacity-70">{t.when}</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+              <nav
+                className="bg-white border border-gray-200 rounded-2xl p-2 shadow-sm"
+                aria-label="MCA tools navigation"
+              >
+                {TOOL_LIST.map((t) => (
+                  <Link
+                    key={t.id}
+                    href={`/tools/${t.id}`}
+                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium mb-1 transition-all ${
+                      slug === t.id
+                        ? "bg-amber-600 text-white shadow"
+                        : "text-cyan-900 hover:bg-gray-100"
+                    }`}
+                    aria-current={slug === t.id ? "page" : undefined}
+                  >
+                    <span className="text-lg" aria-hidden="true">{t.icon}</span>
+                    <div className="flex flex-col items-start">
+                      <span>{t.title}</span>
+                      <span className="text-[10px] opacity-70">{t.when}</span>
+                    </div>
+                  </Link>
+                ))}
+              </nav>
             </div>
           </aside>
 
@@ -192,8 +178,6 @@ export default function ToolsClient({ slug }: { slug: ToolKey }) {
                   {activeTool.description}
                 </p>
               </div>
-
-              {/* Tool component */}
               <div>{activeTool.component}</div>
             </div>
           </section>

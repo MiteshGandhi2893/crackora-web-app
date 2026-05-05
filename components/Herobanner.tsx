@@ -1,5 +1,6 @@
 "use client";
 
+import { h1, h2, h3, p } from "@/data/tailwind-utils";
 import { STARS } from "@/lib/util";
 import Image from "next/image";
 import Link from "next/link";
@@ -127,7 +128,13 @@ const PlatformPanel = memo(function PlatformPanel() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <circle cx="12" cy="12" r="9" stroke="#f59e0b" strokeWidth="1.5" />
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="#f59e0b"
+                strokeWidth="1.5"
+              />
               <path
                 d="M8 12 L11 15 L16 9"
                 stroke="#f59e0b"
@@ -140,9 +147,7 @@ const PlatformPanel = memo(function PlatformPanel() {
 
           {/* Name + tagline */}
           <div className="flex flex-col">
-            <div className="text-[15px] font-bold tracking-wider text-amber-500"
-             
-            >
+            <div className="text-[15px] font-bold tracking-wider text-amber-500">
               CRACKORA
             </div>
             <div className="text-sm text-stone-300 mt-1">
@@ -165,23 +170,17 @@ const PlatformPanel = memo(function PlatformPanel() {
                   padding: "6px 10px",
                 }}
               >
-                <div
-                  className="text-[15px] font-bold text-amber-500"
-                >
+                <div className="text-[15px] font-bold text-amber-500">
                   {num}
                 </div>
-                <div className="text-xs text-stone-400">
-                  {lbl}
-                </div>
+                <div className="text-xs text-stone-400">{lbl}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* ── Exams covered ── */}
-        <div
-        className="text-[15px] font-bold mb-5 text-stone-400"
-        >
+        <div className="text-[15px] font-bold mb-5 text-stone-400">
           Exams covered
         </div>
         <div
@@ -212,10 +211,7 @@ const PlatformPanel = memo(function PlatformPanel() {
         />
 
         {/* ── Features ── */}
-        <div
-        className="text-sm text-stone-400 font-bold mb-5"
-
-        >
+        <div className="text-sm text-stone-400 font-bold mb-5">
           What you get — free
         </div>
         <div
@@ -247,9 +243,7 @@ const PlatformPanel = memo(function PlatformPanel() {
                   flexShrink: 0,
                 }}
               />
-              <span
-                style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8" }}
-              >
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8" }}>
                 {f}
               </span>
             </div>
@@ -344,12 +338,8 @@ const MentorCard = memo(function MentorCard({
 
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-baseline gap-1">
-              <span className="text-gray-400 text-2xl] line-through">
-                ₹599
-              </span>
-              <span className="text-amber-600 text-3xl font-bold">
-                ₹249
-              </span>
+              <span className="text-gray-400 text-2xl] line-through">₹599</span>
+              <span className="text-amber-600 text-3xl font-bold">₹249</span>
               <span className="text-gray-400 text-xl">/ session</span>
             </div>
             <span className="text-md text-green-700 border border-green-200 bg-green-50 px-2 py-0.5 rounded-full font-bold">
@@ -506,8 +496,7 @@ const eyebrowMap: Record<
 > = {
   platform: {
     cls: "border-amber-400/60 bg-amber-950/60 text-amber-300",
-    label:
-      "Free tools, real guidance — from exam day to your first job offer",
+    label: "Free tools, real guidance — from exam day to your first job offer",
   },
   session: {
     cls: "border-cyan-400/60 bg-cyan-950/60 text-cyan-300",
@@ -676,25 +665,25 @@ export function HeroBanner() {
       dispatch({ type: "GO", next });
       exitTimeoutRef.current = setTimeout(
         () => dispatch({ type: "CLEAR_EXIT" }),
-        1500
+        1500,
       );
     },
-    [visible, isMobile]
+    [visible, isMobile],
   );
 
   const advance = useCallback(() => {
     const next = (visible + 1) % slides.length;
     goTo(next);
-  }, [visible, goTo]);
+  }, [visible, goTo]); 
 
-  const resetTimer = useInterval(advance, 6000);
+  const resetTimer = useInterval(advance, 5000);
 
   const handleDot = useCallback(
     (i: number) => {
       goTo(i);
       resetTimer();
     },
-    [goTo, resetTimer]
+    [goTo, resetTimer],
   );
 
   const exitCls =
@@ -705,10 +694,7 @@ export function HeroBanner() {
   return (
     <div className="relative w-full overflow-hidden mt-5 bg-[#020817]">
       {/* Background layers */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden="true"
-      >
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute inset-0 bg-[#020617]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
@@ -740,10 +726,8 @@ export function HeroBanner() {
               >
                 {/* ── Two-column flex layout ── */}
                 <div className="w-full h-full flex flex-col lg:flex-row lg:items-center pt-15 sm:pt-15 lg:pt-12 pb-6 sm:pb-8 lg:pb-14 gap-6 lg:gap-10 xl:gap-14">
-
                   {/* ── LEFT — 55% on lg ── */}
                   <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start">
-
                     {/* Eyebrow pill */}
                     <span
                       className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-semibold tracking-wider uppercase mb-3 backdrop-blur-sm ${eb.cls}`}
@@ -758,12 +742,18 @@ export function HeroBanner() {
                     </span>
 
                     {/* Headline */}
-                    <h1 className="text-4xl lg:text-5xl font-bold leading-tight text-white text-center lg:text-left mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
-                      <SlideTitle title={slide.title} accent={slide.titleAccent} />
+                    <h1 className={`${h1.lg} ${h1.sm} ${h1.default} font-bold leading-tight text-white text-center lg:text-left mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]`}>
+                      <SlideTitle
+                        title={slide.title}
+                        accent={slide.titleAccent}
+                      />
                     </h1>
 
                     {/* Description */}
-                    <p className="text-amber-50 leading-relaxed text-md lg:text-lg text-center lg:text-left max-w-[310px] sm:max-w-md lg:max-w-none my-5 line-clamp-3 sm:line-clamp-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
+                    <p className={
+                      `${p.lg} ${p.sm} ${p.default}
+                      text-amber-50 leading-relaxed  text-center lg:text-left max-w-[310px] sm:max-w-md lg:max-w-none my-5 line-clamp-3 sm:line-clamp-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]`
+                    }>
                       {slide.description}
                     </p>
 
@@ -794,7 +784,6 @@ export function HeroBanner() {
                   <div className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end">
                     <RightPanel type={slide.right} />
                   </div>
-
                 </div>
               </div>
             );

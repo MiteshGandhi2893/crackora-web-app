@@ -1,5 +1,6 @@
 "use client";
 
+import { h2, h3, p } from "@/data/tailwind-utils";
 import {
   BiTargetLock,
   BiBuildings,
@@ -69,14 +70,14 @@ export function WhyCrackora() {
               Why Crackora
             </span>
 
-            <h2 className="font-serif text-[2rem] lg:text-[2.6rem] text-cyan-900 leading-[1.2] tracking-tight">
+            <h2 className={`font-serif ${h2.lg} ${h2.sm} ${h2.default} text-cyan-900 leading-[1.2] tracking-tight`}>
               Best platform for{" "}
               <span className="text-amber-600">MCA Entrance Preparation</span>
             </h2>
 
             <div className="h-0.5 w-10 bg-amber-500 rounded-full" />
 
-            <p className="text-[#05101f]/65 text-[1.2rem] leading-[1.75] max-w-lg font-sans">
+            <p className={`text-[#05101f]/65 ${p.default} leading-[1.75] max-w-lg font-sans`}>
               Crackora helps MCA aspirants at every stage — entrance exam
               preparation, college selection, MCA studies, and placement
               guidance. Instead of figuring everything alone, you get a clear
@@ -132,11 +133,11 @@ export function WhyCrackora() {
                   <div className={`h-0.5 flex-1 rounded-full ${a.bar} opacity-30 group-hover:opacity-60 transition-opacity duration-300`} />
                 </div>
 
-                <h3 className="text-cyan-900 text-xl font-semibold leading-snug">
+                <h3 className={` ${h3.default} text-cyan-900 text-xl font-semibold leading-snug`}>
                   {f.title}
                 </h3>
 
-                <p className="text-cyan-950/55 text-[15px] leading-[1.7]">
+                <p className={`text-sm  text-cyan-950/55  leading-[1.7]`}>
                   {f.description}
                 </p>
               </div>

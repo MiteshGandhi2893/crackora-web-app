@@ -1,4 +1,5 @@
 "use client";
+import { h2, p } from "@/data/tailwind-utils";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { BiTime, BiX, BiChevronRight } from "react-icons/bi";
 
@@ -467,7 +468,7 @@ function OptionButton({
       >
         {dotLabel}
       </span>
-      <span className="leading-snug">{text}</span>
+      <span className="leading-snug text-sm">{text}</span>
     </button>
   );
 }
@@ -706,7 +707,7 @@ function ProblemCard({
       </div>
 
       {/* Question */}
-      <p className="text-[14px] text-[#05101f]/85 font-sans leading-relaxed flex-1">
+      <p className={`${p.default} text-[#05101f]/85 font-sans leading-relaxed flex-1`}>
         {problem.q}
       </p>
 
@@ -735,16 +736,16 @@ function ProblemCard({
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-1 text-[11px] text-[#05101f]/45 font-sans">
             <BiTime className="w-3 h-3" />
-            <span>{problem.avgTime}</span>
+            <span className="text-sm">{problem.avgTime}</span>
           </div>
           <div className="flex items-center gap-1 text-[11px] text-emerald-600 font-sans font-medium">
             <BiTime className="w-3 h-3" />
-            <span>{problem.crackTime}</span>
+            <span className="text-sm">{problem.crackTime}</span>
           </div>
         </div>
         <button
           onClick={handleReveal}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-950 text-white text-xs font-semibold font-sans hover:bg-cyan-900 disabled:opacity-60 disabled:cursor-default transition-colors shrink-0"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-950 text-white text-sm font-semibold font-sans hover:bg-cyan-900 disabled:opacity-60 disabled:cursor-default transition-colors shrink-0"
         >
           <BiChevronRight className="w-3.5 h-3.5" />
           See Solution
@@ -779,12 +780,12 @@ export function DemoLectures() {
           <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-amber-600 font-sans">
             Our Teaching Method
           </span>
-          <h2 className="font-serif text-3xl lg:text-4xl xl:text-5xl text-cyan-900 leading-tight tracking-tight">
+          <h2 className={`font-serif ${h2.lg} ${h2.sm} ${h2.default} text-cyan-900 leading-tight tracking-tight`}>
             See How We Break
             <br className="hidden sm:block" /> Every Problem Down
           </h2>
           <div className="h-0.5 w-12 bg-amber-500 rounded-full" />
-          <p className="text-[#05101f]/65 text-base leading-relaxed max-w-2xl font-sans mt-1">
+          <p className={`text-[#05101f]/65 ${p.default} leading-relaxed max-w-2xl font-sans mt-1`}>
             Pick any question. Select an option, then click{" "}
             <strong>See Solution</strong> to see the full breakdown.
           </p>

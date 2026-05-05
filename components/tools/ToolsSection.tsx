@@ -1,5 +1,6 @@
 "use client";
 
+import { h2, p } from "@/data/tailwind-utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -40,7 +41,7 @@ export function ToolsSection() {
           {/* LEFT */}
           <div className="lg:w-3/5 flex flex-col gap-5 sm:gap-6">
             <div className="flex flex-col gap-2.5">
-              <h2 className="font-serif text-[1.6rem] sm:text-[2rem] lg:text-[2.2rem] xl:text-[2.6rem] text-cyan-900 leading-tight">
+              <h2 className={`font-serif ${h2.lg} ${h2.sm} ${h2.default} text-cyan-900 leading-tight`}>
                 Free MCA Entrance{" "}
                 <span className="text-amber-600">
                   Predictor & Preparation Tools
@@ -49,7 +50,7 @@ export function ToolsSection() {
               <div className="h-0.5 w-24 bg-amber-500 rounded-full" />
             </div>
 
-            <p className="text-[#05101f]/70 text-[0.875rem] sm:text-[0.9rem] leading-relaxed">
+            <p className={`text-[#05101f]/70 ${p.default} leading-relaxed`}>
               Use Crackora`s free tools for NIMCET, MAH MCA CET, TANCET, IPU
               CET, WB JECA and CUET PG. Predict colleges, estimate rank, analyse
               cutoffs, plan your study schedule, check eligibility, and
@@ -72,7 +73,7 @@ export function ToolsSection() {
             <div>
               <Link
                 href="/tools/college"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-600 text-white font-semibold text-[13px] hover:bg-amber-700 transition"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-600 text-white font-semibold text-md lg:text-lg hover:bg-amber-700 transition"
               >
                 Open All Tools →
               </Link>

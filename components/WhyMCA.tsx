@@ -1,4 +1,5 @@
 "use client";
+import { h2, p } from "@/data/tailwind-utils";
 import { STARS } from "@/lib/util";
 import Link from "next/link";
 
@@ -85,12 +86,12 @@ export function McaJourneySection() {
               <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block animate-pulse" />
               The MCA Journey
             </p>
-            <h2 className="font-serif text-[2rem] lg:text-[3rem] text-white leading-tight tracking-tight mb-2.5">
+            <h2 className={`${h2.default} ${h2.sm} ${h2.lg}   font-serif text-white leading-tight tracking-tight mb-2.5`}>
               Confused about MCA?
               <span className="text-amber-500"> Here is the full journey</span>
             </h2>
             <div className="h-0.5 w-10 bg-amber-500 rounded-full mb-3" />
-            <p className="text-white/70 text-[1.2rem] leading-relaxed  font-sans">
+            <p className={` ${p.default} ${p.sm} ${p.lg} text-white/70  leading-relaxed  font-sans`}>
               Many students choose MCA after graduation but are unsure about
               exams, colleges, duration, and career options. Here is the
               complete path from eligibility to your first tech job.
@@ -135,13 +136,13 @@ export function McaJourneySection() {
                   </span>
                 </div>
 
-                <p className="text-lg font-bold text-white/75 leading-snug tracking-wide mb-1 font-sans">
+                <p className={`${p.default} font-bold text-white/75 leading-snug tracking-wide mb-1 font-sans`}>
                   {s.label}
                 </p>
-                <p className="text-sm text-amber-100/60 leading-relaxed mb-2 font-sans">
+                <p className={`text-sm text-amber-100/60 leading-relaxed mb-2 font-sans`}>
                   {s.sub}
                 </p>
-                <span className={`inline-flex items-center px-2 py-[2px] rounded-full text-sm font-bold tracking-[.06em] uppercase border ${s.badgeStyle} font-sans`}>
+                <span className={`inline-flex items-center px-2 py-[2px] rounded-full text-xs font-bold tracking-[.06em] uppercase border ${s.badgeStyle} font-sans`}>
                   {s.badge}
                 </span>
               </div>
@@ -152,7 +153,7 @@ export function McaJourneySection() {
         {/* CTA */}
         <div className="mt-8 lg:mt-10 flex justify-center">
           <Link href="/mca-journey">
-            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-xl text-xl font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
+            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-xl text-lg font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
               <span className="relative z-10">Explore MCA Guide →</span>
               <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent pointer-events-none" />
             </button>

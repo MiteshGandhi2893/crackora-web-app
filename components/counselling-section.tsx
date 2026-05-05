@@ -1,4 +1,5 @@
 "use client";
+import { h2, p } from "@/data/tailwind-utils";
 import { STARS } from "@/lib/util";
 import dynamic from "next/dynamic";
 
@@ -52,14 +53,14 @@ export function CounsellingSection() {
               <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-amber-500 font-sans">
                 Expert Guidance
               </span>
-              <h2 className="font-serif text-[1.6rem] sm:text-[2rem] lg:text-[2.2rem] xl:text-[2.6rem] text-white leading-tight tracking-tight">
+              <h2 className={`${h2.lg} ${h2.sm} ${h2.default} font-serif  text-white leading-tight tracking-tight`}>
                 Mentorship &
                 <span className="text-amber-500"> Doubt Solving</span>
               </h2>
               <div className="h-0.5 w-10 bg-amber-500 rounded-full" />
             </div>
 
-            <p className="text-white/60 text-[0.875rem] sm:text-[0.9rem] leading-relaxed font-sans">
+            <p className={`${p.default} ${p.sm} ${p.lg} text-white/60  leading-relaxed font-sans`}>
               Get personalized guidance from expert mentors. Solve your doubts
               faster, build clarity in concepts, and accelerate your exam
               preparation with structured, one-on-one support.
@@ -74,7 +75,7 @@ export function CounsellingSection() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <span className="text-white/60 text-[0.875rem] sm:text-[0.9rem]">{b}</span>
+                  <span className={`text-white/60 ${p.default}`}>{b}</span>
                 </li>
               ))}
             </ul>
