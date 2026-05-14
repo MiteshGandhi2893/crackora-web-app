@@ -43,9 +43,9 @@ export default function Home() {
 
       {/* ✅ Below-the-fold → dynamically loaded */}
       <WhyCrackora />
+      <DemoLectures />
       <McaJourneySection />
       <ToolsSection />
-      <DemoLectures />
       <CounsellingSection />
       <Testimonials />
     </>
