@@ -1,9 +1,4 @@
-# *
 User-agent: *
 Allow: /
 
-# Host
-Host: https://crackora.com
-
-# Sitemaps
 Sitemap: https://crackora.com/sitemap.xml
