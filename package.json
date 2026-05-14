@@ -13,6 +13,7 @@
     "@next/bundle-analyzer": "^16.2.2",
     "@next/third-parties": "^16.2.2",
     "@tailwindcss/typography": "^0.5.19",
+    "framer-motion": "^12.38.0",
     "india-state-city": "^1.0.3",
     "lite-youtube-embed": "^0.3.4",
     "next": "16.1.6",

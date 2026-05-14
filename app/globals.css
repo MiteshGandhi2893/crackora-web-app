@@ -191,32 +191,31 @@ body {
   .blog-content h2 {
     font-size: 2rem;
     color: #164e61;
-    padding-bottom: 1rem;
     margin-bottom: 0;
+    line-height: 2.2rem;
   }
 
   .blog-content h3 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     color: #d97005 !important;
-    padding-bottom: 0.6rem;
-    font-weight: 500;
-    margin-bottom: 0;
+    line-height: 2.1rem;
+    font-weight: 600;
   }
 
   .blog-content p {
-    font-size: 0.9rem;
-    opacity: 90;
+    padding:.5rem 0;
     text-align: justify;
+    color: rgba(0, 0, 0, 0.6);
   }
 
   .blog-content h4 {
-    font-size: 1rem;
     color: #164e61 !important;
-    padding-bottom: 0.6rem;
-    font-weight: 500;
     margin-bottom: 0;
-    letter-spacing: 1.2px;
-    text-decoration: underline !important;
+    font-size: 1.5rem;
+    color: #164e61;
+    font-weight: 700;
+    opacity: 90;
+    text-decoration: none;
   }
   /* ✅ Card-style table */
   .blog-content table {

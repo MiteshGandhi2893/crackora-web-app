@@ -79,7 +79,7 @@ export function Socials() {
 
           {/* WhatsApp */}
           <Link
-            href="https://wa.me/917738831585"
+            href="https://whatsapp.com/channel/0029VbCTPAe9Bb61q5F63s21"
             target="_blank"
             rel="noopener noreferrer"
             className="

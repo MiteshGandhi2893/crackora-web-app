@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { LuClock, LuEye, LuCalendar, LuArrowLeft } from "react-icons/lu";
 import CommentsSection from "@/components/blogs/CommentsSection";
 import { blogService } from "@/services/Blog.service";
+import { API_BASE_URL } from "@/services/api.service";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -29,7 +30,8 @@ export async function generateMetadata({
     description: desc,
     keywords: blog.seo_keywords,
     alternates: {
-      canonical: blog.canonical_url || `https://crackora.com/blogs/${blog.slug}`,
+      canonical:
+        blog.canonical_url || `https://crackora.com/blogs/${blog.slug}`,
     },
     openGraph: {
       title: blog.seo_title || blog.title,
@@ -126,91 +128,98 @@ export default async function BlogDetailPage({
       />
 
       <main className="min-h-screen bg-[#f8f7f4]">
-
         {/* ── Cover image hero ──────────────────────────────── */}
         {blog.cover_image && (
-          <div className="relative w-full h-72 sm:h-96 md:h-[480px]">
-            <Image
-              src={blog.cover_image}
-              alt={blog.title}
-              fill
-              priority
-               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-            />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/95 via-cyan-950/70 to-cyan-950/10" />
+          <div className="h-72 sm:h-96 md:h-[480px] bg-cyan-900">
+            <div className="relative max-w-6xl h-full m-auto">
+              <Image
+                src={`${API_BASE_URL}/public${blog.cover_image}`}
+                alt={blog.title}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover opacity-60"
+              />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/95 via-cyan-950/70 to-cyan-950/10" />
 
-            {/* Overlay content */}
-            <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 pt-6 max-w-3xl mx-auto w-full">
-              <Link
-                href="/blogs"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold mb-5
+              {/* Overlay content */}
+              <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 pt-6 max-w-3xl mx-auto w-full">
+                <Link
+                  href="/blogs"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold mb-5
                            text-white/60 hover:text-amber-400 transition-colors"
-              >
-                <LuArrowLeft size={13} /> Back to all articles
-              </Link>
+                >
+                  <LuArrowLeft size={13} /> Back to all articles
+                </Link>
 
-              {blog.tags && blog.tags.length > 0 && (
-                <div className="flex gap-2 mb-4 flex-wrap">
-                  {blog.tags.map((t: any) => (
-                    <Link
-                      key={t.slug}
-                      href={`/blogs?tag=${t.slug}`}
-                      className="text-xs bg-amber-500 text-amber-900 font-bold px-3 py-1
+                {blog.tags && blog.tags.length > 0 && (
+                  <div className="flex gap-2 mb-4 flex-wrap">
+                    {blog.tags.map((t: any) => (
+                      <Link
+                        key={t.slug}
+                        href={`/blogs?tag=${t.slug}`}
+                        className="text-xs bg-amber-500 text-amber-900 font-bold px-3 py-1
                                  rounded-full hover:bg-amber-400 transition-colors"
-                    >
-                      {t.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight mb-5">
-                {blog.title}
-              </h1>
-
-              {/* Author + stats row */}
-              <div className="flex flex-wrap items-center gap-5">
-                <div className="flex items-center gap-2.5">
-                  {blog.author?.avatar ? (
-                    <Image
-                      src={blog.author.avatar}
-                      alt={blog.author.name ?? "Author"}
-                      width={36}
-                      height={36}
-                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="rounded-full border-2 border-amber-400/50"
-                    />
-                  ) : (
-                    <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-400/30
-                                    flex items-center justify-center">
-                      <span className="text-sm font-bold text-amber-300">
-                        {blog.author?.name?.[0] ?? "C"}
-                      </span>
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-sm font-semibold text-white">{blog.author?.name}</p>
-                    {blog.author?.bio && (
-                      <p className="text-xs text-white/50">{blog.author.bio}</p>
-                    )}
+                      >
+                        {t.name}
+                      </Link>
+                    ))}
                   </div>
-                </div>
+                )}
 
-                <div className="flex items-center gap-4 text-xs text-white/50">
-                  {blog.published_at && (
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight mb-5">
+                  {blog.title}
+                </h1>
+
+                {/* Author + stats row */}
+                <div className="flex flex-wrap items-center gap-5">
+                  <div className="flex items-center gap-2.5">
+                    {blog.author?.avatar ? (
+                      <Image
+                        src={blog.author.avatar}
+                        alt={blog.author.name ?? "Author"}
+                        width={36}
+                        height={36}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="rounded-full border-2 border-amber-400/50"
+                      />
+                    ) : (
+                      <div
+                        className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-400/30
+                                    flex items-center justify-center"
+                      >
+                        <span className="text-sm font-bold text-amber-300">
+                          {blog.author?.name?.[0] ?? "C"}
+                        </span>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {blog.author?.name}
+                      </p>
+                      {blog.author?.bio && (
+                        <p className="text-xs text-white/50">
+                          {blog.author.bio}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-xs text-white/50">
+                    {blog.published_at && (
+                      <span className="flex items-center gap-1">
+                        <LuCalendar size={12} />
+                        {format(new Date(blog.published_at), "d MMM yyyy")}
+                      </span>
+                    )}
                     <span className="flex items-center gap-1">
-                      <LuCalendar size={12} />
-                      {format(new Date(blog.published_at), "d MMM yyyy")}
+                      <LuClock size={12} /> {blog.read_time} min read
                     </span>
-                  )}
-                  <span className="flex items-center gap-1">
-                    <LuClock size={12} /> {blog.read_time} min read
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <LuEye size={12} /> {blog.views} views
-                  </span>
+                    <span className="flex items-center gap-1">
+                      <LuEye size={12} /> {blog.views} views
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -266,15 +275,19 @@ export default async function BlogDetailPage({
                     className="rounded-full border-2 border-gray-200"
                   />
                 ) : (
-                  <div className="w-9 h-9 rounded-full bg-cyan-50 border border-cyan-100
-                                  flex items-center justify-center">
+                  <div
+                    className="w-9 h-9 rounded-full bg-cyan-50 border border-cyan-100
+                                  flex items-center justify-center"
+                  >
                     <span className="text-sm font-bold text-cyan-800">
                       {blog.author?.name?.[0] ?? "C"}
                     </span>
                   </div>
                 )}
                 <div>
-                  <p className="text-sm font-semibold text-cyan-900">{blog.author?.name}</p>
+                  <p className="text-sm font-semibold text-cyan-900">
+                    {blog.author?.name}
+                  </p>
                   {blog.author?.bio && (
                     <p className="text-xs text-gray-400">{blog.author.bio}</p>
                   )}
@@ -308,7 +321,6 @@ export default async function BlogDetailPage({
 
         {/* ── Main content ─────────────────────────────────── */}
         <div className="max-w-6xl mx-auto px-6 pt-10 pb-4">
-
           {/* Categories */}
           {blog.categories && blog.categories.length > 0 && (
             <div className="flex gap-2 flex-wrap mb-8">
