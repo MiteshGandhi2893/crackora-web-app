@@ -1,16 +1,39 @@
 import { PageSection } from "@/interfaces/StaticPages.interface";
-import { Metadata } from "next";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Crackora",
+  description:
+    "Read Crackora's Privacy Policy to understand how we collect, use, store, and protect your personal data, including cookies, analytics, and third-party sharing practices.",
+
   metadataBase: new URL("https://crackora.com"),
+
   alternates: {
     canonical: "/privacy-policy",
   },
-  description:
-    "Learn how Crackora collects, uses, and protects your personal information. Our privacy policy covers data retention, cookies, third-party sharing, and your rights.",
-};
 
+  openGraph: {
+    title: "Privacy Policy | Crackora",
+    description:
+      "Learn how Crackora handles your data, cookies, and privacy rights across our platform.",
+    url: "https://crackora.com/privacy-policy",
+    siteName: "Crackora",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Privacy Policy | Crackora",
+    description:
+      "Understand how Crackora collects, uses, and protects your personal information.",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 export default function PrivacyPolicy() {
   const sections: PageSection[] = [
     {

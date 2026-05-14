@@ -1,23 +1,42 @@
 import { PageSection } from "@/interfaces/StaticPages.interface";
-import { Metadata } from "next";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Use / Terms & Conditions | Crackora.com",
-  description: `Welcome to Crackora.com (“Crackora”, “we”, “us”, or “our”). These
-          Terms of Use (“Terms”) govern your access to and use of our website,
-          mobile applications, and related services (collectively, the
-          “Platform”). By accessing, registering, or using the Platform, or by
-          clicking “I Agree”, “I Accept”, or similar, you confirm that you have
-          read, understood, and agree to be bound by these Terms and all
-          associated policies. If you do not agree with any part of these Terms,
-          you must discontinue use of the Platform immediately.`,
+  title: "Terms of Use / Terms & Conditions | Crackora",
+
+  description:
+    "Read Crackora’s Terms of Use governing access to our website, apps, and services. By using Crackora, you agree to these terms, policies, and user responsibilities.",
+
   metadataBase: new URL("https://crackora.com"),
+
   alternates: {
     canonical: "/terms-and-conditions",
   },
+
+  openGraph: {
+    title: "Terms & Conditions | Crackora",
+    description:
+      "Official Terms of Use for Crackora covering platform access, usage rules, and user responsibilities.",
+    url: "https://crackora.com/terms-and-conditions",
+    siteName: "Crackora",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Terms & Conditions | Crackora",
+    description:
+      "Read Crackora’s official Terms of Use and platform guidelines.",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
-export default function RefundPolicy() {
+export default function TermsAndConditions() {
   const sections: PageSection[] = [
     {
       number: "01",

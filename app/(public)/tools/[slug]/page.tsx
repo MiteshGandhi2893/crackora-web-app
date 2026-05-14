@@ -1,5 +1,6 @@
 import ToolsClient from "@/components/tools/ToolsPage";
 import { ToolKey } from "@/components/tools/tools-util";
+import { API_BASE_URL } from "@/services/api.service";
 import { Metadata } from "next";
 
 type Props = {
@@ -86,12 +87,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!meta) {
     return {
       title: "Free MCA Entrance Exam Tools 2025",
-        metadataBase: new URL("https://crackora.com"),
-  alternates: {
-    canonical: "/tools/college",
-  },
       description:
         "6 free tools for MCA entrance exam prep — college predictor, rank estimator, cutoff analyser and more.",
+
+      alternates: {
+        canonical: `${API_BASE_URL}/tools`,
+      },
+
+      openGraph: {
+        title: "Free MCA Entrance Exam Tools 2025",
+        description:
+          "Explore MCA tools like college predictor, rank estimator, cutoff analyser and more.",
+        url: `${API_BASE_URL}/tools`,
+        type: "website",
+      },
+
+      twitter: {
+        card: "summary",
+        title: "Free MCA Entrance Exam Tools 2025",
+        description:
+          "Explore MCA entrance exam tools for preparation and planning.",
+      },
     };
   }
 
@@ -99,23 +115,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: meta.title,
     description: meta.description,
     keywords: meta.keywords,
+
+    alternates: {
+      canonical: `${API_BASE_URL}/tools/${slug}`,
+    },
+
     openGraph: {
       title: meta.title,
       description: meta.description,
-      url: `https://crackora.com/tools/${slug}`,
+      url: `${API_BASE_URL}/tools/${slug}`,
       type: "website",
     },
+
     twitter: {
       card: "summary",
       title: meta.title,
       description: meta.description,
     },
-    alternates: {
-      canonical: `https://crackora.com/tools/${slug}`,
-    },
   };
 }
-
 export async function generateStaticParams() {
   return [
     { slug: "college" },

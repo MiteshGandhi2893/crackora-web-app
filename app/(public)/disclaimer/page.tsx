@@ -1,3 +1,59 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://crackora.com"),
+
+  title: "Disclaimer | Crackora",
+
+  description:
+    "Read the official Crackora disclaimer regarding educational content, MCA entrance preparation, career guidance, placements, external links, and limitation of liability.",
+
+  keywords: [
+    "Crackora disclaimer",
+    "educational disclaimer",
+    "MCA entrance guidance",
+    "career guidance disclaimer",
+    "placement disclaimer",
+    "MAH MCA CET preparation",
+    "NIMCET preparation",
+    "Crackora legal",
+    "online education disclaimer",
+  ],
+
+  alternates: {
+    canonical: "https://crackora.com/disclaimer",
+  },
+
+  openGraph: {
+    title: "Disclaimer | Crackora",
+    description:
+      "Understand the terms, limitations, and legal disclaimer governing the use of Crackora’s educational platform and services.",
+    url: "https://crackora.com/disclaimer",
+    siteName: "Crackora",
+    type: "website",
+    images: [
+      {
+        url: "/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "Crackora Disclaimer",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Disclaimer | Crackora",
+    description:
+      "Official legal disclaimer for Crackora’s educational platform, mentorship, and career guidance services.",
+    images: ["/logo.svg"],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 export default function DisclaimerPage() {
   const sections = [
     {

@@ -10,14 +10,60 @@ import { STARS } from "@/lib/util";
 export const metadata: Metadata = {
   metadataBase: new URL("https://crackora.com"),
 
-  alternates: {
-    canonical: "/blog",
-  },
-  title: "Blog | Crackora — MCA MH-CET Prep",
-  description:
-    "Exam strategy, college deep-dives, placement stories and career guides — written by someone who has been through it.",
-};
+  title: "Blog | Crackora — MCA Entrance, Academics & Placement Guides",
 
+  description:
+    "Explore Crackora blogs on MAH MCA CET, NIMCET, MCA colleges, placements, interview preparation, coding skills, career guidance, study strategies, and the complete MCA journey.",
+
+  keywords: [
+    "Crackora blog",
+    "MAH MCA CET blog",
+    "NIMCET preparation",
+    "MCA placement preparation",
+    "MCA colleges",
+    "MCA career guidance",
+    "DSA interview preparation",
+    "MCA entrance strategy",
+    "coding interview tips",
+    "MCA student resources",
+    "MCA academics",
+    "placement stories",
+  ],
+
+  alternates: {
+    canonical: "https://crackora.com/blog",
+  },
+
+  openGraph: {
+    title: "Crackora Blog",
+    description:
+      "Exam strategies, MCA college guides, placement preparation, interview tips, coding resources, and career advice for MCA students.",
+    url: "https://crackora.com/blog",
+    siteName: "Crackora",
+    type: "website",
+    images: [
+      {
+        url: "/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "Crackora Blog",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Crackora Blog",
+    description:
+      "Read blogs on MCA entrances, placements, coding, academics, and career growth with Crackora.",
+    images: ["/logo.svg"],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
 function BlogGridSkeleton() {

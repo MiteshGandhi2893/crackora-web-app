@@ -1,16 +1,38 @@
 import { PageSection } from "@/interfaces/StaticPages.interface";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Refund & Cancellation Policy | Crackora",
-    metadataBase: new URL("https://crackora.com"),
+  description:
+    "Read Crackora’s refund and cancellation policy for courses, mock tests, ebooks, and subscriptions. Learn eligibility criteria, refund timelines, and how to request a refund.",
+
+  metadataBase: new URL("https://crackora.com"),
+
   alternates: {
     canonical: "/refund-policy",
   },
-  description:
-    "Read Crackora's refund and cancellation policy for courses, mock tests, ebooks, and subscriptions. Understand eligibility, timelines, and how to raise a request.",
-};
 
+  openGraph: {
+    title: "Refund & Cancellation Policy | Crackora",
+    description:
+      "Understand Crackora’s refund rules for digital products including courses, mock tests, and subscriptions.",
+    url: "https://crackora.com/refund-policy",
+    siteName: "Crackora",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Refund & Cancellation Policy | Crackora",
+    description:
+      "Refund eligibility, timelines, and cancellation process for Crackora products and subscriptions.",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 export default function RefundPolicy() {
   const sections: PageSection[] = [
     {
