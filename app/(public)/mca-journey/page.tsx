@@ -16,7 +16,7 @@ import {
 // ─── Stage definitions ────────────────────────────────────────────────────────
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+ const metadata: Metadata = {
   title: "Complete MCA Journey Guide (2026) | Exams, Timeline, Careers",
   description:
     "Explore the complete MCA journey in India — eligibility, entrance exams, preparation timeline, semester structure, salary insights, and career paths after MCA. A practical, honest roadmap for students.",

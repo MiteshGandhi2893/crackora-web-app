@@ -1,19 +1,21 @@
-import { API_BASE_URL } from "@/services/api.service";
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = "https://crackora.com";
+
   return {
-   rules :[ 
-    {
+    rules: [
+      {
         userAgent: "*",
-        allow:"/",
-        disallow: ["/contact/", "/api/", "/dashboard/" ]
-    },
-     {
+        allow: "/",
+        disallow: ["/contact/", "/api/", "/dashboard/"],
+      },
+      {
         userAgent: "Googlebot",
-        allow:"/",
-        disallow: ["/terms-and-conditions" ]
-    }],
-    sitemap:`${API_BASE_URL}/sitemap.xml`
+        allow: "/",
+        disallow: ["/terms-and-conditions"],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
