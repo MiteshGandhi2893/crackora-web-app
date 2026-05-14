@@ -11,6 +11,10 @@ export const metadata: Metadata = {
           read, understood, and agree to be bound by these Terms and all
           associated policies. If you do not agree with any part of these Terms,
           you must discontinue use of the Platform immediately.`,
+  metadataBase: new URL("https://crackora.com"),
+  alternates: {
+    canonical: "/terms-and-conditions",
+  },
 };
 
 export default function RefundPolicy() {

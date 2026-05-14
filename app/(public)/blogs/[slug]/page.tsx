@@ -27,6 +27,8 @@ export async function generateMetadata({
 
   return {
     title,
+    metadataBase: new URL("https://crackora.com"),
+
     description: desc,
     keywords: blog.seo_keywords,
     alternates: {

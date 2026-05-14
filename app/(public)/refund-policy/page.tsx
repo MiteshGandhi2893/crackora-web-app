@@ -3,6 +3,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Refund & Cancellation Policy | Crackora",
+    metadataBase: new URL("https://crackora.com"),
+  alternates: {
+    canonical: "/refund-policy",
+  },
   description:
     "Read Crackora's refund and cancellation policy for courses, mock tests, ebooks, and subscriptions. Understand eligibility, timelines, and how to raise a request.",
 };

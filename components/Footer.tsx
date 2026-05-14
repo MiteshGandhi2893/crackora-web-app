@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Logo } from "./header/Logo";
 import { useEffect, useState } from "react";
 
-import { BiLogoYoutube, BiLogoInstagram, BiLogoWhatsapp } from "react-icons/bi";
 import { Socials } from "./SocialButtons";
 
 function FooterColumn({

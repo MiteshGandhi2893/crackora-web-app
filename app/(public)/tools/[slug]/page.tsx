@@ -21,6 +21,7 @@ const TOOL_META: Record<
       "MCA counselling 2025",
     ],
   },
+  
   rank: {
     title: "MCA Rank Predictor 2025 — Estimate Rank from Mock Score",
     description:
@@ -85,6 +86,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!meta) {
     return {
       title: "Free MCA Entrance Exam Tools 2025",
+        metadataBase: new URL("https://crackora.com"),
+  alternates: {
+    canonical: "/tools/college",
+  },
       description:
         "6 free tools for MCA entrance exam prep — college predictor, rank estimator, cutoff analyser and more.",
     };

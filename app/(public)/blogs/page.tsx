@@ -8,6 +8,11 @@ import { blogService } from "@/services/Blog.service";
 import { STARS } from "@/lib/util";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://crackora.com"),
+
+  alternates: {
+    canonical: "/blog",
+  },
   title: "Blog | Crackora — MCA MH-CET Prep",
   description:
     "Exam strategy, college deep-dives, placement stories and career guides — written by someone who has been through it.",

@@ -36,6 +36,8 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://crackora.com/exams/${slug}`,
     },
+      metadataBase: new URL("https://crackora.com"),
+
     openGraph: {
       title: `${exam.title} Exam Preparation | Crackora`,
       description: `Everything you need to crack ${exam.title} – syllabus, mocks, and guidance.`,
