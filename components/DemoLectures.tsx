@@ -814,7 +814,7 @@ export function DemoLectures() {
             it forces React to fully remount each ProblemCard when the
             category changes, resetting selectedOption + revealed to initial state.
         */}
-        <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-2 gap-4">
           {category.problems.map((problem, i) => (
             <ProblemCard
               key={`${activeCat}-${i}`}

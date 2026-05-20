@@ -24,7 +24,7 @@ const benefits = [
 
 export function CounsellingSection() {
   return (
-    <section className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24">
+    <section className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 lg:px-0 sm:px-10">
       {/* ── background ── */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[#020617]" />

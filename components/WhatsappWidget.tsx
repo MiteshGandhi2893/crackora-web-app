@@ -45,7 +45,7 @@ const chatOptions = [
 export function WhatsAppWidget() {
   const [open, setOpen] = useState(false);
 
-  const phone = "917738831585";
+  const phone = "919004782989";
 
   const sendMessage = (message: string) => {
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(

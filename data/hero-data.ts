@@ -143,11 +143,11 @@ export const SLIDES: Slide[] = [
       "Don't guess your college. Get personalised guidance from Azad Sir — smart shortlisting, fees vs ROI comparison, backup strategy, and placement record deep-dives in one 45-min session.",
     primaryBtn: {
       label: "Book Session — ₹249 →",
-      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+want+to+book+a+college+counselling+session+with+Azad+Sir",
+      href: "https://wa.me/919004782989?text=Hi+Crackora,+I+want+to+book+a+college+counselling+session+with+Azad+Sir",
     },
     secondaryBtn: {
       label: "Talk to Counsellor Free",
-      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+need+college+guidance+for+MCA",
+      href: "https://wa.me/919004782989?text=Hi+Crackora,+I+need+college+guidance+for+MCA",
     },
     right: "college-mentor",
     seoTitle:
@@ -164,11 +164,11 @@ export const SLIDES: Slide[] = [
       "Get your personalised career blueprint from Mitesh Sir. DSA + development skill planning, interview guidance, semester-wise action plan — everything to go from MCA student to first job.",
     primaryBtn: {
       label: "Book Session — ₹249 →",
-      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+want+to+book+a+career+mentorship+session+with+Mitesh+Sir",
+      href: "https://wa.me/919137997795?text=Hi+Crackora,+I+want+to+book+a+career+mentorship+session+with+Mitesh+Sir",
     },
     secondaryBtn: {
       label: "Talk to Counsellor Free",
-      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+need+career+guidance+for+MCA",
+      href: "https://wa.me/919137997795?text=Hi+Crackora,+I+need+career+guidance+for+MCA",
     },
     right: "guidance-mentor",
     seoTitle:

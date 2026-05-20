@@ -15,7 +15,7 @@ const tools = [
 
 export function ToolsSection() {
   return (
-    <section className="relative w-full overflow-hidden bg-[#f8f7f4] py-14 sm:py-18 lg:py-24">
+    <section className="relative w-full overflow-hidden bg-[#f8f7f4] py-14 sm:py-18 lg:py-24 lg:px-0 sm:px-10">
       {/* noise texture */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"

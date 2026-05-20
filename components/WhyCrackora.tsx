@@ -78,7 +78,7 @@ const stats = [
 // No useEffect needed. No loading states needed for initial data.
 export function WhyCrackora() {
   return (
-    <section className="w-full bg-[#f8f7f4] py-14 sm:py-18 lg:py-24 relative overflow-hidden">
+    <section className="w-full bg-[#f8f7f4] py-14 sm:py-18 lg:py-24 relative overflow-hidden lg:px-0 sm:px-10">
       {/* Decorative glows — pure CSS, zero JS */}
       <div className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
       <div className="pointer-events-none absolute -top-10 right-0 w-[35vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.05),transparent_65%)]" />

@@ -56,7 +56,7 @@ const steps = [
 
 export function McaJourneySection() {
   return (
-    <section className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 isolate">
+    <section className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 isolate lg:px-0 sm:px-10">
       {/* ── background ── */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[#020617]" />
@@ -106,11 +106,11 @@ export function McaJourneySection() {
               key={s.num}
               className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[.04] border border-white/[.08]"
             >
-              <span className={`font-serif text-xl font-bold ${s.color}`}>
+              <span className={`font-serif lg:text-xl font-bold ${s.color}`}>
                 {s.num}
               </span>
               <span className="w-px h-3.5 bg-white/10" />
-              <span className="text-lg text-white/70 font-sans">
+              <span className="lg:text-lg text-white/70 font-sans">
                 {s.label}
               </span>
             </div>
@@ -153,7 +153,7 @@ export function McaJourneySection() {
         {/* CTA */}
         <div className="mt-8 lg:mt-10 flex justify-center">
           <Link href="/mca-journey">
-            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-xl text-lg font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
+            <button className="relative overflow-hidden bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-xl lg:text-lg font-bold tracking-[.02em] hover:scale-[1.04] hover:shadow-[0_10px_36px_rgba(217,119,6,0.3)] transition-all duration-200 font-sans">
               <span className="relative z-10">Explore MCA Guide →</span>
               <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent pointer-events-none" />
             </button>
