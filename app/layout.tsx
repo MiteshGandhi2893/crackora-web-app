@@ -58,7 +58,7 @@ export default async function RootLayout({
             </AuthProvider>
           </LoadingProvider>
         </SnackbarProvider>
-        <GoogleAnalytics gaId="G-GBJ5XBZPMJ" /> {/* 👈 here */}
+        <GoogleAnalytics gaId="G-GBJ5XBZPMJ" /> {/* 👈   here */}
       </body>
     </html>
   );

@@ -17,7 +17,7 @@
 // ─────────────────────────────────────────────────────
 
 import { HeroSlider } from "./HeroSlider";         // client component (below)
-import { slides } from "../data/hero-data";              // plain data file (below)
+import { SLIDES } from "../data/hero-data";              // plain data file (below)
 
 // Because this is a server component, it CAN be async.
 // Example: if you needed live slot counts from your DB:
@@ -47,7 +47,7 @@ export function HeroBanner() {
         The reverse is not true — a client component cannot render a
         server component directly (it can receive one as a prop/children though).
       */}
-      <HeroSlider slides={slides} />
+      <HeroSlider slides={SLIDES} />
     </div>
   );
 }

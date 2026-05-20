@@ -18,20 +18,7 @@ const EXAM_COLORS: Record<string, { primary: string; light: string; border: stri
   mah:    { primary: "#2563eb", light: "#eff6ff", border: "#93c5fd" },
 };
 
-// ─── Safety classification (internal — never shown as raw numbers to student) ─
-//
-//  NIMCET (rank): relative buffer = (cutoff − rank) / cutoff
-//    ≥35% → SAFE    e.g. rank 50 vs cutoff 108 → 54% → SAFE
-//    ≥10% → LIKELY  e.g. rank 40 vs cutoff 47  → 15% → LIKELY
-//    <10% → TOUGH   e.g. rank 107 vs cutoff 108 → 0.9% → TOUGH
-//
-//  MAH (percentile): absolute gap = student − cutoff
-//    ≥1.5 → SAFE    e.g. 99.20 vs 97.62 → +1.58 → SAFE
-//    ≥0.4 → LIKELY  e.g. 99.20 vs 98.76 → +0.44 → LIKELY
-//    <0.4 → TOUGH   e.g. 98.50 vs 98.38 → +0.12 → TOUGH
-//
-//  classify() is only called on colleges the server already confirmed are
-//  reachable, so the buffer is always ≥ 0.
+// ─── Safety classification ────────────────────────────────────────────────────
 
 type Safety = "SAFE" | "LIKELY" | "TOUGH";
 
@@ -67,17 +54,14 @@ function SafetyBadge({ label }: { label: Safety }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function CollegePredictorTool() {
-  const [examMetaList,   setExamMetaList]   = useState<ExamMeta[]>([]);
-  const [exam,           setExam]           = useState<ExamKey>("nimcet");
-  const [value,          setValue]          = useState("");
-  const [cat,            setCat]            = useState<Category>("General");
-  const [results,        setResults]        = useState<CollegeResult[] | null>(null);
-  const [allYearData,    setAllYearData]    = useState<Record<number, CollegeResult[]>>({});
-  const [loading,        setLoading]        = useState(false);
-  const [error,          setError]          = useState<string | null>(null);
-  const [tried,          setTried]          = useState(false);
-  const [selectedYear,   setSelectedYear]   = useState(2025);
-  const [showOlderYears, setShowOlderYears] = useState(false);
+  const [examMetaList, setExamMetaList] = useState<ExamMeta[]>([]);
+  const [exam,         setExam]         = useState<ExamKey>("mah");
+  const [value,        setValue]        = useState("");
+  const [cat,          setCat]          = useState<Category>("General");
+  const [results,      setResults]      = useState<CollegeResult[] | null>(null);
+  const [loading,      setLoading]      = useState(false);
+  const [error,        setError]        = useState<string | null>(null);
+  const [tried,        setTried]        = useState(false);
 
   useEffect(() => {
     mcaToolsService.getExamMeta().then(setExamMetaList).catch(() => {});
@@ -85,7 +69,7 @@ export function CollegePredictorTool() {
 
   const meta   = examMetaList.find(m => m.key === exam);
   const isRank = exam === "nimcet";
-  const colors = EXAM_COLORS[exam] ?? EXAM_COLORS.nimcet;
+  const colors = EXAM_COLORS[exam] ?? EXAM_COLORS.mah;
 
   const predict = async () => {
     setTried(true);
@@ -94,31 +78,14 @@ export function CollegePredictorTool() {
     setLoading(true);
     setError(null);
     setResults(null);
-    setAllYearData({});
     try {
-      const [r25, r24, r23] = await Promise.all([
-        mcaToolsService.predictColleges({ exam, value: v, category: cat, year: 2025 }),
-        mcaToolsService.predictColleges({ exam, value: v, category: cat, year: 2024 }),
-        mcaToolsService.predictColleges({ exam, value: v, category: cat, year: 2023 }),
-      ]);
-      const yearMap: Record<number, CollegeResult[]> = {
-        2025: r25.colleges,
-        2024: r24.colleges,
-        2023: r23.colleges,
-      };
-      setAllYearData(yearMap);
-      setResults(yearMap[2025]);
-      setSelectedYear(2025);
+      const res = await mcaToolsService.predictColleges({ exam, value: v, category: cat });
+      setResults(res.colleges);
     } catch (err: any) {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const switchYear = (yr: number) => {
-    setSelectedYear(yr);
-    if (allYearData[yr]) setResults(allYearData[yr]);
   };
 
   const numVal = parseFloat(value);
@@ -132,8 +99,12 @@ export function CollegePredictorTool() {
     : "bg-gray-50 border-gray-200";
 
   const resetExam = (key: ExamKey) => {
-    setExam(key); setResults(null); setValue(""); setCat("General");
-    setTried(false); setError(null); setAllYearData({}); setSelectedYear(2025);
+    setExam(key);
+    setResults(null);
+    setValue("");
+    setCat("General");
+    setTried(false);
+    setError(null);
   };
 
   return (
@@ -143,24 +114,36 @@ export function CollegePredictorTool() {
       {examMetaList.length > 0 && (
         <div className="flex gap-2 flex-wrap">
           {examMetaList.map(m => {
-            const mc = EXAM_COLORS[m.key] ?? EXAM_COLORS.nimcet;
+            const mc        = EXAM_COLORS[m.key] ?? EXAM_COLORS.mah;
+            const isNimcet  = m.key === "nimcet";
+            const isActive  = exam === m.key;
             return (
               <button
                 key={m.key}
-                onClick={() => resetExam(m.key)}
-                className="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer border"
-                style={exam === m.key
-                  ? { backgroundColor: mc.primary, color: "#fff", borderColor: "transparent" }
-                  : { backgroundColor: "#f9fafb", color: "#6b7280", borderColor: "#e5e7eb" }}
+                onClick={() => !isNimcet && resetExam(m.key)}
+                disabled={isNimcet}
+                className="relative px-4 py-2 rounded-xl text-sm font-bold transition-all border"
+                style={
+                  isNimcet
+                    ? { backgroundColor: "#f3f4f6", color: "#d1d5db", borderColor: "#e5e7eb", cursor: "not-allowed" }
+                    : isActive
+                    ? { backgroundColor: mc.primary, color: "#fff", borderColor: "transparent", cursor: "pointer" }
+                    : { backgroundColor: "#f9fafb", color: "#6b7280", borderColor: "#e5e7eb", cursor: "pointer" }
+                }
               >
                 {m.shortName}
+                {isNimcet && (
+                  <span className="ml-2 text-[10px] font-semibold bg-gray-200 text-gray-400 px-1.5 py-0.5 rounded-full">
+                    Soon
+                  </span>
+                )}
               </button>
             );
           })}
         </div>
       )}
 
-      {/* ── What this exam uses ─────────────────────────────── */}
+      {/* ── Exam explainer ──────────────────────────────────── */}
       <div
         className="rounded-xl px-4 py-3 text-xs leading-relaxed"
         style={{ backgroundColor: colors.light, border: `1px solid ${colors.border}`, color: colors.primary }}
@@ -203,7 +186,6 @@ export function CollegePredictorTool() {
             onChange={e => { setCat(e.target.value as Category); setResults(null); }}
             className="border-2 border-gray-200 focus:border-gray-400 rounded-xl px-3 py-3 text-sm text-gray-700 outline-none bg-white font-semibold sm:w-36"
           >
-            {/* Simple category names — students already know their own category */}
             <option value="General">General</option>
             <option value="OBC">OBC</option>
             <option value="SC">SC</option>
@@ -228,31 +210,6 @@ export function CollegePredictorTool() {
             }
           </button>
         </div>
-
-        {/* Older year toggle — hidden by default */}
-        <button
-          onClick={() => setShowOlderYears(x => !x)}
-          className="mt-2.5 text-[11px] text-gray-400 hover:text-gray-600 transition-colors cursor-pointer underline underline-offset-2"
-        >
-          {showOlderYears ? "▲ Hide" : "▼ Want to check older year cutoffs? (2024 / 2023)"}
-        </button>
-        {showOlderYears && (
-          <div className="mt-2 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-gray-500">Showing cutoffs for:</span>
-            {[2025, 2024, 2023].map(yr => (
-              <button
-                key={yr}
-                onClick={() => { setSelectedYear(yr); if (allYearData[yr]) setResults(allYearData[yr]); }}
-                className="text-xs px-3 py-1 rounded-lg border font-bold transition-all cursor-pointer"
-                style={selectedYear === yr
-                  ? { backgroundColor: colors.primary, color: "#fff", borderColor: "transparent" }
-                  : { backgroundColor: "#f9fafb", color: "#6b7280", borderColor: "#e5e7eb" }}
-              >
-                {yr}{yr === 2025 ? " (latest)" : ""}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* ── Validation / error ──────────────────────────────── */}
@@ -271,26 +228,26 @@ export function CollegePredictorTool() {
       {results !== null && !loading && (
         <div className="space-y-3">
 
-          {/* What SAFE / LIKELY / TOUGH means — shown BEFORE the list */}
+          {/* SAFE / LIKELY / TOUGH legend */}
           {results.length > 0 && (
             <div className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-xs text-gray-600 space-y-1.5">
               <p className="font-bold text-gray-700 mb-1">What do the labels mean?</p>
               <p>
                 <span className="inline-block bg-emerald-100 text-emerald-700 font-black px-2 py-0.5 rounded-full text-[11px] mr-1.5">SAFE</span>
-                Your {isRank ? "rank" : "percentile"} is well above what was needed last year. Good chance of getting a seat here.
+                Your {isRank ? "rank" : "percentile"} is well above the cutoff. Good chance of getting a seat here.
               </p>
               <p>
                 <span className="inline-block bg-sky-100 text-sky-700 font-black px-2 py-0.5 rounded-full text-[11px] mr-1.5">LIKELY</span>
-                You are close to the cutoff. You may get in, but do not treat it as confirmed. Keep a backup.
+                You are close to the cutoff. May get in, but keep a backup ready.
               </p>
               <p>
                 <span className="inline-block bg-rose-100 text-rose-700 font-black px-2 py-0.5 rounded-full text-[11px] mr-1.5">TOUGH</span>
-                You just barely qualified based on last year`s data. Very risky — do not rely on this college alone.
+                You just barely qualified. Very risky — do not rely on this college alone.
               </p>
             </div>
           )}
 
-          {/* Summary: how many in each bucket */}
+          {/* Summary buckets */}
           {results.length > 0 && (
             <div className="grid grid-cols-3 gap-2">
               {[
@@ -307,26 +264,6 @@ export function CollegePredictorTool() {
             </div>
           )}
 
-          {/* Year switcher — only visible after results, with plain explanation */}
-          {Object.keys(allYearData).length > 0 && results.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] text-gray-500 font-semibold">Cutoffs from:</span>
-              {[2025, 2024, 2023].map(yr => (
-                <button
-                  key={yr}
-                  onClick={() => switchYear(yr)}
-                  className="text-xs px-3 py-1 rounded-lg border font-bold transition-all cursor-pointer"
-                  style={selectedYear === yr
-                    ? { backgroundColor: colors.primary, color: "#fff", borderColor: "transparent" }
-                    : { backgroundColor: "#f9fafb", color: "#6b7280", borderColor: "#e5e7eb" }}
-                >
-                  {yr}{yr === 2025 ? " (latest)" : ""}
-                </button>
-              ))}
-              <span className="text-[10px] text-gray-400">← tap to compare how cutoffs changed year by year</span>
-            </div>
-          )}
-
           {/* College list */}
           {results.length > 0 ? (
             <div className="space-y-2 max-h-150 overflow-y-auto pr-0.5">
@@ -337,7 +274,6 @@ export function CollegePredictorTool() {
                     key={c.name}
                     className={`flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl border transition-all hover:shadow-md ${tierBg(c.tier)}`}
                   >
-                    {/* Left: name + details */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1.5">
                         <TierBadge tier={c.tier} />
@@ -351,12 +287,9 @@ export function CollegePredictorTool() {
                       </p>
                     </div>
 
-                    {/* Right: cutoff in plain language */}
                     <div className="text-right shrink-0">
                       <p className="text-[10px] text-gray-400 leading-tight">
-                        {isRank
-                          ? "Last seat given at rank"
-                          : "Minimum percentile needed"}
+                        {isRank ? "Last seat given at rank" : "Minimum percentile needed"}
                       </p>
                       <p className="text-xl font-black tabular-nums mt-0.5" style={{ color: colors.primary }}>
                         {isRank ? c.cutoff.toLocaleString() : Number(c.cutoff)?.toFixed(2)}
@@ -367,18 +300,17 @@ export function CollegePredictorTool() {
               })}
             </div>
           ) : (
-            /* No results — plain English explanation */
             <div className="rounded-2xl border border-orange-100 bg-orange-50 p-6 text-center">
               <div className="text-4xl mb-3">😕</div>
               <p className="text-sm font-bold text-orange-800 mb-2">
-                No colleges found for your {isRank ? "rank" : "percentile"} of <span style={{ color: colors.primary }}>{value}</span>
+                No colleges found for your {isRank ? "rank" : "percentile"} of{" "}
+                <span style={{ color: colors.primary }}>{value}</span>
               </p>
               <p className="text-xs text-orange-700 leading-relaxed mb-4 max-w-sm mx-auto">
                 {isRank
-                  ? `In ${selectedYear}, the last seat at every college in our list was given to a rank better than ${Number(value).toLocaleString()}. This means students with a lower rank number got those seats.`
-                  : `In ${selectedYear}, every college required a percentile higher than ${value}. You need a better score to qualify for the colleges in our list.`}
+                  ? `Every college in our list gave its last seat to a student with a rank better than ${Number(value).toLocaleString()}. A lower rank number means a better score.`
+                  : `Every college in our list required a percentile higher than ${value}. You need a better score to qualify.`}
               </p>
-              {/* Suggest other categories */}
               <p className="text-xs text-orange-600 font-semibold mb-2">
                 Are you eligible under a reserved category? Cutoffs are usually lower:
               </p>
@@ -398,10 +330,10 @@ export function CollegePredictorTool() {
             </div>
           )}
 
-          {/* Short, plain disclaimer */}
+          {/* Disclaimer */}
           {results.length > 0 && (
             <p className="text-[11px] text-gray-400 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2.5 leading-relaxed">
-              📋 Cutoffs shown are from <strong>{selectedYear}</strong> actual admissions. Cutoffs change every year — treat this as a guide, not a guarantee. Always apply to a mix of Safe, Likely, and Tough colleges.
+              📋 Cutoffs are based on the latest available admission data. They change every year — treat this as a guide, not a guarantee. Always apply to a mix of Safe, Likely, and Tough colleges.
             </p>
           )}
         </div>

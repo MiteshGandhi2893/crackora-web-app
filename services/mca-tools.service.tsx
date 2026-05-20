@@ -317,18 +317,17 @@ export const mcaToolsService = {
   getExamMeta: (): Promise<ExamMeta[]> =>
     unwrap(apiService.get<ExamMeta[]>("/mca-tools/exam-meta")),
 
-  predictColleges: async (payload: {
-    exam    : ExamKey;
-    value   : number;
-    category: Category;
-    year    : number;
-  }): Promise<PredictCollegesResult> => {
-    const res = await unwrap(apiService.post<PredictCollegesResult>("/mca-tools/predict-colleges", payload));
-    return {
-      ...res,
-      colleges: res.colleges.map((c: any) => ({ ...c, cutoff: Number(c.cutoff) })),
-    };
-  },
+ predictColleges: async (payload: {
+  exam    : ExamKey;
+  value   : number;
+  category: Category;
+}): Promise<PredictCollegesResult> => {
+  const res = await unwrap(apiService.post<PredictCollegesResult>("/mca-tools/predict-colleges", payload));
+  return {
+    ...res,
+    colleges: res.colleges.map((c: any) => ({ ...c, cutoff: Number(c.cutoff) })),
+  };
+},
 
   getCollegesByExam: async (exam: ExamKey): Promise<CollegesByExamResult> => {
     const res = await unwrap(apiService.get<CollegesByExamResult>(`/mca-tools/colleges/${exam}`));
