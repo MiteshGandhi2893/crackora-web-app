@@ -1,21 +1,21 @@
 // hero-data.ts
 // SEO-optimized hero slides for Crackora
-// 4 slides: MCA Entrance → MCA Journey → Skill Development → Placement Mentor
+// Slide 1: Platform overview (entrance)
+// Slide 2: College Guidance — Azad Sir
+// Slide 3: MCA Career Mentorship — Mitesh Sir
 
 // ─── Slide type ────────────────────────────────────────────────────────────
-export type RightKey = "entrance" | "journey" | "skills" | "mentor";
+export type RightKey = "orbit" | "college-mentor" | "guidance-mentor";
 
 export interface Slide {
   id: string;
-  eyebrow: "entrance" | "journey" | "skills" | "mentor";
+  eyebrow: "entrance" | "college" | "mentor";
   title: string;
   titleAccent: string;
   description: string;
   primaryBtn: { label: string; href: string };
   secondaryBtn: { label: string; href: string };
   right: RightKey;
-  // SEO metadata — the parent page/server component should inject these
-  // into the <title> and <meta name="description"> for the hero section
   seoTitle: string;
   seoDescription: string;
 }
@@ -29,21 +29,17 @@ export const eyebrowMap: Record<
     label: "MCA Entrance 2026 • NIMCET • MAH MCA CET • CUET PG",
     cls: "border-amber-500/30 text-amber-400 bg-amber-500/10",
   },
-  journey: {
-    label: "The Full MCA Journey • Entrance to First Job",
+  college: {
+    label: "1-on-1 College Counselling • Expert Guidance • Real Mentors",
     cls: "border-cyan-500/30 text-cyan-300 bg-cyan-500/10",
   },
-  skills: {
-    label: "Skill Development • Full Stack • AI/ML • Cloud",
-    cls: "border-violet-400/30 text-violet-300 bg-violet-500/10",
-  },
   mentor: {
-    label: "1-on-1 Mentorship • Expert Guidance • Real Mentors",
+    label: "1-on-1 Career Mentorship • DSA • Placement • Real Experts",
     cls: "border-emerald-400/30 text-emerald-300 bg-emerald-500/10",
   },
 };
 
-// ─── Exams (for entrance panel orbit) ──────────────────────────────────────
+// ─── Exams (for entrance panel) ────────────────────────────────────────────
 export const EXAMS = [
   { label: "NIMCET", color: "#f59e0b", desc: "NIT seats via NIMCET" },
   { label: "MAH MCA\nCET", color: "#38bdf8", desc: "Maharashtra colleges" },
@@ -63,215 +59,121 @@ export const FEATURES = [
   { title: "Career Guidance", icon: "🎯" },
 ] as const;
 
-// ─── Journey steps ─────────────────────────────────────────────────────────
-export const JOURNEY_STEPS = [
-  {
-    num: "01",
-    title: "Check Eligibility",
-    sub: "BCA · BSc · BCom with Maths",
-    color: "#f59e0b",
-    href: "/tools/eligibility",
-  },
-  {
-    num: "02",
-    title: "Crack the Entrance",
-    sub: "NIMCET · MAH CET · CUET PG",
-    color: "#38bdf8",
-    href: "/exam-info/nimcet",
-  },
-  {
-    num: "03",
-    title: "Choose Your NIT",
-    sub: "Rank predictor · Cutoffs",
-    color: "#a78bfa",
-    href: "/tools/college",
-  },
-  {
-    num: "04",
-    title: "Complete MCA",
-    sub: "Subjects · Notes · Projects",
-    color: "#34d399",
-    href: "/mca-journey",
-  },
-  {
-    num: "05",
-    title: "Build Real Skills",
-    sub: "Full Stack · AI · Cloud · DSA",
-    color: "#fb923c",
-    href: "/mca-journey",
-  },
-  {
-    num: "06",
-    title: "Land Your First Job",
-    sub: "₹4–10 LPA · NIT Placements",
-    color: "#f472b6",
-    href: "/mca-journey",
-  },
-] as const;
-
-// ─── Skill tracks ──────────────────────────────────────────────────────────
-export const SKILL_TRACKS = [
-  {
-    id: "fullstack",
-    icon: "🌐",
-    title: "Full Stack Dev",
-    tags: ["React", "Node.js", "SQL"],
-    salary: "₹5–9 LPA",
-    demand: "Very High",
-    color: "#38bdf8",
-    colorBg: "rgba(56,189,248,0.08)",
-    colorBorder: "rgba(56,189,248,0.25)",
-  },
-  {
-    id: "aiml",
-    icon: "🤖",
-    title: "AI / ML",
-    tags: ["Python", "TensorFlow", "DS"],
-    salary: "₹6–12 LPA",
-    demand: "Highest",
-    color: "#a78bfa",
-    colorBg: "rgba(167,139,250,0.08)",
-    colorBorder: "rgba(167,139,250,0.25)",
-  },
-  {
-    id: "cloud",
-    icon: "☁️",
-    title: "Cloud & DevOps",
-    tags: ["AWS", "Docker", "CI/CD"],
-    salary: "₹5–10 LPA",
-    demand: "High",
-    color: "#34d399",
-    colorBg: "rgba(52,211,153,0.08)",
-    colorBorder: "rgba(52,211,153,0.25)",
-  },
-  {
-    id: "data",
-    icon: "📊",
-    title: "Data Analytics",
-    tags: ["Python", "Power BI", "SQL"],
-    salary: "₹4–8 LPA",
-    demand: "High",
-    color: "#fb923c",
-    colorBg: "rgba(251,146,60,0.08)",
-    colorBorder: "rgba(251,146,60,0.25)",
-  },
-] as const;
-
 // ─── Mentor data ────────────────────────────────────────────────────────────
 export const MENTOR_DATA = {
+  // Slide 2 — College Guidance
   college: {
-    name: "Nitin Parmar",
-    role: "MCA Entrance Expert · 8+ years",
-    photoSrc: "/mentor-nitin.jpg",
-    photoAlt: "Nitin Parmar — MCA College Selection Mentor",
+    name: "Azad Sir",
+    role: "MCA College Counsellor · 10+ years",
+    photoSrc: "/Azad.jpeg",           // ← place your image here
+    photoAlt: "Azad Sir — MCA College Counselling Expert at Crackora",
+    programTitle: "MCA COUNSELLING PROGRAM 1:1",
+    programSubtitle: "COLLEGE GUIDANCE",
     features: [
-      "NIMCET strategy",
-      "College selection",
-      "NIT cutoff analysis",
-      "CAP round guidance",
+      "1-to-1 Personalized Counselling",
+      "Smart College Shortlisting Strategy",
+      "Fees vs ROI Comparison (Top Colleges)",
+      "Backup College Planning",
+      "Placement record deep-dive",
     ] as const,
-    bookHref: "https://wa.me/917738831585?text=Hi+Crackora,+I+want+to+book+a+college+selection+session",
-    badge: "Entrance Specialist",
+    validity: "Valid for 30 days",
+    bookHref:
+      "https://learn.crackora.com/learn/MCA-Counselling-Program--1-1-College-Guidance",
+    badge: "College Expert",
+    price: "₹249",
+    originalPrice: "₹599",
+    discount: "58% OFF",
+    sessionDuration: "45 min · Limited slots · Offer ends soon",
   },
+  // Slide 3 — Career Mentorship
   guidance: {
-    name: "Priya Sharma",
-    role: "Placement & Career Mentor",
-    photoSrc: "/mentor-priya.jpg",
-    photoAlt: "Priya Sharma — MCA Placement and Career Mentor at Crackora",
+    name: "Mitesh Sir",
+    role: "MCA Career & Placement Mentor",
+    photoSrc: "/Mitesh.jpeg",         // ← place your image here
+    photoAlt: "Mitesh Sir — MCA Career Mentorship Expert at Crackora",
+    programTitle: "MCA SUCCESS BLUEPRINT: 1-TO-1",
+    programSubtitle: "CAREER MENTORSHIP PROGRAM",
     features: [
-      "DSA interview prep",
-      "Resume building",
-      "Company-wise strategy",
-      "Offer negotiation",
+      "1-to-1 Personalized Mentorship",
+      "Career Roadmap",
+      "Technical Skill Planning (DSA + Development)",
+      "Communication & Interview Guidance",
+      "Semester-wise Action Plan",
     ] as const,
-    bookHref: "https://wa.me/917738831585?text=Hi+Crackora,+I+want+to+book+a+placement+guidance+session",
+    validity: "Valid for 30 days",
+    bookHref:
+      "https://learn.crackora.com/learn/MCA-Success-Blueprint--1-to-1-Career-Mentorship-Program",
     badge: "Placement Expert",
+    price: "₹249",
+    originalPrice: "₹599",
+    discount: "58% OFF",
+    sessionDuration: "45 min · Limited slots · Offer ends soon",
   },
 } as const;
 
-// ─── Slides ────────────────────────────────────────────────────────────────
-// Each slide H1 targets a primary search keyword cluster.
-// titleAccent is the substring that will be rendered in amber.
-// Parent server component should use seoTitle + seoDescription for meta tags.
+// ─── Slides (3 slides) ─────────────────────────────────────────────────────
 export const SLIDES: Slide[] = [
   {
-    id: "entrance",
-    eyebrow: "entrance",
-    title: "Crack NIMCET & MAH MCA CET 2026 with Free Mock Tests & PYQs",
-    titleAccent: "NIMCET & MAH MCA CET 2026",
-    description:
-      "India's most focused MCA entrance platform. 50+ free mock tests, PYQ bank with solutions, rank predictor, and expert guidance — everything you need to get into NIT MCA.",
-    primaryBtn: {
-      label: "Start Free Mock Test →",
-      href: "https://learn.crackora.com/learn/Free-MAH-MCA-CET-2026-Mock-Test",
-    },
-    secondaryBtn: {
-      label: "Check NIMCET Eligibility",
-      href: "/tools/eligibility",
-    },
-    right: "entrance",
-    seoTitle: "NIMCET & MAH MCA CET 2026 Preparation — Free Mock Tests | Crackora",
-    seoDescription:
-      "Crack NIMCET, MAH MCA CET, CUET PG, TANCET, IPU CET and WB JECA with Crackora's free mock tests, PYQ bank, rank predictor, and expert guidance. India's #1 MCA entrance platform.",
+  id: "entrance",
+  eyebrow: "entrance",
+  title: "Free NIMCET 2026 Mock Test — Score Higher in NIT MCA Entrance",
+  titleAccent: "Free NIMCET 2026 Mock Test",
+  description:
+    "Exam on June 6 — only days away. 25,000 aspirants. 1,003 seats. Practice with full-length free mock tests built on the exact NIMCET pattern: 120 MCQs, sectional timer, detailed solutions & rank estimate.",
+  primaryBtn: {
+    label: "Attempt Free Mock Test Now →",
+    href: "https://learn.crackora.com/learn/NIMCET-2026-FREE-Mock-Test-with-Detailed-Solutions",
   },
-  {
-    id: "journey",
-    eyebrow: "journey",
-    title: "Your Complete MCA Journey — Entrance to First Job, Step by Step",
-    titleAccent: "MCA Journey",
-    description:
-      "From checking eligibility to cracking NIMCET, choosing the right NIT, surviving semesters, building skills, and landing a ₹4–10 LPA job — Crackora guides you at every stage.",
-    primaryBtn: {
-      label: "Explore Full MCA Guide →",
-      href: "/mca-journey",
-    },
-    secondaryBtn: {
-      label: "Predict Your College",
-      href: "/tools/college",
-    },
-    right: "journey",
-    seoTitle: "MCA Journey Guide 2026 — Eligibility to Placement | Crackora",
-    seoDescription:
-      "Complete MCA journey guide — eligibility, NIMCET preparation, NIT college selection, semester subjects, skill development, and placement preparation. Free tools at every stage.",
+  secondaryBtn: {
+    label: "View NIMCET Syllabus & Pattern",
+    href: "/exam-info/nimcet",
   },
+  right: "orbit",
+  seoTitle:
+    "Free NIMCET 2026 Mock Test — Full-Length Practice with Solutions | Crackora",
+  seoDescription:
+    "Attempt Crackora's free NIMCET 2026 mock test — 120 MCQs, sectional timing (Maths, Reasoning, Computer Awareness, English), detailed solutions and rank predictor. Prepare for the June 6 exam with India's most focused NIT MCA practice platform.",
+},
   {
-    id: "skills",
-    eyebrow: "skills",
-    title: "Build Placement-Ready Skills During MCA — Full Stack, AI & Cloud",
-    titleAccent: "Placement-Ready Skills",
+    id: "college-mentor",
+    eyebrow: "college",
+    title: "1-on-1 MCA College Counselling — Smart Shortlisting & ROI Clarity",
+    titleAccent: "MCA College Counselling",
     description:
-      "Don't waste 2 years of MCA. Get a clear semester-wise roadmap to pick Full Stack, AI/ML, Cloud, or Data Analytics — with free resources, project ideas, and what companies actually hire for.",
+      "Don't guess your college. Get personalised guidance from Azad Sir — smart shortlisting, fees vs ROI comparison, backup strategy, and placement record deep-dives in one 45-min session.",
     primaryBtn: {
-      label: "Explore Skills Roadmap →",
-      href: "/mca-journey",
-    },
-    secondaryBtn: {
-      label: "View Final Year Projects",
-      href: "/mca-placements/project-ideas",
-    },
-    right: "skills",
-    seoTitle: "Skills to Learn During MCA 2026 — Full Stack vs AI/ML vs Cloud | Crackora",
-    seoDescription:
-      "Semester-wise skill roadmap for MCA students — Full Stack, AI/ML, Cloud, Data Analytics. Free resources, project ideas, and placement-focused learning paths.",
-  },
-  {
-    id: "mentor",
-    eyebrow: "mentor",
-    title: "1-on-1 Placement Mentorship for MCA Students — Real Experts",
-    titleAccent: "Placement Mentorship",
-    description:
-      "Get personalized guidance from mentors who've been through NIMCET, NIT placements, and the job hunt. Resume reviews, DSA strategy, company-wise prep — all in one 45-min session.",
-    primaryBtn: {
-      label: "Book a Session — ₹249 →",
-      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+want+to+book+a+mentorship+session",
+      label: "Book Session — ₹249 →",
+      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+want+to+book+a+college+counselling+session+with+Azad+Sir",
     },
     secondaryBtn: {
       label: "Talk to Counsellor Free",
-      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+need+guidance+for+MCA",
+      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+need+college+guidance+for+MCA",
     },
-    right: "mentor",
-    seoTitle: "MCA Placement Mentorship — 1-on-1 Expert Guidance | Crackora",
+    right: "college-mentor",
+    seoTitle:
+      "MCA College Counselling 1-on-1 — Expert Guidance by Azad Sir | Crackora",
     seoDescription:
-      "Book a 45-min 1-on-1 mentorship session with MCA placement experts. Resume review, DSA interview prep, company-wise strategy. Only ₹249.",
+      "Book a 45-min 1-on-1 MCA college counselling session with Azad Sir. Smart shortlisting, fees vs ROI analysis, backup college planning. Only ₹249.",
+  },
+  {
+    id: "guidance-mentor",
+    eyebrow: "mentor",
+    title: "1-on-1 MCA Career Mentorship — DSA, Roadmap & Placement Strategy",
+    titleAccent: "MCA Career Mentorship",
+    description:
+      "Get your personalised career blueprint from Mitesh Sir. DSA + development skill planning, interview guidance, semester-wise action plan — everything to go from MCA student to first job.",
+    primaryBtn: {
+      label: "Book Session — ₹249 →",
+      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+want+to+book+a+career+mentorship+session+with+Mitesh+Sir",
+    },
+    secondaryBtn: {
+      label: "Talk to Counsellor Free",
+      href: "https://wa.me/917738831585?text=Hi+Crackora,+I+need+career+guidance+for+MCA",
+    },
+    right: "guidance-mentor",
+    seoTitle:
+      "MCA Career Mentorship 1-on-1 — Expert Guidance by Mitesh Sir | Crackora",
+    seoDescription:
+      "Book a 45-min 1-on-1 MCA career mentorship session with Mitesh Sir. Career roadmap, DSA strategy, semester-wise action plan. Only ₹249.",
   },
 ];

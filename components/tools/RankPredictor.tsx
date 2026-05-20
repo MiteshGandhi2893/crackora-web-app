@@ -140,7 +140,6 @@ export function RankPredictorTool() {
           exam,
           value   : val,
           category: "General",
-          year    : 2025,
         });
         setCollegeResult(res.colleges.slice(0, 8));
       }
