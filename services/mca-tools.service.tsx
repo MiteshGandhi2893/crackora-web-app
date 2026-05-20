@@ -132,7 +132,7 @@ export interface JourneyData {
 // ─── College predictor types ──────────────────────────────────────────────────
 
 export type ExamKey     = 'nimcet' | 'mah';
-export type Category    = 'General' | 'OBC' | 'SC' | 'ST';
+export type Category    = 'General' | 'OBC' | 'SC' | 'ST' | 'EWS';
 export type CollegeTier = 'S' | 'A' | 'B';
 
 export type CutoffMap = Partial<Record<Category, Partial<Record<number, number>>>>;

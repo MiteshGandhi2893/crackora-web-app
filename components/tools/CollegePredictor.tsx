@@ -190,7 +190,6 @@ export function CollegePredictorTool() {
             <option value="OBC">OBC</option>
             <option value="SC">SC</option>
             <option value="ST">ST</option>
-            <option value="EWS">EWS</option>
           </select>
 
           <button
