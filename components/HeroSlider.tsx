@@ -548,7 +548,7 @@ export function HeroSlider({ slides }: { slides: Slide[] }) {
     () => goTo((visible + 1) % slides.length),
     [visible, goTo, slides.length],
   );
-  const resetTimer = useInterval(advance, 50000);
+  const resetTimer = useInterval(advance, 5000);
 
   const handleDot = useCallback(
     (i: number) => {
