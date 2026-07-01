@@ -1142,9 +1142,9 @@ export default function MCAJourneyPage() {
   const next = () => setStageIndex((i) => Math.min(STAGES.length - 1, i + 1));
 
   return (
-    <main className="min-h-screen bg-[#f8f7f4]">
+    <main className="min-h-screen bg-[#f8f7f4] ">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <div className="bg-cyan-950 relative overflow-hidden">
+      <div className="bg-cyan-950 relative overflow-hidden md:py-20 py-5">
         {/* Radial glows */}
         <div className="pointer-events-none absolute inset-0">
           {/* Deep space */}

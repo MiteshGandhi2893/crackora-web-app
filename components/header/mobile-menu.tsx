@@ -140,7 +140,7 @@ export function MobileMenu({
                 <div key={subItem.id}>
                   <div
                     className={`flex items-center justify-between pl-5 pr-1 py-2.5 cursor-pointer border-b border-[#f0ede6]
-                      ${subOpen ? "text-amber-600" : "text-[#05101f]/55 hover:text-amber-600"}`}
+                      ${subOpen ? "text-cyan-950" : "text-[#05101f]/55 hover:text-amber-600"}`}
                     onClick={() =>
                       hasChild && setOpenLevel2(subOpen ? null : subItem.id)
                     }
@@ -151,7 +151,7 @@ export function MobileMenu({
 
                     {hasChild &&
                       (subOpen ? (
-                        <BiCaretDown className="w-3.5 h-3.5 text-amber-500" />
+                        <BiCaretDown className="w-3.5 h-3.5 text-cyan-950" />
                       ) : (
                         <BiCaretRight className="w-3.5 h-3.5 text-[#05101f]/30" />
                       ))}

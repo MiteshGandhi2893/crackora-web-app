@@ -186,11 +186,13 @@ body {
     color: rgba(0, 0, 0, 0.65);
     line-height: 1.6rem;
     font-size: 0.95rem;
+    min-width: 0;      /* <-- add this */
+    max-width: 100%;   /* <-- and this */
+    overflow-x: hidden; /* safety net so nothing escapes the column */
   }
-
   .blog-content h2 {
     font-size: 2rem;
-    color: #164e61;
+    color: #164e61!important;
     margin-bottom: 0;
     line-height: 2.2rem;
   }
@@ -202,6 +204,14 @@ body {
     font-weight: 600;
   }
 
+   .blog-content .table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0.75rem 0;
+  }
+
   .blog-content p {
     padding:.5rem 0;
     text-align: justify;
@@ -211,7 +221,7 @@ body {
   .blog-content h4 {
     color: #164e61 !important;
     margin-bottom: 0;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     color: #164e61;
     font-weight: 700;
     opacity: 90;
@@ -220,15 +230,16 @@ body {
   /* ✅ Card-style table */
   .blog-content table {
     width: 100%;
-    display: block;
-    overflow-x: auto;
+    border-collapse: collapse;
     font-size: 0.9rem;
+    /* remove display:block and overflow-x:auto from here */
   }
 
   .blog-content table td,
   .blog-content table th {
     border: 1px solid rgba(0, 0, 0, 0.06);
     padding: 0.65rem 0.75rem;
+    white-space: nowrap; /* prevents cells from wrapping and defeats the scroll */
   }
 
   /* ✅ Header styling logic */

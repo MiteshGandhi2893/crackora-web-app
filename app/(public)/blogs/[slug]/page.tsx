@@ -8,6 +8,7 @@ import { LuClock, LuEye, LuCalendar, LuArrowLeft } from "react-icons/lu";
 import CommentsSection from "@/components/blogs/CommentsSection";
 import { blogService } from "@/services/Blog.service";
 import { API_BASE_URL } from "@/services/api.service";
+import Script from "next/script";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -124,11 +125,15 @@ export default async function BlogDetailPage({
 
   return (
     <>
-      <script
+  
+      <Script
+        id="blog-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
       />
-
       <main className="min-h-screen bg-[#f8f7f4]">
         {/* ── Cover image hero ──────────────────────────────── */}
         {blog.cover_image && (
@@ -322,7 +327,7 @@ export default async function BlogDetailPage({
         )}
 
         {/* ── Main content ─────────────────────────────────── */}
-        <div className="max-w-6xl mx-auto px-6 pt-10 pb-4">
+        <div className="max-w-6xl mx-auto px-6 pt-10 pb-4 blog-content">
           {/* Categories */}
           {blog.categories && blog.categories.length > 0 && (
             <div className="flex gap-2 flex-wrap mb-8">
@@ -348,13 +353,12 @@ export default async function BlogDetailPage({
             </div>
           )}
 
-          <TableOfContents sections={blog.table_index ?? []} />
 
           {/* Article body */}
           <div className="bg-white border border-gray-200 rounded-2xl px-6 sm:px-10 py-8 mb-10">
             <article
               className="blog-content"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
+              dangerouslySetInnerHTML={{ __html: blog.content || ""}}
             />
           </div>
 

@@ -245,13 +245,13 @@ const MentorCard = memo(function MentorCard({
 }) {
   return (
     <div className="w-full flex lg:justify-end justify-center select-none">
-      <div className="w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[380px] xl:max-w-[400px] rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
-
+      <div className="w-full max-w-75 sm:max-w-90 lg:max-w-95 xl:max-w-110 rounded-2xl overflow-hidden shadow-2xl shadow-black/50">5
         {/* ── Header band (teal-dark, matches reference images) ── */}
         <div
           className="relative px-4 pt-4 pb-5"
           style={{
-            background: "linear-gradient(135deg, #0d3d4f 0%, #0a2a38 60%, #071e2a 100%)",
+            background:
+              "linear-gradient(135deg, #0d3d4f 0%, #0a2a38 60%, #071e2a 100%)",
           }}
         >
           {/* LIVE SESSION badge */}
@@ -293,8 +293,8 @@ const MentorCard = memo(function MentorCard({
             <div
               className="shrink-0 rounded-xl overflow-hidden"
               style={{
-                width: 80,
-                height: 90,
+                width: 100,
+                height: 100,
                 border: "2.5px solid #f59e0b",
                 background: "rgba(255,255,255,0.07)",
                 position: "relative",
@@ -322,23 +322,22 @@ const MentorCard = memo(function MentorCard({
                   />
                 </svg>
               </div>
-              <Image
-                src={photoSrc}
-                alt={photoAlt}
-                fill
-                className="object-cover object-top"
-                // Show nothing if the image 404s; the silhouette stays visible
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
+                <Image
+                  src={photoSrc}
+                  alt={photoAlt}
+                  fill
+                  className="object-cover object-top "
+                  // Show nothing if the image 404s; the silhouette stays visible
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
             </div>
           </div>
         </div>
 
         {/* ── White body ── */}
         <div className="bg-white px-4 pt-4 pb-5">
-
           {/* Mentor name + role */}
           <div className="flex items-center gap-2 mb-3">
             <div>
@@ -434,7 +433,8 @@ const MentorCard = memo(function MentorCard({
 const RightPanel = memo(function RightPanel({ type }: { type: RightKey }) {
   if (type === "orbit") return <MockTestCard />;
   if (type === "college-mentor") return <MentorCard {...MENTOR_DATA.college} />;
-  if (type === "guidance-mentor") return <MentorCard {...MENTOR_DATA.guidance} />;
+  if (type === "guidance-mentor")
+    return <MentorCard {...MENTOR_DATA.guidance} />;
   return null;
 });
 
@@ -548,7 +548,7 @@ export function HeroSlider({ slides }: { slides: Slide[] }) {
     () => goTo((visible + 1) % slides.length),
     [visible, goTo, slides.length],
   );
-  const resetTimer = useInterval(advance, 5000);
+  const resetTimer = useInterval(advance, 50000);
 
   const handleDot = useCallback(
     (i: number) => {
@@ -590,7 +590,7 @@ export function HeroSlider({ slides }: { slides: Slide[] }) {
                 {/* LEFT */}
                 <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start">
                   <span
-                    className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-semibold tracking-wider uppercase mb-3 backdrop-blur-sm ${eb.cls}`}
+                    className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border text-[11px] font-semibold tracking-wider uppercase mb-3 backdrop-blur-sm text-amber-700 bg-amber-100 border-amber-500`}
                   >
                     {eb.label}
                   </span>
@@ -604,7 +604,7 @@ export function HeroSlider({ slides }: { slides: Slide[] }) {
                     />
                   </h1>
 
-                  <p className="text-amber-50 leading-relaxed text-center lg:text-left max-w-[310px] sm:max-w-md lg:max-w-none my-5 line-clamp-3 sm:line-clamp-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
+                  <p className="text-amber-50 leading-relaxed font-light text-center lg:text-xl lg:text-left max-w-[310px] sm:max-w-md lg:max-w-none my-5 line-clamp-3 sm:line-clamp-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
                     {slide.description}
                   </p>
 
