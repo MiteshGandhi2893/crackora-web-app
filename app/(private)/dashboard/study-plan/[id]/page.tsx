@@ -2,18 +2,37 @@ import { StudyCalendar } from "@/components/study-plan/StudyCalendar";
 import { studyPlannerService } from "@/services/StudyPlan.service";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+// ─── Helper: exchange the httpOnly refreshToken cookie for a fresh access token
+async function getAccessTokenFromCookie(): Promise<string | null> {
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refreshToken")?.value;
+  if (!refreshToken) return null;
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/refresh`, {
+      method: "POST",
+      headers: { Cookie: `refreshToken=${refreshToken}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.accessToken ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function StudyPlanPage({
   params,
 }: {
   params: { id: string };
 }) {
   const { id } = await params;
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jwt")?.value;
 
-  // If no token → open login if user fails to login or register than taken him back to the home page
-  if (!token) {
-    // this is the bad state just logout and send them back to home page
+  // No valid session → redirect to home with auth=expired flag
+  const accessToken = await getAccessTokenFromCookie();
+  if (!accessToken) {
     redirect("/?auth=expired");
   }
 
@@ -21,7 +40,7 @@ export default async function StudyPlanPage({
 
   try {
     const res = await studyPlannerService.getStudentPlanById(id, {
-      Cookie: `jwt=${token}`,
+      Authorization: `Bearer ${accessToken}`,
     });
 
     if (!res.success || res.status === 401) {

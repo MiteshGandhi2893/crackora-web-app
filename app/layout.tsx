@@ -9,15 +9,19 @@ import { SnackbarProvider } from "@/providers/SnackbarProvider";
 import { LoadingProvider } from "@/providers/LoadingProvider";
 import { TopPackagesProvider } from "@/providers/TopPackagesProvide";
 import SessionWatcher from "@/components/SessionWatcher";
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 import { Suspense } from "react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const roboto = Roboto({
@@ -28,6 +32,8 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: "Crackora - Clarity before Confidence",
+    metadataBase: new URL("https://crackora.com"),
+
   description:
     "Crackora is an exam preparation platform built on the principle of Clarity before Confidence. We offer concept-driven learning, structured resources, expert guidance, and practical strategies to help students prepare smarter and succeed faster.",
 };
@@ -46,16 +52,13 @@ export default async function RootLayout({
           <LoadingProvider>
             <AuthProvider>
               <Suspense fallback={<div>Loading...</div>}>
-              <SessionWatcher />
+                <SessionWatcher />
               </Suspense>
-              <ExamProvider>
-                <TopPackagesProvider>
-                  <StudyPlannerProvider>{children}</StudyPlannerProvider>
-                </TopPackagesProvider>
-              </ExamProvider>
+                {children}
             </AuthProvider>
           </LoadingProvider>
         </SnackbarProvider>
+        <GoogleAnalytics gaId="G-GBJ5XBZPMJ" /> {/* 👈   here */}
       </body>
     </html>
   );

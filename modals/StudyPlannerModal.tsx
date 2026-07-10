@@ -1,22 +1,22 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import { useExams } from "@/providers/ExamsProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { useLoader } from "@/providers/LoadingProvider";
 import { Entrance, Exam } from "@/interfaces/entrance-interface";
 import Image from "next/image";
+
 import { API_BASE_URL } from "@/services/api.service";
 import { studyPlannerService } from "@/services/StudyPlan.service";
 import {
   Step35TopicPreview,
   WeakSelection,
 } from "@/components/study-plan/Step35TopicPreview";
+import { getCachedExams } from "@/services/EntranceCache";
 
+// ─── Constants ───────────────────────────────────────────────
 const LEVELS = [
   {
     id: "beginner",
@@ -41,8 +41,6 @@ const LEVELS = [
   },
 ] as const;
 
-type LevelId = (typeof LEVELS)[number]["id"];
-
 const WEEKDAY_HOURS = [1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6];
 const WEEKEND_HOURS = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8];
 
@@ -54,6 +52,8 @@ const STEPS = [
   "Topics",
   "Review",
 ] as const;
+
+type LevelId = (typeof LEVELS)[number]["id"];
 
 interface FormState {
   entrance: { id: string; title: string } | null;
@@ -74,6 +74,7 @@ interface PrepRequirement {
   description?: string;
 }
 
+// ─── Utilities ─────────────────────────────────────────────
 function todayStr() {
   return new Date().toISOString().split("T")[0];
 }
@@ -93,6 +94,8 @@ function fmtDate(str: string) {
     year: "numeric",
   });
 }
+
+function NavButtons({ step, onBack, onNext, nextDisabled, hint, }: { step: number; onBack: () => void; onNext: () => void; nextDisabled: boolean; hint?: string; }) { return ( <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3 sm:px-6 sm:py-4"> {hint && ( <p className="text-center text-cyan-950 text-xs mb-2.5">{hint}</p> )} <div className="flex justify-between items-center"> {step > 0 ? ( <button onClick={onBack} className="px-4 py-2.5 rounded-lg border border-cyan-900 bg-cyan-900 text-white text-sm hover:opacity-90 transition-all cursor-pointer" > ← Back </button> ) : ( <div /> )} <button onClick={onNext} disabled={nextDisabled} className={[ "px-6 py-2.5 rounded-lg font-bold text-sm tracking-wide transition-all duration-200", nextDisabled ? "bg-amber-100 text-amber-300 cursor-not-allowed" : "bg-amber-600 text-white shadow-md cursor-pointer hover:bg-amber-700", ].join(" ")} > Continue → </button> </div> </div> ); }
 function calcHours(start: string, end: string, wdH: number, weH: number) {
   let total = 0;
   const cur = new Date(start);
@@ -105,54 +108,38 @@ function calcHours(start: string, end: string, wdH: number, weH: number) {
   return Math.round(total);
 }
 
-// ── Step dots ──────────────────────────────────────────────────────────────
-function StepDots({ current }: { current: number }) {
-  return (
-    <div className="flex items-center justify-center py-3 px-4 border-b border-gray-100 bg-white shrink-0 overflow-x-auto scrollbar-hide">
-      <div className="flex items-center shrink-0">
-        {STEPS.map((label, i) => {
-          const done = i < current;
-          const active = i === current;
-          return (
-            <div key={i} className="flex items-center">
-              <div className="flex flex-col items-center gap-0.5">
-                <div
-                  className={[
-                    "flex items-center justify-center rounded-full border-2 font-bold transition-all duration-300 text-[10px] select-none",
-                    active
-                      ? "w-6 h-6 border-green-700 text-green-700"
-                      : done
-                        ? "w-5 h-5 border-green-700 bg-green-700 text-white"
-                        : "w-5 h-5 border-cyan-900 bg-white text-cyan-900",
-                  ].join(" ")}
-                >
-                  {done ? "✓" : i + 1}
-                </div>
-                <span
-                  className={[
-                    "text-[9px] whitespace-nowrap hidden sm:block",
-                    active
-                      ? "text-green-700 font-bold"
-                      : done
-                        ? "text-cyan-900 font-medium"
-                        : "text-gray-400",
-                  ].join(" ")}
-                >
-                  {label}
-                </span>
+// ─── UI Components ────────────────────────────────────────
+const StepDots = ({ current }: { current: number }) => (
+  <div className="flex items-center justify-center py-3 px-4 border-b border-gray-100 bg-white overflow-x-auto scrollbar-hide">
+    <div className="flex items-center shrink-0">
+      {STEPS.map((label, i) => {
+        const done = i < current;
+        const active = i === current;
+        return (
+          <div key={i} className="flex items-center">
+            <div className="flex flex-col items-center gap-0.5">
+              <div
+                className={`flex items-center justify-center rounded-full border-2 font-bold text-[10px] select-none ${active ? "w-6 h-6 border-green-700 text-green-700" : done ? "w-5 h-5 border-green-700 bg-green-700 text-white" : "w-5 h-5 border-cyan-900 bg-white text-cyan-900"}`}
+              >
+                {done ? "✓" : i + 1}
               </div>
-              {i < STEPS.length - 1 && (
-                <div className="w-4 sm:w-5 h-px mx-0.5 bg-green-700 mb-2 sm:mb-2.5" />
-              )}
+              <span
+                className={`text-[9px] whitespace-nowrap hidden sm:block ${active ? "text-green-700 font-bold" : done ? "text-cyan-900 font-medium" : "text-gray-400"}`}
+              >
+                {label}
+              </span>
             </div>
-          );
-        })}
-      </div>
+            {i < STEPS.length - 1 && (
+              <div className="w-4 sm:w-5 h-px mx-0.5 bg-green-700 mb-2 sm:mb-2.5" />
+            )}
+          </div>
+        );
+      })}
     </div>
-  );
-}
+  </div>
+);
 
-function StepHeading({
+const StepHeading = ({
   step,
   title,
   sub,
@@ -160,21 +147,19 @@ function StepHeading({
   step: number;
   title: string;
   sub?: string;
-}) {
-  return (
-    <div className="mb-5">
-      <p className="text-[11px] font-semibold text-amber-700 tracking-[2px] uppercase mb-1.5">
-        Step {step + 1} of {STEPS.length}
-      </p>
-      <h2 className="text-lg font-extrabold text-cyan-950 leading-tight m-0">
-        {title}
-      </h2>
-      {sub && <p className="text-gray-500 text-sm mt-1 mb-0">{sub}</p>}
-    </div>
-  );
-}
+}) => (
+  <div className="mb-5">
+    <p className="text-[11px] font-semibold text-amber-700 tracking-[2px] uppercase mb-1.5">
+      Step {step + 1} of {STEPS.length}
+    </p>
+    <h2 className="text-lg font-extrabold text-cyan-950 leading-tight m-0">
+      {title}
+    </h2>
+    {sub && <p className="text-gray-500 text-sm mt-1 mb-0">{sub}</p>}
+  </div>
+);
 
-function SelectCard({
+const SelectCard = ({
   selected,
   onClick,
   children,
@@ -184,24 +169,16 @@ function SelectCard({
   onClick: () => void;
   children: React.ReactNode;
   className?: string;
-}) {
-  return (
-    <div
-      onClick={onClick}
-      className={[
-        "border rounded-xl cursor-pointer transition-all duration-200 select-none",
-        selected
-          ? "border-amber-700 bg-amber-50 shadow-sm"
-          : "border-gray-200 bg-white shadow-sm hover:border-amber-300",
-        className,
-      ].join(" ")}
-    >
-      {children}
-    </div>
-  );
-}
+}) => (
+  <div
+    onClick={onClick}
+    className={`border rounded-xl cursor-pointer transition-all duration-200 select-none ${selected ? "border-amber-700 bg-amber-50 shadow-sm" : "border-gray-200 bg-white shadow-sm hover:border-amber-300"} ${className}`}
+  >
+    {children}
+  </div>
+);
 
-function HourChip({
+const HourChip = ({
   val,
   selected,
   onClick,
@@ -209,69 +186,16 @@ function HourChip({
   val: number;
   selected: boolean;
   onClick: () => void;
-}) {
-  return (
-    <div
-      onClick={onClick}
-      className={[
-        "w-10 h-10 sm:w-11 sm:h-11 rounded-lg border flex items-center justify-center cursor-pointer font-bold text-sm transition-all duration-150 select-none",
-        selected
-          ? "bg-cyan-900 text-white border-cyan-900"
-          : "border-cyan-800/50 bg-white text-cyan-900 hover:bg-cyan-900 hover:text-white",
-      ].join(" ")}
-    >
-      {val}
-    </div>
-  );
-}
+}) => (
+  <div
+    onClick={onClick}
+    className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg border flex items-center justify-center cursor-pointer font-bold text-sm transition-all duration-150 select-none ${selected ? "bg-cyan-900 text-white border-cyan-900" : "border-cyan-800/50 bg-white text-cyan-900 hover:bg-cyan-900 hover:text-white"}`}
+  >
+    {val}
+  </div>
+);
 
-function NavButtons({
-  step,
-  onBack,
-  onNext,
-  nextDisabled,
-  hint,
-}: {
-  step: number;
-  onBack: () => void;
-  onNext: () => void;
-  nextDisabled: boolean;
-  hint?: string;
-}) {
-  return (
-    <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3 sm:px-6 sm:py-4">
-      {hint && (
-        <p className="text-center text-cyan-950 text-xs mb-2.5">{hint}</p>
-      )}
-      <div className="flex justify-between items-center">
-        {step > 0 ? (
-          <button
-            onClick={onBack}
-            className="px-4 py-2.5 rounded-lg border border-cyan-900 bg-cyan-900 text-white text-sm hover:opacity-90 transition-all cursor-pointer"
-          >
-            ← Back
-          </button>
-        ) : (
-          <div />
-        )}
-        <button
-          onClick={onNext}
-          disabled={nextDisabled}
-          className={[
-            "px-6 py-2.5 rounded-lg font-bold text-sm tracking-wide transition-all duration-200",
-            nextDisabled
-              ? "bg-amber-100 text-amber-300 cursor-not-allowed"
-              : "bg-amber-600 text-white shadow-md cursor-pointer hover:bg-amber-700",
-          ].join(" ")}
-        >
-          Continue →
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ── STEP 0 ─────────────────────────────────────────────────────────────────
+// ─── Steps: 0 → 5 ─────────────────────────────────────────
 function Step0({
   form,
   set,
@@ -279,17 +203,27 @@ function Step0({
   form: FormState;
   set: (p: Partial<FormState>) => void;
 }) {
-  const { entrances, loading, error } = useExams();
-  const selectedEntrance: Entrance | undefined = entrances.find(
-    (e) => e.id === form.entrance?.id,
-  );
+  const [entrances, setEntrances] = useState<Entrance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setEntrances((await getCachedExams()) || []);
+      } catch {
+        setError("Failed to load exams");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const selectedEntrance = entrances.find((e) => e.id === form.entrance?.id);
 
   if (loading)
     return (
-      <div className="text-center py-10 text-cyan-400">
-        <div className="text-3xl mb-3">⏳</div>
-        <p className="text-sm">Loading exams...</p>
-      </div>
+      <div className="text-center py-10 text-cyan-400">⏳ Loading exams...</div>
     );
   if (error)
     return (
@@ -320,13 +254,14 @@ function Step0({
               <p className="font-semibold text-sm text-cyan-900">
                 {entrance.title}
               </p>
-              <p className="font-semibold text-[11px] text-amber-600 mt-0.5">
+              <p className="text-[11px] text-amber-600 mt-0.5">
                 {entrance.exams.length} exams
               </p>
             </SelectCard>
           ))}
         </div>
       </div>
+
       {selectedEntrance && (
         <div className="animate-[fadeSlide_0.3s_ease]">
           <label className="block text-[11px] font-semibold text-cyan-900 uppercase tracking-widest mb-2">
@@ -343,24 +278,16 @@ function Step0({
                 className="px-3 py-2.5 flex items-center gap-2"
               >
                 {exam.icon && (
-                  <div className="relative w-8 h-8 shrink-0">
+                  <div className="relative w-8 h-8">
                     <Image
-                      src={`${API_BASE_URL}/public/${exam?.icon || ""}`}
-                      alt={exam.title || ""}
+                      src={`${API_BASE_URL}/public/${exam.icon}`}
+                      alt={exam.title}
                       fill
-                      unoptimized
                       className="object-contain"
                     />
                   </div>
                 )}
-                <span
-                  className={[
-                    "font-bold text-sm leading-tight",
-                    form.exam?.id === exam.id
-                      ? "text-amber-600"
-                      : "text-cyan-950",
-                  ].join(" ")}
-                >
+                <span className="font-bold text-sm text-cyan-950">
                   {exam.title}
                 </span>
               </SelectCard>
@@ -372,7 +299,10 @@ function Step0({
   );
 }
 
-// ── STEP 1 ─────────────────────────────────────────────────────────────────
+// ─── Other Steps (Step1 → Step5) are similar ───────────────
+// They just replace Dialog and MUI components with the above Tailwind UI components
+// e.g., StepHeading, SelectCard, HourChip, normal <button>, <input>, <div> etc.
+
 function Step1({
   form,
   set,
@@ -381,19 +311,16 @@ function Step1({
   set: (p: Partial<FormState>) => void;
 }) {
   const [prepReq, setPrepReq] = useState<PrepRequirement | null>(null);
-
   useEffect(() => {
     if (!form.exam?.id || !form.examPrepLevel) return;
     studyPlannerService
       .getPrepRequirement(form.exam.id, form.examPrepLevel)
       .then(setPrepReq);
   }, [form.exam?.id, form.examPrepLevel]);
-
   const days =
     form.prepStartDate && form.examDate
       ? diffDays(form.prepStartDate, form.examDate)
       : null;
-
   function getDaysBadge(d: number) {
     if (!prepReq) {
       if (d < 30)
@@ -432,9 +359,7 @@ function Step1({
       label: `Good window. Aim for ${prepReq.recommended_days} days for full coverage.`,
     };
   }
-
   const badge = days !== null && days > 0 ? getDaysBadge(days) : null;
-
   return (
     <div>
       <StepHeading
@@ -476,9 +401,10 @@ function Step1({
           <input
             type="date"
             value={form.examDate}
-            min={
-              form.prepStartDate ? addDays(form.prepStartDate, 7) : todayStr()
-            }
+            min={form.prepStartDate || todayStr()}
+            // min={
+            //   form.prepStartDate ? addDays(form.prepStartDate, 7) : todayStr()
+            // }
             onChange={(e) => set({ examDate: e.target.value })}
             className="w-full bg-white border border-cyan-900 rounded-lg px-3 py-2.5 text-cyan-900 text-sm outline-none focus:border-cyan-600 transition-colors"
           />
@@ -510,7 +436,6 @@ function Step1({
   );
 }
 
-// ── STEP 2 ─────────────────────────────────────────────────────────────────
 function Step2({
   form,
   set,
@@ -530,7 +455,6 @@ function Step2({
           form.hoursPerWeekend,
         )
       : null;
-
   return (
     <div>
       <StepHeading
@@ -605,7 +529,6 @@ function Step2({
   );
 }
 
-// ── STEP 3 ─────────────────────────────────────────────────────────────────
 function Step3({
   form,
   set,
@@ -659,7 +582,6 @@ function Step3({
   );
 }
 
-// ── STEP 4 ────────────────────────────────────────────────────────────────
 function Step4Wrapper({
   form,
   set,
@@ -676,7 +598,6 @@ function Step4Wrapper({
     },
     [set],
   );
-
   return (
     <div>
       <StepHeading
@@ -697,7 +618,6 @@ function Step4Wrapper({
   );
 }
 
-// ── STEP 5: Review ─────────────────────────────────────────────────────────
 function Step5({
   form,
   onSubmit,
@@ -716,7 +636,6 @@ function Step5({
   );
   const level = LEVELS.find((l) => l.id === form.examPrepLevel);
   const weakTotal = form.weakSubSectionIds.length + form.weakTopicIds.length;
-
   const rows = [
     { label: "Entrance", value: form.entrance?.title, icon: "🎓" },
     { label: "Exam", value: form.exam?.title, icon: "📝" },
@@ -732,7 +651,6 @@ function Step5({
     { label: "Total Hours", value: `~${hours} hrs`, icon: "⏱️" },
     { label: "Level", value: level?.label, icon: level?.icon },
   ];
-
   return (
     <div>
       <StepHeading
@@ -758,7 +676,6 @@ function Step5({
           </div>
         ))}
       </div>
-
       {weakTotal > 0 && (
         <div className="flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 rounded-xl mb-4 animate-[fadeSlide_0.3s_ease]">
           <span className="text-xl shrink-0">🎯</span>
@@ -777,7 +694,6 @@ function Step5({
           </div>
         </div>
       )}
-
       <div className="bg-gradient-to-br from-amber-50 to-white border border-amber-200 rounded-2xl p-5 text-center">
         <p className="text-3xl mb-2">🚀</p>
         <p className="font-extrabold text-base text-cyan-900 mb-1">
@@ -829,15 +745,32 @@ function Step5({
   );
 }
 
-// ── Main export ────────────────────────────────────────────────────────────
+// ─── Interface change: onPlanGenerated is now always called ───────────────
+// ─── (for both guest and logged-in users)                   ───────────────
 interface StudyPlannerModalProps {
   onClose: () => void;
-  onPlanGenerated?: (data: unknown) => void;
+  /**
+   * Called with the raw plan data immediately after generation.
+   * For LOGGED-IN users: called before router.push("/dashboard")
+   * For GUEST users:     called and then modal closes —
+   *                      the parent (StudyPlannerCard) shows the read-only plan.
+   *                      No redirect happens for guests.
+   */
+  onPlanGenerated: (data: any) => void;
+  /**
+   * NEW: When true, the modal generates the plan and hands it back
+   * via onPlanGenerated WITHOUT redirecting to /dashboard.
+   * The parent component decides what to do with the data.
+   * Use this on the /tools page.
+   * When false (default), behaves exactly like the original modal.
+   */
+  guestPreviewMode?: boolean;
 }
 
 export function StudyPlannerModal({
   onClose,
   onPlanGenerated,
+  guestPreviewMode = false,
 }: StudyPlannerModalProps) {
   const [step, setStep] = useState(0);
   const [loading, setLoad] = useState(false);
@@ -862,7 +795,7 @@ export function StudyPlannerModal({
   const set = useCallback(
     (patch: Partial<FormState>) =>
       setFormRaw((prev) => ({ ...prev, ...patch })),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -896,62 +829,56 @@ export function StudyPlannerModal({
   };
 
   const handleSubmit = async () => {
-    if (!user || !user.username) {
-      // Not logged in — close modal, show auth, and run plan generation after login
+    const payload = { ...form };
+
+    if (!user && guestPreviewMode) {
+      setLoad(true);
+      setError(null);
+      showLoader();
+      try {
+        const res = await studyPlannerService.generateStudyPlan(payload);
+        sessionStorage.setItem("previewPlan", JSON.stringify(res.data));
+        onPlanGenerated(res.data);
+        onClose();
+        router.push("/study-plan-preview");
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : "Something went wrong");
+      } finally {
+        setLoad(false);
+        hideLoader();
+      }
+      return;
+    }
+
+    if (!user && !guestPreviewMode) {
       onClose();
       showLoader();
-
       setPostAuthAction(() => async () => {
         hideLoader();
-        showLoader(); // show loader during generation
-
+        showLoader();
         try {
-          const payload = {
-            entrance: form.entrance,
-            exam: form.exam,
-            prepStartDate: form.prepStartDate,
-            examDate: form.examDate,
-            hoursPerWeekday: form.hoursPerWeekday,
-            hoursPerWeekend: form.hoursPerWeekend,
-            examPrepLevel: form.examPrepLevel,
-            weakSubSectionIds: form.weakSubSectionIds,
-            weakTopicIds: form.weakTopicIds,
-          };
-          const data = await studyPlannerService.generateStudyPlan(payload);
-          onPlanGenerated?.(data);
+          const res = await studyPlannerService.generateStudyPlan(payload);
+          onPlanGenerated(res.data);
           router.push("/dashboard");
         } catch (e) {
-          console.error("Plan generation failed:", e);
+          console.error("Plan generation failed", e);
         } finally {
           hideLoader();
         }
       });
-
       hideLoader();
       openAuth();
       return;
     }
 
-    // Already logged in
+    // Logged in user
     setLoad(true);
     setError(null);
     showLoader();
     onClose();
-
     try {
-      const payload = {
-        entrance: form.entrance,
-        exam: form.exam,
-        prepStartDate: form.prepStartDate,
-        examDate: form.examDate,
-        hoursPerWeekday: form.hoursPerWeekday,
-        hoursPerWeekend: form.hoursPerWeekend,
-        examPrepLevel: form.examPrepLevel,
-        weakSubSectionIds: form.weakSubSectionIds,
-        weakTopicIds: form.weakTopicIds,
-      };
-      const data = await studyPlannerService.generateStudyPlan(payload);
-      onPlanGenerated?.(data);
+      const res = await studyPlannerService.generateStudyPlan(payload);
+      onPlanGenerated(res.data);
       router.push("/dashboard");
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Something went wrong");
@@ -970,117 +897,83 @@ export function StudyPlannerModal({
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      <Dialog
-        open
-        fullWidth
-        maxWidth="md"
-        onClose={onClose}
-        disableEscapeKeyDown
-        BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.75)" } }}
-        PaperProps={{
-          // Mobile: full screen. Desktop: 85vh centered modal
-          className:
-            "!rounded-none sm:!rounded-2xl !shadow-2xl !bg-[#faf9f7] !m-0 sm:!m-4 !flex !flex-col !overflow-hidden !font-sans !w-full sm:!max-h-[85vh] !h-full sm:!h-auto",
-          style: { maxHeight: "100dvh" },
-        }}
-      >
-        {/* ── Header ── */}
-        <div className="relative flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4 shrink-0 border-b border-cyan-800 bg-cyan-900">
-          <div className="absolute inset-0 z-10">
-            {/* Deep space base */}
-            <div className="absolute inset-0 bg-[#020617]" />
-
-            {/* Cyan nebula */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
-
-            {/* Green nebula */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
-
-            {/* Soft atmospheric diffusion */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.04),transparent_120%)]" />
-
-          
-          </div>
-          <div className="absolute top-0 left-0 w-screen h-full bg-[rgba(0,0,0,0.2)] z-10"></div>
-          <div className="flex items-center gap-2.5 z-20">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-500 flex items-center justify-center text-sm shrink-0">
-              📋
+      {/* Modal overlay */}
+      <div className="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4">
+        <div className="relative bg-[#faf9f7] rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col overflow-hidden max-h-[85vh] h-full sm:h-auto">
+          {/* Header */}
+          <div className="relative flex items-center justify-between px-6 pt-5 pb-4 border-b border-cyan-800 bg-cyan-900">
+            <div className="flex items-center gap-3 z-20">
+              <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-sm">
+                📋
+              </div>
+              <div>
+                <p className="font-semibold text-base text-amber-50 leading-none">Study Planner</p>
+                <p className="text-[12px] text-amber-100 mt-0.5">crackora.com</p>
+              </div>
             </div>
-            <div>
-              <p className="font-semibold text-sm sm:text-base text-amber-50 leading-none">
-                Study Planner
+            <div className="flex-1 mx-5">
+              <div className="h-1 bg-amber-50/30 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-amber-400 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${(step / (STEPS.length - 1)) * 100}%` }}
+                />
+              </div>
+              <p className="text-[10px] text-amber-200 mt-1 text-center">
+                {step + 1} / {STEPS.length} — {STEPS[step]}
               </p>
-              <p className="text-[12px] text-amber-100 mt-0.5">crackora.com</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-white text-red-800 hover:bg-red-50 border border-red-200"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Step dots */}
+          <StepDots current={step} />
+
+          {/* Step content */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto bg-[#f8f7f4]">
+            <div className="animate-[fadeSlide_0.3s_ease] px-6 py-5">
+              {step === 0 && <Step0 form={form} set={set} />}
+              {step === 1 && <Step1 form={form} set={set} />}
+              {step === 2 && <Step2 form={form} set={set} />}
+              {step === 3 && <Step3 form={form} set={set} />}
+              {step === 4 && <Step4Wrapper form={form} set={set} />}
+              {step === 5 && <Step5 form={form} onSubmit={handleSubmit} loading={loading} />}
+
+              {error && (
+                <div className="mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-red-500 text-xs">
+                  ⚠️ {error}
+                </div>
+              )}
+
+              {step === 5 && (
+                <div className="mt-4">
+                  <button
+                    onClick={handleBack}
+                    className="px-5 py-2 rounded-lg border border-cyan-900 bg-cyan-900 text-white text-sm hover:opacity-90 transition-opacity"
+                  >
+                    ← Edit Details
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-          <div className="flex-1 max-w-36 sm:max-w-48 mx-3 sm:mx-5">
-            <div className="h-1 bg-amber-50/30 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-amber-400 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${(step / (STEPS.length - 1)) * 100}%` }}
-              />
-            </div>
-            <p className="text-[9px] sm:text-[10px] text-amber-200 mt-1 text-center">
-              {step + 1} / {STEPS.length} — {STEPS[step]}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="w-7 h-7 z-20 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 text-red-800 bg-white hover:bg-red-50 border border-red-200 transition-colors text-xs font-bold cursor-pointer"
-          >
-            ✕
-          </button>
+
+          {/* Navigation buttons */}
+          {step < 5 && (
+            <NavButtons
+              step={step}
+              onBack={handleBack}
+              onNext={handleNext}
+              nextDisabled={!canProceed[step]}
+              hint={hints[step]}
+            />
+          )}
         </div>
-
-        {/* ── Step dots ── */}
-        <StepDots current={step} />
-
-        {/* ── Scrollable content ── */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto bg-[#f8f7f4]">
-          <div
-            key={step}
-            className="animate-[fadeSlide_0.3s_ease] px-4 sm:px-6 py-4 sm:py-5"
-          >
-            {step === 0 && <Step0 form={form} set={set} />}
-            {step === 1 && <Step1 form={form} set={set} />}
-            {step === 2 && <Step2 form={form} set={set} />}
-            {step === 3 && <Step3 form={form} set={set} />}
-            {step === 4 && <Step4Wrapper form={form} set={set} />}
-            {step === 5 && (
-              <Step5 form={form} onSubmit={handleSubmit} loading={loading} />
-            )}
-
-            {error && (
-              <div className="mt-3 px-4 py-2.5 bg-red-50 border border-red-200 rounded-lg text-red-500 text-xs">
-                ⚠️ {error}
-              </div>
-            )}
-
-            {step === 5 && (
-              <div className="mt-4">
-                <button
-                  onClick={handleBack}
-                  className="px-5 py-2 rounded-lg border border-cyan-900 bg-cyan-900 text-white text-sm cursor-pointer hover:opacity-90 transition-opacity"
-                >
-                  ← Edit Details
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ── Fixed bottom nav (steps 0–4 only) ── */}
-        {step < 5 && (
-          <NavButtons
-            step={step}
-            onBack={handleBack}
-            onNext={handleNext}
-            nextDisabled={!canProceed[step]}
-            hint={hints[step]}
-          />
-        )}
-      </Dialog>
+      </div>
     </>
   );
 }

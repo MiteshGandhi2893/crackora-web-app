@@ -1,6 +1,7 @@
 // app/(public)/layout.tsx
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/header/Header";
+import { WhatsAppWidget } from "@/components/WhatsappWidget";
 import { ExamMenuUIProvider } from "@/providers/ExamMenuUIProvider";
 export default function PublicLayout({
   children,
@@ -12,6 +13,7 @@ export default function PublicLayout({
       <ExamMenuUIProvider>
         <Header />
         <main className="select-none">{children}</main>
+        <WhatsAppWidget/>
         <Footer />
       </ExamMenuUIProvider>
     </>

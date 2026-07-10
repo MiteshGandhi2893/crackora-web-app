@@ -1,10 +1,18 @@
 @import "tailwindcss";
-
+@source "../components/**/*.{js,ts,jsx,tsx}";
+@source "../app/**/*.{js,ts,jsx,tsx}";
+@source "../providers/**/*.{js,ts,jsx,tsx}";
+@source "../modals/**/*.{js,ts,jsx,tsx}";
+@plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
+  --background: #f8f7f4;
   --foreground: #171717;
   font-family: var(--font-roboto), system-ui, sans-serif;
+}
+
+body {
+  background: #f8f7f4;
 }
 
 @theme inline {
@@ -27,18 +35,24 @@ body {
 }
 
 @layer components {
-
   .exam-content {
     color: rgba(0, 0, 0, 0.65);
     line-height: 1.6rem;
     font-size: 0.95rem;
+    overflow-x: auto;
   }
 
   .exam-content h2 {
     font-size: 1.55rem;
+
     color: #d97005;
     padding-bottom: 0.6rem;
     margin-bottom: 0;
+  }
+
+  .exam-content a {
+    color: blue !important;
+    text-decoration: underline !important; /* Default style */
   }
 
   /* ✅ Card-style table */
@@ -47,8 +61,6 @@ body {
     display: block;
     overflow-x: auto;
     font-size: 0.9rem;
-
-
   }
 
   .exam-content table td,
@@ -64,9 +76,19 @@ body {
     color: white;
   }
 
+  .exam-content table:has(th) th a {
+    color: #d97000 !important;
+    font-weight: bold;
+  }
+
   .exam-content table:not(:has(th)) tr:first-child td {
     background-color: #164e61;
     color: white;
+  }
+
+  .exam-content table:not(:has(th)) tr:first-child td a {
+    color: #d97000 !important;
+    font-weight: bold;
   }
 
   /* ✅ Zebra striping (data rows only) */
@@ -76,8 +98,6 @@ body {
   }
 
   /* ✅ Rounded header corners */
-
- 
 
   /* ✅ Smooth hover effect */
 
@@ -96,8 +116,171 @@ body {
 
   /* Scroll offset for anchored headings */
 
-  .exam-content h2,
+  .exam-content h2 {
+  }
   .exam-content h3 {
+    scroll-margin-top: 140px;
+    font-size: 1rem;
+    color: #d97005 !important;
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .exam-content {
+      font-size: 0.95rem;
+      line-height: 1.7rem;
+      padding: 0 0.2rem;
+    }
+
+    /* Headings */
+    .exam-content h2 {
+      font-size: 1.35rem;
+      line-height: 1.9rem;
+      margin-top: 1.2rem;
+    }
+
+    .exam-content h3 {
+      font-size: 1.05rem;
+      line-height: 1.6rem;
+      margin-top: 1rem;
+    }
+
+    /* Paragraphs */
+    .exam-content p {
+      font-size: 0.95rem;
+      line-height: 1.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* Lists */
+    .exam-content ul {
+      padding-left: 1.2rem;
+    }
+
+    .exam-content li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* ✅ Table Fix (IMPORTANT) */
+    .exam-content table {
+      display: table; /* 🔥 FIX your current bug */
+      min-width: 600px;
+      font-size: 0.85rem;
+    }
+
+    .exam-content {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Table spacing */
+    .exam-content table td,
+    .exam-content table th {
+      padding: 0.5rem;
+    }
+  }
+}
+
+@layer components {
+  .blog-content {
+    color: rgba(0, 0, 0, 0.65);
+    line-height: 1.6rem;
+    font-size: 0.95rem;
+    min-width: 0;      /* <-- add this */
+    max-width: 100%;   /* <-- and this */
+    overflow-x: hidden; /* safety net so nothing escapes the column */
+  }
+  .blog-content h2 {
+    font-size: 2rem;
+    color: #164e61!important;
+    margin-bottom: 0;
+    line-height: 2.2rem;
+  }
+
+  .blog-content h3 {
+    font-size: 1.5rem;
+    color: #d97005 !important;
+    line-height: 2.1rem;
+    font-weight: 600;
+  }
+
+   .blog-content .table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0.75rem 0;
+  }
+
+  .blog-content p {
+    padding:.5rem 0;
+    text-align: justify;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .blog-content h4 {
+    color: #164e61 !important;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    color: #164e61;
+    font-weight: 700;
+    opacity: 90;
+    text-decoration: none;
+  }
+  /* ✅ Card-style table */
+  .blog-content table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    /* remove display:block and overflow-x:auto from here */
+  }
+
+  .blog-content table td,
+  .blog-content table th {
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 0.65rem 0.75rem;
+    white-space: nowrap; /* prevents cells from wrapping and defeats the scroll */
+  }
+
+  /* ✅ Header styling logic */
+
+  .blog-content table:has(th) th {
+    background-color: #164e61;
+    color: white;
+  }
+
+  .blog-content table:not(:has(th)) tr:first-child td {
+    background-color: #164e61;
+    color: white;
+  }
+
+  /* ✅ Zebra striping (data rows only) */
+
+  .blog-content table tr:not(:first-child):nth-child(even) td {
+    background-color: rgba(0, 0, 0, 0.018);
+  }
+
+  /* ✅ Rounded header corners */
+
+  /* ✅ Smooth hover effect */
+
+  .blog-content table tr:hover td {
+    background-color: rgba(22, 78, 97, 0.04);
+    transition: background-color 0.15s ease;
+  }
+
+  /* Lists */
+
+  .blog-content ul {
+    list-style: inside;
+    padding: 0.5rem 0;
+    padding-left: 2rem;
+  }
+
+  /* Scroll offset for anchored headings */
+
+  .blog-content h2,
+  .blog-content h3 {
     scroll-margin-top: 140px;
   }
 }
@@ -150,8 +333,6 @@ body {
   }
 }
 
-
-
 @keyframes flyIn {
   0% {
     transform: translateY(25px);
@@ -167,4 +348,32 @@ body {
 
 .animate-fly {
   animation: flyIn 0.6s ease forwards;
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(-20px) translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
 }

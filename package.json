@@ -5,15 +5,19 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/material": "^7.3.7",
+    "@next/bundle-analyzer": "^16.2.2",
+    "@next/third-parties": "^16.2.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "framer-motion": "^12.38.0",
     "india-state-city": "^1.0.3",
+    "lite-youtube-embed": "^0.3.4",
     "next": "16.1.6",
+    "next-sitemap": "^4.2.3",
     "react": "19.2.3",
     "react-country-state-city": "^1.1.12",
     "react-datepicker": "^9.1.0",

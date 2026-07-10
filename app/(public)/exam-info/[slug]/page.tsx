@@ -8,8 +8,12 @@ import Script from "next/script";
 /**
  * Dynamic SEO for each exam
  */
-export async function generateMetadata({ params }: {params: Promise<{slug: string}>}) {
-  const {slug} = await params;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const exam: Exam | null = await examService.getExamBySlug(slug);
 
   if (!exam) {
@@ -32,6 +36,8 @@ export async function generateMetadata({ params }: {params: Promise<{slug: strin
     alternates: {
       canonical: `https://crackora.com/exams/${slug}`,
     },
+      metadataBase: new URL("https://crackora.com"),
+
     openGraph: {
       title: `${exam.title} Exam Preparation | Crackora`,
       description: `Everything you need to crack ${exam.title} – syllabus, mocks, and guidance.`,
@@ -45,8 +51,12 @@ export async function generateMetadata({ params }: {params: Promise<{slug: strin
 /**
  * Exam page (server component)
  */
-export default async function ExamInfoPage({ params }: {params: Promise<{slug: string}>}) {
-  const {slug} = await params;
+export default async function ExamInfoPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const exam: Exam | null = await examService.getExamBySlug(slug);
 
   if (!exam) {
@@ -55,7 +65,7 @@ export default async function ExamInfoPage({ params }: {params: Promise<{slug: s
 
   const examSchema = getExamSchema(exam);
 
-return (
+  return (
     <>
       {/* ✅ Structured Data (Schema.org) */}
       <Script
@@ -68,6 +78,7 @@ return (
       />
 
       {/* ✅ Visible page content */}
-      <ExamInfo exam={exam} />
+        <ExamInfo exam={exam} />
     </>
-  );}
+  );
+}

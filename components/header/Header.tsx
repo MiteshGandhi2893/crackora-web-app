@@ -9,7 +9,7 @@ import { Logo } from "./Logo";
 import { useExamMenu } from "@/providers/ExamMenuUIProvider";
 
 export function Header() {
-  const {open, setOpen} = useExamMenu();
+  const { open, setOpen } = useExamMenu();
   const [mobileMenu, setMobileMenu] = useState(false);
   const toggleMenu = () => {
     const flag = !mobileMenu;
@@ -18,11 +18,13 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full h-16 bg-white border-b shadow z-50 lg:px-30 md:px-10 px-5 ">
-        <div className="h-full flex items-center justify-between">
-          <Logo />
-          <div className="lg:block hidden">
-            <Navbar onExamsInfoClicked={() => setOpen(true)} />
+      <header className="fixed top-0 left-0 w-full bg-white  border-b shadow z-50 lg:px-24 md:px-10 px-5 ">
+        <div className="h-full flex items-center justify-between max-w-6xl mx-auto">
+          <div className="flex justify-center items-center gap-5">
+            <Logo />
+            <div className="lg:block hidden">
+              <Navbar onExamsInfoClicked={() => setOpen(true)} />
+            </div>
           </div>
 
           <div className="hidden lg:block">
@@ -45,8 +47,6 @@ export function Header() {
     top-16
     left-1/2
     -translate-x-1/2
-    w-[70%]
-    h-[calc(100vh-4rem)]
     z-40
     bg-white
     border border-gray-200
@@ -54,6 +54,8 @@ export function Header() {
     rounded-b-md
     transition-all
     duration-200
+    w-[70%]
+  
   "
           >
             <MegaExamInfoMenu onClose={() => setOpen(false)} />

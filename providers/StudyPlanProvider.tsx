@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, {
@@ -7,6 +8,7 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
+
 import { StudyPlannerModal } from "@/modals/StudyPlannerModal";
 import { Entrance, Exam } from "@/interfaces/entrance-interface";
 
@@ -26,9 +28,14 @@ interface StudyPlannerContextType {
   isOpen: boolean;
   openPlanner: () => void;
   closePlanner: () => void;
+
   studyPlanForm: StudyPlanForm;
   setStudyPlanForm: (plan: Partial<StudyPlanForm>) => void;
   resetStudyPlanForm: () => void;
+
+  // ✅ NEW
+  generatedPlan: any;
+  setGeneratedPlan: (data: any) => void;
 }
 
 const defaultPlan: StudyPlanForm = {
@@ -41,19 +48,23 @@ const defaultPlan: StudyPlanForm = {
   examPrepLevel: "intermediate",
 };
 
-const StudyPlannerContext = createContext<StudyPlannerContextType | undefined>(
-  undefined
-);
+const StudyPlannerContext = createContext<
+  StudyPlannerContextType | undefined
+>(undefined);
 
 // --- Provider Component ---
 
 export function StudyPlannerProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [studyPlanForm, setStudyPlanFormInternal] = useState<StudyPlanForm>(
-    defaultPlan
-  );
+
+  const [studyPlanForm, setStudyPlanFormInternal] =
+    useState<StudyPlanForm>(defaultPlan);
+
+  // ✅ NEW
+  const [generatedPlan, setGeneratedPlan] = useState<any>(null);
 
   const openPlanner = () => setIsOpen(true);
+
   const closePlanner = () => setIsOpen(false);
 
   const setStudyPlanForm = useCallback(
@@ -79,12 +90,20 @@ export function StudyPlannerProvider({ children }: { children: ReactNode }) {
         studyPlanForm,
         setStudyPlanForm,
         resetStudyPlanForm,
+
+        // ✅ NEW
+        generatedPlan,
+        setGeneratedPlan,
       }}
     >
       {children}
 
       {isOpen && (
         <StudyPlannerModal
+          guestPreviewMode
+          onPlanGenerated={(data) => {
+            setGeneratedPlan(data);
+          }}
           onClose={() => {
             closePlanner();
             resetStudyPlanForm();
@@ -99,6 +118,11 @@ export function StudyPlannerProvider({ children }: { children: ReactNode }) {
 
 export function useStudyPlanner() {
   const ctx = useContext(StudyPlannerContext);
-  if (!ctx) throw new Error("useStudyPlanner must be used inside StudyPlannerProvider");
+
+  if (!ctx)
+    throw new Error(
+      "useStudyPlanner must be used inside StudyPlannerProvider"
+    );
+
   return ctx;
 }

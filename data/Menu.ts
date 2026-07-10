@@ -1,39 +1,46 @@
 import { Menu } from "@/interfaces/menu.interface";
-import {
-  BiSolidNews,
-  BiSolidFileBlank,
-  BiSolidSpreadsheet,
-  BiSolidDashboard,
-} from "react-icons/bi";
+import { BiSolidSpreadsheet, BiUser } from "react-icons/bi";
+import { TbToolsOff } from "react-icons/tb";
+import { RiMindMap } from "react-icons/ri";
+import { BsChatLeftText } from "react-icons/bs";
+import { MdOutlineOndemandVideo } from "react-icons/md"; // 👈 new icon
 
-export const menu: Menu[] = [
-  {
-    id: "1",
-    label: "Mock Tests",
-    href: "https://learn.crackora.com/learn/MCA-Mocktest-Series",
-    icon: BiSolidNews,
-    isActive: false,
-    target: "_blank",
-  },
+export const baseMenu: Menu[] = [
   {
     id: "exams",
     label: "Exams",
     href: "#",
     icon: BiSolidSpreadsheet,
-    isActive: false,
   },
   {
-    id: "3",
-    label: "Past Papers",
-    href: "/past-papers",
-    icon: BiSolidFileBlank,
-    isActive: false,
+    id: "mca-roadmap",
+    label: "MCA Roadmap",
+    href: "/mca-journey",
+    icon: RiMindMap,
   },
   {
-    id: "4",
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: BiSolidDashboard,
-    isActive: false,
+    id: "free-tools",
+    label: "MCA Tools",
+    href: "/tools/college",
+    icon: TbToolsOff,
+  },
+  // {
+  //   id: "webinars",             // 👈 NEW
+  //   label: "Webinars",
+  //   href: "/webinar",
+  //   icon: MdOutlineOndemandVideo,
+  // },
+  {
+    id: "blogs",
+    label: "Blogs",
+    href: "/blogs",
+    icon: BsChatLeftText,
   },
 ];
+
+export const dashboardMenu: Menu = {
+  id: "dashboard",
+  label: "Dashboard",
+  href: "/dashboard",
+  icon: BiUser,
+};

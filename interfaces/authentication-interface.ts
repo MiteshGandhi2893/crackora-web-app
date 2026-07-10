@@ -9,6 +9,8 @@ export interface SignUpPayload {
     email: string;
     password: string;
     phoneNumber: string;
+    agreedOn?: string;
+    emailVerified?: boolean;
 }
 
 
