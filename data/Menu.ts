@@ -12,15 +12,16 @@ export const baseMenu: Menu[] = [
     href: "#",
     icon: BiSolidSpreadsheet,
   },
-  {
-    id: "mca-roadmap",
-    label: "MCA Roadmap",
-    href: "/mca-journey",
+   {
+    id: "roadmap",
+    label: "Roadmaps",
+    href: "#",
     icon: RiMindMap,
   },
+
   {
     id: "free-tools",
-    label: "MCA Tools",
+    label: "Tools",
     href: "/tools/college",
     icon: TbToolsOff,
   },
