@@ -13,9 +13,12 @@ import { useRouter } from "next/navigation";
 export function Navbar({
   mobile = false,
   onExamsInfoClicked,
+  onPackagesInfoClicked,
+
 }: {
   mobile?: boolean;
   onExamsInfoClicked?: () => void;
+  onPackagesInfoClicked?: () => void;
 }) {
   const { user } = useAuth();
   const router = useRouter();
@@ -38,6 +41,10 @@ export function Navbar({
 
     if (clicked.label === "Exams" && !mobile) {
       onExamsInfoClicked?.();
+    }
+
+    if (clicked.label === "Courses" && !mobile) {
+      onPackagesInfoClicked?.();
     }
 
     if (!hasSubMenu && clicked.href && clicked.href !== "#") {

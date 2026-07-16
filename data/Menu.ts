@@ -3,9 +3,15 @@ import { BiSolidSpreadsheet, BiUser } from "react-icons/bi";
 import { TbToolsOff } from "react-icons/tb";
 import { RiMindMap } from "react-icons/ri";
 import { BsChatLeftText } from "react-icons/bs";
-import { MdOutlineOndemandVideo } from "react-icons/md"; // 👈 new icon
+import { BiDice4 } from "react-icons/bi";
 
 export const baseMenu: Menu[] = [
+    {
+    id: "courses",
+    label: "Courses",
+    href: "#",
+    icon: BiDice4,
+  },
   {
     id: "exams",
     label: "Exams",

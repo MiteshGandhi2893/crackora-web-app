@@ -1,6 +1,9 @@
+import { CoursePackageInfo } from "@/components/CoursePackageInfo";
 import { CoursePackage } from "@/interfaces/CoursePackage.interface";
+import { getPackageSchema } from "@/schema-generators/package.schema";
 import { packageService } from "@/services/courses.service";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 
 export default async function PackageInfoPage({
   params,
@@ -9,20 +12,29 @@ export default async function PackageInfoPage({
 }) {
   const { slug } = await params;
   const response = await packageService.getPackageBySlug(slug);
-  if (response.status === 404) {
+  let coursePackage;
+  if (response.success) {
+    coursePackage = response.package;
+  }
+
+  if (response.error) {
     notFound();
   }
 
-  if (!response.success) {
-    throw new Error(
-      response.error || "Server Error, please contact info@crackora.com",
-    );
-  }
-
-  const coursePackage = response.package as CoursePackage;
+  const coursePackageSchema = getPackageSchema(coursePackage);
 
   return (
     <>
+      <Script
+        id="exam-schema"
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(coursePackageSchema),
+        }}
+      />
+
+      <CoursePackageInfo coursePackage={coursePackage}></CoursePackageInfo>
     </>
   );
 }

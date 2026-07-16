@@ -23,8 +23,6 @@ body {
   --font-roboto: var(--font-roboto);
   --font-inter: var(--font-inter);
   --font-display: var(--font-display);
-
-
 }
 
 @media (prefers-color-scheme: dark) {
@@ -187,17 +185,56 @@ body {
 }
 
 @layer components {
+  .package-overview {
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 0.95rem;
+    min-width: 0; /* <-- add this */
+    max-width: 100%; /* <-- and this */
+    overflow-x: hidden;
+  }
+
+  .package-overview h2 {
+    font-size: 2rem;
+    color: #164e61 !important;
+    margin-bottom: 0;
+  }
+
+  .package-overview h3 {
+    font-size: 1.5rem;
+    color: #d97005 !important;
+    font-weight: 600;
+  }
+
+  .package-overview h4 {
+    color: #164e61 !important;
+    margin-bottom: 0 !important;
+    font-size: 1.1rem;
+    color: #164e61;
+    font-weight: 700;
+    opacity: 90;
+    text-decoration: none;
+  }
+
+    .package-overview p {
+    text-align: justify;
+    color: rgba(0, 0, 0, 0.8);
+    margin: 0 !important;
+  }
+
+}
+
+@layer components {
   .blog-content {
     color: rgba(0, 0, 0, 0.65);
     line-height: 1.6rem;
     font-size: 0.95rem;
-    min-width: 0;      /* <-- add this */
-    max-width: 100%;   /* <-- and this */
+    min-width: 0; /* <-- add this */
+    max-width: 100%; /* <-- and this */
     overflow-x: hidden; /* safety net so nothing escapes the column */
   }
   .blog-content h2 {
     font-size: 2rem;
-    color: #164e61!important;
+    color: #164e61 !important;
     margin-bottom: 0;
     line-height: 2.2rem;
   }
@@ -209,7 +246,7 @@ body {
     font-weight: 600;
   }
 
-   .blog-content .table-scroll {
+  .blog-content .table-scroll {
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
@@ -218,7 +255,7 @@ body {
   }
 
   .blog-content p {
-    padding:.5rem 0;
+    padding: 0.5rem 0;
     text-align: justify;
     color: rgba(0, 0, 0, 0.6);
   }

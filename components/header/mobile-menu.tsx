@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 // ✅ FIXED: MobileMenu updates instantly on logout (Dashboard removed)
+// ✅ ADDED: Packages submenu (entrance -> package type -> package), mirrors Exams
 
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -15,6 +16,21 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { LoginStatus } from "../app-buttons/login-button";
 import { getCachedExams } from "@/services/EntranceCache";
+import {
+  packageService,
+  type MenuPackage,
+  type PackageType,
+} from "@/services/courses.service";
+
+// NOTE: duplicated from PackageMegaMenu.tsx — consider moving to a shared
+// constants file (e.g. @/data/packageTypes.ts) so both stay in sync.
+const PACKAGE_TYPE_LABELS: Record<PackageType, string> = {
+  course: "Courses",
+  live: "Live Batches",
+  mock_test: "Mock Tests",
+  ebook: "E-books",
+};
+const PACKAGE_TYPE_ORDER: PackageType[] = ["course", "live", "mock_test", "ebook"];
 
 export function MobileMenu({
   open,
@@ -28,8 +44,12 @@ export function MobileMenu({
 
   const [openLevel1, setOpenLevel1] = useState<string | null>(null);
   const [openLevel2, setOpenLevel2] = useState<string | null>(null);
+
   const [entrances, setEntrances] = useState<any[]>([]);
   const [examsLoaded, setExamsLoaded] = useState(false);
+
+  const [packages, setPackages] = useState<MenuPackage[]>([]);
+  const [packagesLoaded, setPackagesLoaded] = useState(false);
 
   // ✅ reset accordion on close OR logout
   useEffect(() => {
@@ -46,10 +66,59 @@ export function MobileMenu({
     return items;
   }, [user?.username]); // ✅ FIX
 
+  // Groups a flat package list into entrance -> [package-type-grouped leaves]
+  const buildPackageEntrances = (pkgs: MenuPackage[]): Menu[] => {
+    const entranceMap = new Map<
+      string,
+      { id: string; name: string; items: MenuPackage[] }
+    >();
+
+    pkgs.forEach((p) => {
+      if (!entranceMap.has(p.entrance_id)) {
+        entranceMap.set(p.entrance_id, {
+          id: p.entrance_id,
+          name: p.entrance_name,
+          items: [],
+        });
+      }
+      entranceMap.get(p.entrance_id)!.items.push(p);
+    });
+
+    return Array.from(entranceMap.values()).map((entrance) => {
+      const byType = new Map<PackageType, MenuPackage[]>();
+      entrance.items.forEach((p) => {
+        if (!byType.has(p.package_type)) byType.set(p.package_type, []);
+        byType.get(p.package_type)!.push(p);
+      });
+
+      const orderedTypes = PACKAGE_TYPE_ORDER.filter((t) => byType.has(t));
+
+      const subMenu: Menu[] = [];
+      orderedTypes.forEach((type) => {
+        byType.get(type)!.forEach((pkg, idx) => {
+          subMenu.push({
+            id: pkg.id,
+            label: pkg.course_name,
+            slug: pkg.slug,
+            imageIcon: pkg.image,
+            // only the first item of each type group carries the divider label
+            groupLabel: idx === 0 ? PACKAGE_TYPE_LABELS[type] : undefined,
+          } as Menu);
+        });
+      });
+
+      return {
+        id: entrance.id,
+        label: entrance.name,
+        subMenu,
+      } as Menu;
+    });
+  };
+
   const menu: Menu[] = useMemo(() => {
     const cloned: Menu[] = JSON.parse(JSON.stringify(baseItems));
-    const examsMenu = cloned.find((item) => item.label === "Exams");
 
+    const examsMenu = cloned.find((item) => item.label === "Exams");
     if (examsMenu && entrances.length) {
       examsMenu.subMenu = entrances.map((entrance: any) => ({
         label: entrance.title,
@@ -65,14 +134,26 @@ export function MobileMenu({
       }));
     }
 
+    const packagesMenu = cloned.find((item) => item.label === "Courses");
+    if (packagesMenu && packages.length) {
+      packagesMenu.subMenu = buildPackageEntrances(packages);
+    }
+
     return cloned;
-  }, [baseItems, entrances]);
+  }, [baseItems, entrances, packages]);
 
   const handleMenuClick = async (item: Menu) => {
     if (item.label === "Exams" && !examsLoaded) {
       const data = await getCachedExams();
       setEntrances(data ?? []);
       setExamsLoaded(true);
+    }
+
+    if (item.label === "Courses" && !packagesLoaded) {
+      const res = await packageService.getActiveForMenu();
+      console.log(res.packages)
+      setPackages(res.packages ?? []);
+      setPackagesLoaded(true);
     }
 
     if (item.label === "Dashboard") {
@@ -86,7 +167,9 @@ export function MobileMenu({
     }
 
     const hasSubMenu =
-      !!item.subMenu?.length || item.label === "Exams";
+      !!item.subMenu?.length ||
+      item.label === "Exams" ||
+      item.label === "Courses";
 
     if (hasSubMenu) {
       setOpenLevel1((prev) => (prev === item.id ? null : item.id));
@@ -101,11 +184,15 @@ export function MobileMenu({
     onClose();
   };
 
-  const renderMenu = (items: Menu[]) =>
+  // rootLabel tells Level3 which route/behavior to use ("Exams" vs "Packages")
+  const renderMenu = (items: Menu[], rootLabel?: string) =>
     items.map((item) => {
       const hasSubMenu =
-        !!item.subMenu?.length || item.label === "Exams";
+        !!item.subMenu?.length ||
+        item.label === "Exams" ||
+        item.label === "Courses";
       const isOpen = openLevel1 === item.id;
+      const currentRoot = rootLabel ?? item.label; // set root at Level1
 
       return (
         <div key={item.id}>
@@ -161,26 +248,38 @@ export function MobileMenu({
                   {hasChild &&
                     subOpen &&
                     subItem.subMenu!.map((lastItem) => (
-                      <div
-                        key={lastItem.id}
-                        onClick={() => {
-                          router.push(`/exam-info/${lastItem.slug}`);
-                          onClose();
-                        }}
-                        className="flex items-center gap-3 pl-9 pr-3 py-2.5 border-b border-[#f0ede6] hover:bg-amber-50 cursor-pointer"
-                      >
-                        <div className="relative w-7 h-7 rounded-md overflow-hidden border bg-[#f8f7f4]">
-                          <Image
-                            src={apiService.getPublicAsset(lastItem.imageIcon || "")}
-                            alt={lastItem.label}
-                            fill
-                            className="object-contain p-0.5"
-                          />
-                        </div>
+                      <div key={lastItem.id}>
+                        {/* Non-clickable divider for package-type groups */}
+                        {(lastItem as any).groupLabel && (
+                          <div className="pl-9 pr-3 pt-3 pb-1 text-[10px] font-bold tracking-[0.14em] uppercase text-cyan-900/50">
+                            {(lastItem as any).groupLabel}
+                          </div>
+                        )}
 
-                        <span className="text-xs font-semibold text-amber-600">
-                          {lastItem.label}
-                        </span>
+                        <div
+                          onClick={() => {
+                            if (currentRoot === "Courses") {
+                              router.push(`/course/${lastItem.slug}`);
+                            } else {
+                              router.push(`/exam-info/${lastItem.slug}`);
+                            }
+                            onClose();
+                          }}
+                          className="flex items-center gap-3 pl-9 pr-3 py-2.5 border-b border-[#f0ede6] hover:bg-amber-50 cursor-pointer"
+                        >
+                          <div className="relative w-7 h-7 rounded-md overflow-hidden border bg-[#f8f7f4]">
+                            <Image
+                              src={apiService.getPublicAsset(lastItem.imageIcon || "")}
+                              alt={lastItem.label}
+                              fill
+                              className="object-contain p-0.5"
+                            />
+                          </div>
+
+                          <span className="text-xs font-semibold text-amber-600">
+                            {lastItem.label}
+                          </span>
+                        </div>
                       </div>
                     ))}
                 </div>

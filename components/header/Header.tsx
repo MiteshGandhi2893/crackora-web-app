@@ -6,10 +6,12 @@ import { MegaExamInfoMenu } from "./meg-menus/ExamMegaMenu";
 import { BiAlignRight } from "react-icons/bi";
 import { MobileMenu } from "./mobile-menu";
 import { Logo } from "./Logo";
-import { useExamMenu } from "@/providers/ExamMenuUIProvider";
+import { useExamMenu } from "@/providers/MenuUIProvider";
+import { PackageMegaMenu } from "./meg-menus/PackageExamMenu";
 
 export function Header() {
-  const { open, setOpen } = useExamMenu();
+  const { openExams, setOpenExams, openPackages, setOpenPackage } =
+    useExamMenu();
   const [mobileMenu, setMobileMenu] = useState(false);
   const toggleMenu = () => {
     const flag = !mobileMenu;
@@ -23,7 +25,10 @@ export function Header() {
           <div className="flex justify-center items-center gap-5">
             <Logo />
             <div className="lg:block hidden">
-              <Navbar onExamsInfoClicked={() => setOpen(true)} />
+              <Navbar
+                onExamsInfoClicked={() => setOpenExams(true)}
+                onPackagesInfoClicked={() => setOpenPackage(true)}
+              />
             </div>
           </div>
 
@@ -35,11 +40,11 @@ export function Header() {
           </div>
         </div>
       </header>
-      {open && (
+      {openExams && (
         <>
           <div
             className="fixed inset-0 bg-black/70 z-30"
-            onClick={() => setOpen(false)}
+            onClick={() => setOpenExams(false)}
           ></div>
           <div
             className="
@@ -58,11 +63,38 @@ export function Header() {
   
   "
           >
-            <MegaExamInfoMenu onClose={() => setOpen(false)} />
+            <MegaExamInfoMenu onClose={() => setOpenExams(false)} />
           </div>
         </>
       )}
 
+      {openPackages && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/70 z-30"
+            onClick={() => setOpenPackage(false)}
+          ></div>
+          <div
+            className="
+    fixed
+    top-16
+    left-1/2
+    -translate-x-1/2
+    z-40
+    bg-white
+    border border-gray-200
+    shadow-2xl
+    rounded-b-md
+    transition-all
+    duration-200
+    w-[70%]
+  
+  "
+          >
+            <PackageMegaMenu onClose={() => setOpenPackage(false)} />
+          </div>
+        </>
+      )}
       <MobileMenu open={mobileMenu} onClose={toggleMenu} />
     </>
   );
