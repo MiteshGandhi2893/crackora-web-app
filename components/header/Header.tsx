@@ -26,8 +26,15 @@ export function Header() {
             <Logo />
             <div className="lg:block hidden">
               <Navbar
-                onExamsInfoClicked={() => setOpenExams(true)}
-                onPackagesInfoClicked={() => setOpenPackage(true)}
+                onExamsInfoClicked={() => {
+                  setOpenPackage(false);
+                  setOpenExams(true);
+                }}
+                onPackagesInfoClicked={() => {
+                  setOpenExams(false);
+
+                  setOpenPackage(true);
+                }}
               />
             </div>
           </div>
@@ -72,7 +79,9 @@ export function Header() {
         <>
           <div
             className="fixed inset-0 bg-black/70 z-30"
-            onClick={() => setOpenPackage(false)}
+            onClick={() => {
+              setOpenPackage(false);
+            }}
           ></div>
           <div
             className="

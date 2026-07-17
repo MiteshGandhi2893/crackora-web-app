@@ -265,7 +265,7 @@ export function ExamInfo({ exam }: { exam: Exam }) {
                   Entrance Exam Information
                 </span>
               </div>
-              <h1 className="text-2xl lg:text-5xl font-bold leading-tight drop-shadow-lg">
+              <h1 className="text-2xl lg:text-5xl font-bold leading-tight drop-shadow-lg" data-examinfo-title={exam?.meta_title || exam?.title}>
                 {exam?.meta_title || exam?.title}
               </h1>
               <div className="h-0.5 w-16 bg-amber-500 mx-auto sm:mx-0" />
@@ -355,6 +355,7 @@ export function ExamInfo({ exam }: { exam: Exam }) {
             className="fixed bottom-6 right-6 z-50 flex items-center gap-1.5
                        bg-cyan-900 hover:bg-cyan-800 text-white text-xs font-bold
                        px-4 py-2.5 rounded-full shadow-lg transition-colors"
+          
           >
             <svg
               className="w-3.5 h-3.5"

@@ -68,7 +68,7 @@ export function Navbar({
     const isOpen = activeMenuId === menu.id;
 
     return (
-      <li key={menu.id} className={mobile ? "w-full" : "w-fit"}>
+      <li key={menu.id} id={menu.id} className={mobile ? "w-full" : "w-fit"}>
         <div
           onClick={(e) => {
             e.stopPropagation();
