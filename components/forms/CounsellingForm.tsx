@@ -15,7 +15,12 @@ const CATEGORIES = [
   { value: "Skills & Placement", label: "Skills & Placement", icon: "⚡" },
 ];
 
-export function CounsellingForm() {
+interface CounsellingFormProps {
+  sourcePage: "exam-info" | "paperset" | "home";
+  sourceSlug: string;
+}
+
+export function CounsellingForm({ sourcePage, sourceSlug }: CounsellingFormProps) {
   const { showLoader, hideLoader } = useLoader();
   const { showMessage } = useSnackbar();
   const [states, setStates] = useState<any[]>([]);
@@ -102,7 +107,12 @@ export function CounsellingForm() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
     showLoader();
-    const res = await emailService.sendCounsellingEmail(formData);
+    const res = await emailService.sendCounsellingEmail({
+      ...formData,
+      sourcePage,
+      sourceSlug,
+      sourceUrl: typeof window !== "undefined" ? window.location.href : "",
+    });
     hideLoader();
     if (res.data?.success) {
       showMessage(res.data?.message, "success");

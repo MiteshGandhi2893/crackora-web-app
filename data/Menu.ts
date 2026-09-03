@@ -1,12 +1,12 @@
 import { Menu } from "@/interfaces/menu.interface";
-import { BiSolidSpreadsheet, BiUser } from "react-icons/bi";
+import { BiFile, BiSolidSpreadsheet, BiUser } from "react-icons/bi";
 import { TbToolsOff } from "react-icons/tb";
 import { RiMindMap } from "react-icons/ri";
 import { BsChatLeftText } from "react-icons/bs";
 import { BiDice4 } from "react-icons/bi";
 
 export const baseMenu: Menu[] = [
-    {
+  {
     id: "courses",
     label: "Courses",
     href: "#",
@@ -18,19 +18,19 @@ export const baseMenu: Menu[] = [
     href: "#",
     icon: BiSolidSpreadsheet,
   },
-   {
-    id: "roadmap",
-    label: "Roadmaps",
+  {
+    id: "papers",
+    label: "Previous Papers",
     href: "#",
-    icon: RiMindMap,
+    icon: BiFile,
   },
-
   {
     id: "free-tools",
     label: "Tools",
     href: "/tools/college",
     icon: TbToolsOff,
   },
+  
   // {
   //   id: "webinars",             // 👈 NEW
   //   label: "Webinars",

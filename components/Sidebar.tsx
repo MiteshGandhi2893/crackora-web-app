@@ -47,7 +47,7 @@ export function Sidebar({ studyPlans, mobileMenuOpen, setMobileMenuOpen }: any) 
           z-50 shadow-xl
           ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:relative lg:shrink-0
-          lg:h-[calc(100vh-40px)] lg:rounded-2xl lg:sticky lg:top-5
+          lg:h-[calc(100vh-40px)] lg:rounded-2xl lg:top-5
         `}
       >
         {/* Logo */}

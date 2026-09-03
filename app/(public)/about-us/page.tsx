@@ -79,7 +79,7 @@ export default function AboutUs() {
     <section className="bg-[#f8f7f4] min-h-screen">
 
       {/* ── Page header ─────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 pt-20 pb-10">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 pt-20 pb-10">
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
           Who we are
         </p>
@@ -120,12 +120,12 @@ export default function AboutUs() {
       </div>
 
       {/* ── Divider ─────────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6">
         <div className="border-t border-gray-200" />
       </div>
 
       {/* ── Co-Founder 1: Mohd Azad — photo LEFT, text RIGHT ── */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 py-16">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
 
           {/* Photo frame */}
@@ -234,7 +234,7 @@ export default function AboutUs() {
       </div>
 
       {/* ── Divider ─────────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 py-2">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 py-2">
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-gray-200" />
           <div className="flex-1 h-px bg-gray-200" />
@@ -242,7 +242,7 @@ export default function AboutUs() {
       </div>
 
       {/* ── Co-Founder 2: Mitesh Gandhi — text LEFT, photo RIGHT ── */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 py-16">
         <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
 
           {/* Photo frame */}
@@ -367,7 +367,7 @@ export default function AboutUs() {
 
       {/* ── Full journey section ─────────────────────────────── */}
       <div className="bg-cyan-950 mt-4">
-        <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 py-16">
           <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-400 mb-3">
             What we cover
           </p>

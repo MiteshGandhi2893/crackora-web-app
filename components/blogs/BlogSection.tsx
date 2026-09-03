@@ -2,11 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { LuArrowRight, LuClock, LuEye } from 'react-icons/lu';
 import { formatDistanceToNow } from 'date-fns';
-import type { BlogListItem } from '@/services/Blog.service';
+import { BlogsSectionProps } from '@/interfaces/blog.interface';
 
-interface BlogsSectionProps {
-  blogs: BlogListItem[];
-}
+
 
 export default function BlogsSection({ blogs }: BlogsSectionProps) {
   if (!blogs.length) return null;
@@ -16,7 +14,7 @@ export default function BlogsSection({ blogs }: BlogsSectionProps) {
 
   return (
     <section className="py-16 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto">
 
         {/* Header */}
         <div className="flex items-end justify-between mb-10">

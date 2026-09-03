@@ -11,20 +11,11 @@ import {
   LuFlag,
   LuChevronDown,
 } from "react-icons/lu";
-import { blogService, type BlogComment } from "@/services/Blog.service";
+import { blogService } from "@/services/Blog.service";
 import { useAuth } from "@/providers/AuthProvider";
+import { BlogComment, CommentItemProps } from "@/interfaces/blog.interface";
 
 // ─── Single comment + nested replies ──────────────────────────────────────────
-
-interface CommentItemProps {
-  comment: BlogComment;
-  // FIX: typed properly instead of passing the whole User object around
-  currentUsername?: string;
-  currentAvatar?: string;
-  onReply: (parentId: string, text: string) => Promise<void>;
-  onReport: (commentId: string) => void;
-  depth?: number;
-}
 
 function CommentItem({
   comment,
@@ -246,7 +237,7 @@ export default function CommentsSection({ blogId }: CommentsSectionProps) {
     setLoading(true);
     blogService.getComments(blogId).then((res) => {
       // FIX: res.data is the full backend response { comments: [...] }
-      if (res.success) setComments(res.data?.comments ?? []);
+      setComments(res.comments ?? []);
       setLoading(false);
     });
   }, [blogId]);
@@ -260,12 +251,12 @@ export default function CommentsSection({ blogId }: CommentsSectionProps) {
 
     const res = await blogService.postComment(blogId, text.trim());
 
-    if (res.success && res.data?.comment) {
+    if (res.comment) {
       // Optimistic update — merge in the current user's display info
       setComments((prev) => [
         ...prev,
         {
-          ...res.data!.comment,
+          ...res.comment,
           // FIX: use user_name (display) and username (handle) from AuthProvider
           user_name: user?.fullname ?? user?.username ?? "You",
           username: user?.username ?? "",
@@ -275,7 +266,7 @@ export default function CommentsSection({ blogId }: CommentsSectionProps) {
       ]);
       setText("");
     } else {
-      setError(res.error ?? "Failed to post. Please try again.");
+      setError("Failed to post. Please try again.");
     }
 
     setSubmitting(false);
@@ -286,9 +277,9 @@ export default function CommentsSection({ blogId }: CommentsSectionProps) {
   const handleReply = useCallback(
     async (parentId: string, replyText: string) => {
       const res = await blogService.postComment(blogId, replyText, parentId);
-      if (res.success && res.data?.comment) {
+      if (res.comment) {
         const newReply: BlogComment = {
-          ...res.data.comment,
+          ...res.comment,
           user_name: user?.fullname ?? user?.username ?? "You",
           username: user?.username ?? "",
           user_avatar: user?.avatar,
@@ -303,9 +294,8 @@ export default function CommentsSection({ blogId }: CommentsSectionProps) {
   // ── Report ─────────────────────────────────────────────────────────────────
 
   const handleReport = useCallback(async (commentId: string) => {
-    const res = await blogService.reportComment(commentId);
-    if (res.success) alert("Comment reported. Our team will review it.");
-    else alert(res.error ?? "Failed to report comment.");
+    await blogService.reportComment(commentId);
+    alert("Comment reported. Our team will review it.");
   }, []);
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -377,7 +367,8 @@ export default function CommentsSection({ blogId }: CommentsSectionProps) {
           </p>
           <div
             className="inline-flex items-center gap-2 bg-amber-600 text-white text-sm
-                       font-semibold px-5 py-2.5 rounded-xl hover:scale(105) transition-colors cursor-pointer" onClick={() => openAuth()}
+                       font-semibold px-5 py-2.5 rounded-xl hover:scale(105) transition-colors cursor-pointer"
+            onClick={() => openAuth()}
           >
             <LuLogIn size={15} /> Sign in to comment
           </div>

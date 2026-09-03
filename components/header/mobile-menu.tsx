@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 // ✅ FIXED: MobileMenu updates instantly on logout (Dashboard removed)
 // ✅ ADDED: Packages submenu (entrance -> package type -> package), mirrors Exams
+// ✅ ADDED: Previous Papers submenu (entrance -> papers), mirrors Exams/Courses
 
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -18,19 +19,27 @@ import { LoginStatus } from "../app-buttons/login-button";
 import { getCachedExams } from "@/services/EntranceCache";
 import {
   packageService,
-  type MenuPackage,
-  type PackageType,
 } from "@/services/courses.service";
+import { MenuPackage, PackageCategory } from "@/interfaces/CoursePackage.interface";
+import { paperSetService } from "@/services/previouspaperset.service";
+import {
+  Entrance as PaperEntrance,
+  PaperExamForMenu,
+  PaperExam,
+} from "@/interfaces/papersets.interface";
 
 // NOTE: duplicated from PackageMegaMenu.tsx — consider moving to a shared
 // constants file (e.g. @/data/packageTypes.ts) so both stay in sync.
-const PACKAGE_TYPE_LABELS: Record<PackageType, string> = {
-  course: "Courses",
-  live: "Live Batches",
+const PACKAGE_TYPE_LABELS: Record<PackageCategory, string> = {
+  self_study: "Self Study",
+  live_course: "Live Batches",
   mock_test: "Mock Tests",
   ebook: "E-books",
 };
-const PACKAGE_TYPE_ORDER: PackageType[] = ["course", "live", "mock_test", "ebook"];
+const PACKAGE_TYPE_ORDER: PackageCategory[] = Object.keys(
+  PACKAGE_TYPE_LABELS,
+) as PackageCategory[];
+
 
 export function MobileMenu({
   open,
@@ -50,6 +59,12 @@ export function MobileMenu({
 
   const [packages, setPackages] = useState<MenuPackage[]>([]);
   const [packagesLoaded, setPackagesLoaded] = useState(false);
+
+  const [paperSets, setPaperSets] = useState<Record<string, PaperExamForMenu>>(
+    {},
+  );
+  const [paperEntrances, setPaperEntrances] = useState<PaperEntrance[]>([]);
+  const [papersLoaded, setPapersLoaded] = useState(false);
 
   // ✅ reset accordion on close OR logout
   useEffect(() => {
@@ -85,10 +100,10 @@ export function MobileMenu({
     });
 
     return Array.from(entranceMap.values()).map((entrance) => {
-      const byType = new Map<PackageType, MenuPackage[]>();
+      const byType = new Map<PackageCategory, MenuPackage[]>();
       entrance.items.forEach((p) => {
-        if (!byType.has(p.package_type)) byType.set(p.package_type, []);
-        byType.get(p.package_type)!.push(p);
+        if (!byType.has(p.category)) byType.set(p.category, []);
+        byType.get(p.category)!.push(p);
       });
 
       const orderedTypes = PACKAGE_TYPE_ORDER.filter((t) => byType.has(t));
@@ -115,6 +130,25 @@ export function MobileMenu({
     });
   };
 
+  // Groups paper sets into entrance -> [paper leaves], mirrors buildPackageEntrances
+  const buildPaperEntrances = (
+    sets: Record<string, PaperExamForMenu>,
+    ents: PaperEntrance[],
+  ): Menu[] =>
+    ents.map((entrance) => ({
+      id: entrance.id,
+      label: entrance.name,
+      subMenu: (sets[entrance.id]?.paperExams ?? []).map(
+        (paperExam: PaperExam) =>
+          ({
+            id: paperExam.slug,
+            label: paperExam.paper_title,
+            slug: paperExam.slug,
+            imageIcon: paperExam.exam_icon,
+          }) as Menu,
+      ),
+    }) as Menu);
+
   const menu: Menu[] = useMemo(() => {
     const cloned: Menu[] = JSON.parse(JSON.stringify(baseItems));
 
@@ -139,8 +173,13 @@ export function MobileMenu({
       packagesMenu.subMenu = buildPackageEntrances(packages);
     }
 
+    const papersMenu = cloned.find((item) => item.label === "Previous Papers");
+    if (papersMenu && paperEntrances.length) {
+      papersMenu.subMenu = buildPaperEntrances(paperSets, paperEntrances);
+    }
+
     return cloned;
-  }, [baseItems, entrances, packages]);
+  }, [baseItems, entrances, packages, paperSets, paperEntrances]);
 
   const handleMenuClick = async (item: Menu) => {
     if (item.label === "Exams" && !examsLoaded) {
@@ -150,10 +189,16 @@ export function MobileMenu({
     }
 
     if (item.label === "Courses" && !packagesLoaded) {
-      const res = await packageService.getActiveForMenu();
-      console.log(res.packages)
-      setPackages(res.packages ?? []);
+      const packages = await packageService.getActiveForMenu();
+      setPackages(packages);
       setPackagesLoaded(true);
+    }
+
+    if (item.label === "Previous Papers" && !papersLoaded) {
+      const res = await paperSetService.getAll();
+      setPaperSets(res.paperSets ?? {});
+      setPaperEntrances(res.entrances ?? []);
+      setPapersLoaded(true);
     }
 
     if (item.label === "Dashboard") {
@@ -169,7 +214,8 @@ export function MobileMenu({
     const hasSubMenu =
       !!item.subMenu?.length ||
       item.label === "Exams" ||
-      item.label === "Courses";
+      item.label === "Courses" ||
+      item.label === "Previous Papers";
 
     if (hasSubMenu) {
       setOpenLevel1((prev) => (prev === item.id ? null : item.id));
@@ -184,13 +230,14 @@ export function MobileMenu({
     onClose();
   };
 
-  // rootLabel tells Level3 which route/behavior to use ("Exams" vs "Packages")
+  // rootLabel tells Level3 which route/behavior to use ("Exams" vs "Packages" vs "Previous Papers")
   const renderMenu = (items: Menu[], rootLabel?: string) =>
     items.map((item) => {
       const hasSubMenu =
         !!item.subMenu?.length ||
         item.label === "Exams" ||
-        item.label === "Courses";
+        item.label === "Courses" ||
+        item.label === "Previous Papers";
       const isOpen = openLevel1 === item.id;
       const currentRoot = rootLabel ?? item.label; // set root at Level1
 
@@ -259,7 +306,9 @@ export function MobileMenu({
                         <div
                           onClick={() => {
                             if (currentRoot === "Courses") {
-                              router.push(`/course/${lastItem.slug}`);
+                              router.push(`/packages/${lastItem.slug}`);
+                            } else if (currentRoot === "Previous Papers") {
+                              router.push(`/previous-paperset/${lastItem.slug}`);
                             } else {
                               router.push(`/exam-info/${lastItem.slug}`);
                             }

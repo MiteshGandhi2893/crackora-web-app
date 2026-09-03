@@ -1,5 +1,3 @@
-// ✅ FIX: force Navbar to re-render immediately on logout
-
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -10,34 +8,46 @@ import { baseMenu, dashboardMenu } from "@/data/Menu";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 
+// ⚠️ Adjust these labels to match the exact `label` strings in your
+// data/Menu.ts baseMenu array. Anything NOT in FREE_LABELS falls into
+// the "paid" group by default (so Dashboard sits with login/profile).
+const FREE_LABELS = ["Exams", "Previous Papers", "Tools", "Blogs", "Dashboard"];
+
 export function Navbar({
   mobile = false,
+  group = "paid",
   onExamsInfoClicked,
   onPackagesInfoClicked,
-
+  onPreviousPaperInfoClicked
 }: {
   mobile?: boolean;
+  group?: "paid" | "free";
   onExamsInfoClicked?: () => void;
   onPackagesInfoClicked?: () => void;
+  onPreviousPaperInfoClicked?: () => void;
 }) {
   const { user } = useAuth();
   const router = useRouter();
 
-  // ✅ IMPORTANT: depend on user?.username (not full user object)
   const LEFT_MENU: Menu[] = useMemo(() => {
     const items = [...baseMenu];
     if (user?.username) items.push(dashboardMenu);
-    return items;
-  }, [user?.username]); // ✅ FIXED
+
+    if (mobile) return items; // mobile untouched — no grouping applied
+
+    return items.filter((item) =>
+      group === "free"
+        ? FREE_LABELS.includes(item.label)
+        : !FREE_LABELS.includes(item.label),
+    );
+  }, [user?.username, mobile, group]);
 
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   const handleMenuClick = (clicked: Menu) => {
     const hasSubMenu = !!clicked.subMenu?.length;
 
-    setActiveMenuId((prev) =>
-      prev === clicked.id ? null : clicked.id
-    );
+    setActiveMenuId((prev) => (prev === clicked.id ? null : clicked.id));
 
     if (clicked.label === "Exams" && !mobile) {
       onExamsInfoClicked?.();
@@ -45,6 +55,10 @@ export function Navbar({
 
     if (clicked.label === "Courses" && !mobile) {
       onPackagesInfoClicked?.();
+    }
+
+    if (clicked.label === "Previous Papers" && !mobile) {
+      onPreviousPaperInfoClicked?.();
     }
 
     if (!hasSubMenu && clicked.href && clicked.href !== "#") {
@@ -75,13 +89,19 @@ export function Navbar({
             handleMenuClick(menu);
           }}
           className={`
-            cursor-pointer text-cyan-950 flex justify-between items-center
-            ${mobile ? "pl-2 pb-2 mt-4 border-b" : "text-[14px]"}
-          `}
+    cursor-pointer flex justify-between items-end transition-all duration-200 
+    ${
+      mobile
+        ? "pl-2 pb-2 mt-4 border-b"
+        : group === "paid"
+          ? "text-[14px] font-semibold text-white border border-amber-400 bg-amber-600 px-2 py-1 rounded"
+          : "px-2 py-2 text-[14px] text-cyan-900 hover:text-cyan-950"
+    }
+  `}
         >
           <span className="flex items-center gap-1">
             {menu.icon && (
-              <menu.icon className="w-4 h-4 text-amber-700 opacity-80" />
+              <menu.icon className={`w-4 h-4 ${group === "paid" ? 'text-white' : 'text-amber-700' }  opacity-80`}/>
             )}
 
             {menu.href && menu.href !== "#" && !menu.subMenu ? (

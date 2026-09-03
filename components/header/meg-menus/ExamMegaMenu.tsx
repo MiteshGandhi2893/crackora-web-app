@@ -40,9 +40,9 @@ export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
   return (
     <div className="w-full overflow-hidden bg-[#f8f7f4]">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-[#f0ede6]">
+       <div className="flex items-center bg-cyan-950 justify-between px-6 py-3 border-b border-[#f0ede6]">
         <div className="flex items-center gap-3">
-          <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-amber-700">
+          <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-cyan-50">
             Entrance Exams
           </span>
           <span className="text-[11px] bg-amber-50 text-amber-600 border border-amber-200 rounded-full px-2 py-0.5 font-semibold">
@@ -83,9 +83,9 @@ export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
       </div>
 
       {/* Body: sidebar + grid */}
-      <div className="flex flex-col sm:flex-row max-h-[70vh]">
+      <div className="flex flex-col sm:flex-row max-h-[70vh] my-5">
         {/* Sidebar */}
-        <div className="sm:w-50 shrink-0 border-b sm:border-b-0 sm:border-r border-[#f0ede6] bg-[#faf9f7]">
+        <div className="sm:w-50 shrink-0 border-b sm:border-b-0 sm:border-r border-gray-300 bg-[#faf9f7]">
           <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-auto sm:max-h-[70vh] p-2 gap-1">
             {entrances.map((entrance) => {
               const isSelected = entrance.id === activeId;
@@ -96,7 +96,7 @@ export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
                     setActiveId(entrance.id ?? null);
                     setSearch("");
                   }}
-                  className={`flex-shrink-0 sm:flex-shrink flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left transition-all cursor-pointer whitespace-nowrap sm:whitespace-normal ${
+                  className={`shrink-0 sm:shrink flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left transition-all cursor-pointer whitespace-nowrap sm:whitespace-normal ${
                     isSelected
                       ? "bg-amber-600 text-white shadow-sm"
                       : "text-[#05101f]/70 hover:bg-[#f0ede6]"
@@ -109,7 +109,7 @@ export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
                     {entrance.title}
                   </span>
                   <span
-                    className={`text-[10px] rounded-full px-1.5 py-0.5 font-semibold flex-shrink-0 ${
+                    className={`text-[10px] rounded-full px-1.5 py-0.5 font-semibold shrink-0 ${
                       isSelected
                         ? "bg-white/20 text-white"
                         : "bg-amber-50 text-amber-600"
@@ -145,7 +145,7 @@ export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
               rounded-xl p-3 text-left transition-all duration-200 hover:shadow-[0_4px_16px_rgba(5,16,31,0.08)] hover:-translate-y-0.5"
             >
               <div className="flex justify-center items-center gap-3">
-                <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-[#e8e4dc] bg-[#f8f7f4] flex-shrink-0">
+                <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-[#e8e4dc] bg-[#f8f7f4] shrink-0">
                   <Image
                     src={`${API_BASE_URL}/public/${exam?.icon || ""}`}
                     alt={exam.title || ""}

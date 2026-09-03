@@ -4,11 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { LuClock, LuEye } from 'react-icons/lu';
 import { formatDistanceToNow } from 'date-fns';
-import type { BlogListItem } from '@/services/Blog.service';
 import {API_BASE_URL} from '@/services/api.service';
-interface BlogCardProps {
-  blog: BlogListItem;
-}
+import { BlogCardProps } from '@/interfaces/blog.interface';
+
 
 export default function BlogCard({ blog }: BlogCardProps) {
   // FIX: guard against null/invalid date — published_at may be empty on some records

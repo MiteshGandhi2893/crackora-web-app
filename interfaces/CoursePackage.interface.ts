@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type PackageCategory =
   | "live_course"
   | "self_study"
@@ -20,6 +21,13 @@ export interface LinkedPackageSummary {
   image: string;
 }
 
+// Matches what getTeachersFor() returns from the API.
+export interface TeacherSummary {
+  username: string;
+  fullname: string;
+  avatar?: string;
+  designation?: string;
+}
 
 export interface CurriculumTopic {
   id: string;
@@ -58,6 +66,17 @@ export interface FaqItem {
   answer: string;
 }
 
+export interface TeacherSummary {
+  username: string;
+  fullname: string;
+  avatar?: string;
+  designation?: string;
+  qualifications?: string[];
+  skills?:string[];
+  affiliation?: string;
+  bio?: string;
+}
+
 export interface CoursePackage {
   id?: string;
   category: PackageCategory;
@@ -86,6 +105,10 @@ export interface CoursePackage {
   // bundling — populated on read, editable on write
   linked_package_ids?: string[];
   linked_packages?: LinkedPackageSummary[];
+
+  // teachers (M-M via course_package_teachers) — populated on read
+  teacher_usernames?: string[];
+  teachers?: TeacherSummary[];
 
   // live_course-specific
   batch_start_date?: Date;
@@ -116,6 +139,13 @@ export interface CoursePackage {
   test_duration_minutes?: number;
   syllabus_topics?: string[];
   difficulty_level?: "Easy" | "Moderate" | "Hard" | "Mixed";
+
+
+  // SEO / meta
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  og_image?: string;
 }
 
 // Lightweight shape used only by menu/listing endpoints — a subset of
@@ -131,4 +161,7 @@ export interface MenuPackage {
   image: string;
   entrance_id: string;
   entrance_name: string;
+  description?: string;
+  checkout_link?: string;
+  what_you_will_get?: [string];
 }

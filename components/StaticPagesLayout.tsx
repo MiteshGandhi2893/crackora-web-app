@@ -17,9 +17,11 @@ export function StaticPagesLayout({
       {/* Hero */}
       <div className="relative bg-[#05101f] overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(8,60,100,0.6),transparent_65%)]" />
-        <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
           }}
         />
@@ -31,7 +33,9 @@ export function StaticPagesLayout({
             {title}
           </h1>
           {lastUpdated && (
-            <p className="text-white/35 text-sm mt-3">Last updated: {lastUpdated}</p>
+            <p className="text-white/35 text-sm mt-3">
+              Last updated: {lastUpdated}
+            </p>
           )}
         </div>
       </div>
@@ -42,8 +46,6 @@ export function StaticPagesLayout({
           {children}
         </div>
       </div>
-
-    
     </div>
   );
 }

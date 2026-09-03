@@ -194,15 +194,15 @@ export default function RefundPolicy() {
   return (
     <section className="bg-[#f8f7f4] min-h-screen">
       {/* ── Page header ─────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 pt-20 pb-10">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 pt-20 pb-10">
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
           Legal
         </p>
-        <h1 className="text-4xl sm:text-5xl font-bold text-cyan-900 leading-tight max-w-6xl">
+        <h1 className="text-4xl sm:text-5xl font-bold text-cyan-900 leading-tight lg:max-w-6xl sm:max-w-3xl">
           Refund & Cancellation Policy
         </h1>
         <div className="h-0.5 w-16 bg-amber-500 mt-4 mb-6" />
-        <p className="text-gray-600 leading-relaxed max-w-6xl text-[15px]">
+        <p className="text-gray-600 leading-relaxed lg:max-w-6xl sm:max-w-3xl text-[15px]">
           This policy governs all paid services offered on Crackora.com,
           including courses, mock test series, ebooks, and subscriptions. By
           purchasing any service on the Platform, you agree to the terms set out
@@ -237,7 +237,7 @@ export default function RefundPolicy() {
       </div>
 
       {/* ── Sections ────────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-6">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 py-12 space-y-6">
         {sections.map((section) => (
           <div
             key={section.number}

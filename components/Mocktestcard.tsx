@@ -24,7 +24,7 @@ const MOCK_FEATURES = [
 export const MockTestCard = function MockTestCard() {
   return (
     <div className="w-full flex lg:justify-end justify-center select-none">
-      <div className="w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[380px] xl:max-w-[400px] rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
+      <div className="w-full max-w-75 sm:max-w-90 lg:max-w-95 xl:max-w-100 rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
 
         {/* ── Header band — dark teal, matches MentorCard ── */}
         <div

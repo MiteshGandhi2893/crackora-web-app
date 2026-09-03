@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { STARS } from "@/lib/util";
-import { CoursePackage } from "@/interfaces/CoursePackage.interface";
+import {
+  CoursePackage,
+  TeacherSummary,
+} from "@/interfaces/CoursePackage.interface";
 import { BiHeart, BiShareAlt, BiChevronDown } from "react-icons/bi";
 
 import Image from "next/image";
 import { API_BASE_URL } from "@/services/api.service";
 import Link from "next/link";
-import router from "next/router";
 // ─── FAQ type ─────────────────────────────────────────────────────────────────
 
 export interface FaqItem {
@@ -25,6 +28,92 @@ export function parseFaqItems(faq: string | undefined): FaqItem[] {
   } catch {
     return [];
   }
+}
+
+// ─── Linked / related package type ─────────────────────────────────────────
+// Matches what getLinkedPackagesFor() returns from the API — id, title,
+// category, price, discounted_price, image, slug. If your shared
+// CoursePackage.interface.ts doesn't declare `linked_packages` yet, add:
+//   linked_packages?: LinkedPackage[]
+// there instead of relying on this local type.
+export interface LinkedPackage {
+  id: string;
+  title: string;
+  category: string;
+  price: number;
+  discounted_price?: number;
+  image?: string;
+  slug?: string;
+  description?: string;
+}
+
+function InstructorSection({ teachers }: { teachers: TeacherSummary[] }) {
+  if (!teachers.length) {
+    return <ContentSectionPlaceholder title="Instructor" />;
+  }
+
+  return (
+    <section className="mb-10 flex flex-col gap-4">
+      {teachers.map((t) => (
+        <div
+          key={t.username}
+          className="flex flex-col  gap-4 bg-white border border-[#e8e4dc] rounded-xl"
+        >
+          <div className="flex items-center gap-5 bg-cyan-950 p-4">
+            {t.avatar ? (
+              <div className="relative w-20 h-20  overflow-hidden shrink-0 shadow-xl rounded border border-amber-500 ">
+                <Image
+                  src={`${API_BASE_URL}/public/${t.avatar}`}
+                  alt={t.fullname}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-cyan-100 text-cyan-800 flex items-center justify-center text-lg font-semibold shrink-0">
+                {t.fullname.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div>
+              <div className="text-sm font-semibold text-cyan-50 flex lg:flex-row flex-col  lg:items-end  lg:gap-2 ">
+                <span className="text-lg">{t.fullname}</span>
+                {t.designation && (
+                  <div className="text-xs text-amber-400">{t.designation}</div>
+                )}
+              </div>
+
+              {t.qualifications && (
+                <div className="text-xs text-gray-300/90 font-sans mt-2">
+                  {" "}
+                  {t.qualifications.join(", ")}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 px-4">
+            {t.bio && (
+              <div className="text-[13px] text-gray-500 font-roboto ">
+                {" "}
+                {t.bio}
+              </div>
+            )}
+          </div>
+
+          {t.skills && (
+            <div className="text-xs text-amber-800 flex gap-2 px-4 mb-5">
+              {" "}
+              <span className="font-semibold text-cyan-900">
+                Expertise:
+              </span>{" "}
+              {t.skills.join(", ")}
+            </div>
+          )}
+        </div>
+      ))}
+    </section>
+  );
 }
 
 // ─── FAQ Schema ───────────────────────────────────────────────────────────────
@@ -48,7 +137,7 @@ function FaqSchema({ items }: { items: FaqItem[] }) {
   );
 }
 
-// ─── FAQ Accordion ────────────────────────────────────────────────────────────
+// ─── FAQ Accordion (same visual language as ExamInfo) ─────────────────────────
 
 function FaqAccordion({ items }: { items: FaqItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -56,42 +145,139 @@ function FaqAccordion({ items }: { items: FaqItem[] }) {
 
   return (
     <section className="mt-10" id="faq-section">
-      {/* Header matching page style */}
+      <div className="mb-6">
+        <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
+          Got questions?
+        </p>
+        <h2 className="text-2xl font-bold text-cyan-900">
+          Frequently Asked Questions
+        </h2>
+        <div className="h-0.5 w-12 bg-amber-500 mt-3" />
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {items.map((item, i) => {
+          const isOpen = openIndex === i;
+          return (
+            <div
+              key={i}
+              className={`border-2 rounded-2xl overflow-hidden transition-all duration-200
+                ${
+                  isOpen
+                    ? "border-amber-300 shadow-sm"
+                    : "border-gray-100 hover:border-gray-200"
+                }`}
+            >
+              <button
+                className="w-full flex items-center gap-4 px-5 py-4 text-left cursor-pointer"
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                aria-expanded={isOpen}
+              >
+                <span
+                  className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center
+                    text-xs font-bold transition-colors
+                    ${isOpen ? "bg-amber-500 text-white" : "bg-cyan-50 text-amber-500"}`}
+                >
+                  {i + 1}
+                </span>
+                <span
+                  className={`flex-1 text-sm font-semibold leading-snug transition-colors
+                    ${isOpen ? "text-cyan-900" : "text-gray-700"}`}
+                >
+                  {item.question}
+                </span>
+                <BiChevronDown
+                  className={`flex-shrink-0 w-4 h-4 transition-transform duration-200
+                    ${isOpen ? "rotate-180 text-amber-500" : "text-gray-400"}`}
+                />
+              </button>
+
+              {isOpen && (
+                <div className="px-5 pb-5 pt-0">
+                  <div className="ml-11 text-sm text-gray-600 leading-relaxed border-l-2 border-amber-300 pl-4">
+                    {item.answer}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
 
-// ─── TOC Item ─────────────────────────────────────────────────────────────────
+// ─── Related / Recommended packages ────────────────────────────────────────
 
-function TocItem({
-  section,
-  isActive,
-  onClick,
-}: {
-  section: { id: string; title: string };
-  isActive: boolean;
-  onClick: () => void;
-}) {
+function RelatedPackages({ packages }: { packages: LinkedPackage[] }) {
+  if (!packages.length) return null;
   return (
-    <button
-      onClick={onClick}
-      className={`w-full text-left py-2 px-3 rounded-xl text-sm transition-all cursor-pointer
-        ${
-          isActive
-            ? "bg-amber-50 text-amber-700 font-semibold border-l-2 border-amber-500 pl-2.5"
-            : "text-gray-500 hover:text-cyan-900 hover:bg-gray-50"
-        }`}
+    <section
+      className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 lg:px-10 pb-20"
+      id="related-packages"
     >
-      {section.title}
-    </button>
+      <div className="mb-6">
+        <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
+          Recommended
+        </p>
+        <h2 className="text-2xl font-bold text-cyan-900">Related Packages</h2>
+        <div className="h-0.5 w-12 bg-amber-500 mt-3" />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {packages.map((pkg) => (
+          <Link
+            key={pkg.id}
+            href={pkg.slug ? `/packages/${pkg.slug}` : "#"}
+            className="group border border-[#e8e4dc] rounded-xl overflow-hidden bg-white
+                       shadow-[0_2px_10px_rgba(5,16,31,0.04)] hover:shadow-[0_8px_28px_rgba(5,16,31,0.14)]
+                       transition-shadow"
+          >
+            <div className="relative w-full aspect-video bg-[#e8e4dc]">
+              <Image
+                src={`${API_BASE_URL}/public/${pkg.image || ""}`}
+                alt={pkg.title}
+                fill
+                unoptimized
+                className="object-cover"
+              />
+              <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wide bg-cyan-950/80 text-amber-300 px-2 py-1 rounded-full">
+                {pkg.category?.replace("_", " ")}
+              </span>
+            </div>
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-cyan-900 mb-2 line-clamp-2 group-hover:text-amber-700 transition-colors">
+                {pkg.title}
+              </h3>
+              <h4 className="text-sm  text-cyan-950 mb-2 line-clamp-2  transition-colors">
+                {pkg.description}
+              </h4>
+
+              <div className="flex items-center gap-2">
+                {pkg.discounted_price ? (
+                  <>
+                    <span className="text-md text-[#05101f]/40 line-through">
+                      ₹{pkg.price}
+                    </span>
+                    <span className="text-lg font-bold text-amber-700">
+                      ₹{pkg.discounted_price}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-sm font-semibold text-amber-700">
+                    ₹{pkg.price}
+                  </span>
+                )}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
 // ─── Placeholder building blocks ───────────────────────────────────────────────
-
-function SkeletonLine({ width = "w-full" }: { width?: string }) {
-  return <div className={`h-3 rounded bg-white/15 ${width}`} />;
-}
 
 function SkeletonLineDark({ width = "w-full" }: { width?: string }) {
   return <div className={`h-3 rounded bg-[#05101f]/10 ${width}`} />;
@@ -114,13 +300,7 @@ function ContentSectionPlaceholder({ title }: { title: string }) {
 
 function getFeatureList(pkg: CoursePackage): string[] {
   const rows: string[] = (() => {
-    switch (pkg.category) {
-      case "live_course":
-      case "self_study":
-        return pkg.what_you_will_get || [];
-      default:
-        return [];
-    }
+    return pkg.what_you_will_get || [];
   })();
 
   return rows;
@@ -148,16 +328,16 @@ function PurchaseCardPlaceholder({
         />
       </div>
 
-      <div className="p-5">
+      <div className="lg:p-5 p-2">
         {/* Price */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center lg:gap-2 mb-4">
           <div className="w-full flex items-center justify-center gap-2">
             {Number(coursePackage.discounted_price) > 0 ? (
               <>
                 <span className="text-sm text-[#05101f]/40 line-through">
                   ₹{coursePackage.price}
                 </span>
-                <span className="text-lg font-bold font-inter text-cyan-700">
+                <span className="text-2xl font-bold font-inter text-cyan-900">
                   ₹{coursePackage.discounted_price}
                 </span>
               </>
@@ -189,11 +369,13 @@ function PurchaseCardPlaceholder({
         </div>
 
         {/* Feature list — driven by package_type */}
-        <div className="space-y-2.5 pt-4 border-t border-[#f0ede6] flex flex-wrap justify-center w-full p-3">
+        <div className="space-y-2.5 pt-4 border-t border-[#f0ede6] flex flex-wrap justify-between w-full">
           {features.length > 0 ? (
             features.map((f, i) => (
-              <div key={i} className="w-1/2">
-                <span className="text-[13px] text-gray-900/50">{f}</span>
+              <div key={i} className="w-1/2 text-left">
+                <span className="lg:text-[12px] text-[12px] text-gray-900/50">
+                  {f}
+                </span>
               </div>
             ))
           ) : (
@@ -213,36 +395,54 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "overview", label: "Overview" },
   { key: "curriculum", label: "Curriculum" },
   { key: "instructor", label: "Instructor" },
-  { key: "reviews", label: "Reviews" },
+  // { key: "reviews", label: "Reviews" },
 ];
 
 function PackageTabs({
   activeTab,
   onChange,
+  category,
 }: {
   activeTab: TabKey;
   onChange: (tab: TabKey) => void;
+  category?: string;
 }) {
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [underline, setUnderline] = useState({ left: 0, width: 0 });
 
-  // Measure the active button's position/width and move the underline there.
-  // Re-runs on tab change and on resize so it never falls out of sync.
+  const showCourseTabs =
+    category === "live_courses" || category === "self_study";
+
+  const tabs = showCourseTabs
+    ? TABS
+    : TABS.filter(
+        (tab) => tab.key !== "curriculum" && tab.key !== "instructor",
+      );
+
   useEffect(() => {
     const measure = () => {
       const el = tabRefs.current[activeTab];
+
       if (el) {
-        setUnderline({ left: el.offsetLeft, width: el.offsetWidth });
+        setUnderline({
+          left: el.offsetLeft,
+          width: el.offsetWidth,
+        });
       }
     };
+
     measure();
+
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [activeTab]);
+
+    return () => {
+      window.removeEventListener("resize", measure);
+    };
+  }, [activeTab, showCourseTabs]);
 
   return (
     <div className="relative flex gap-6 border-b border-[#e8e4dc] mb-8 overflow-x-auto">
-      {TABS.map((tab) => (
+      {tabs.map((tab) => (
         <button
           key={tab.key}
           ref={(el) => {
@@ -259,21 +459,25 @@ function PackageTabs({
         </button>
       ))}
 
-      {/* Sliding underline */}
       <div
         className="absolute bottom-0 h-[2px] bg-amber-600 transition-all duration-300 ease-out"
-        style={{ left: underline.left, width: underline.width }}
+        style={{
+          left: underline.left,
+          width: underline.width,
+        }}
       />
     </div>
   );
 }
-
 // ─── Main CoursePackageInfo ────────────────────────────────────────────────────
 
 export function CoursePackageInfo({
   coursePackage,
 }: {
-  coursePackage: CoursePackage;
+  coursePackage: CoursePackage & {
+    linked_packages?: LinkedPackage[];
+    teachers?: TeacherSummary[];
+  };
 }) {
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
@@ -297,10 +501,13 @@ export function CoursePackageInfo({
     });
   };
 
+  const faqItems = parseFaqItems(coursePackage.faq);
+  const linkedPackages = coursePackage.linked_packages || [];
+
   return (
     <>
       {/* ── Banner ── */}
-      <section className="relative w-full overflow-hidden bg-linear-to-b from-cyan-950 via-cyan-900 to-cyan-800 py-15 ">
+      <section className="relative w-full overflow-hidden bg-linear-to-b from-cyan-950 via-cyan-900 to-cyan-800">
         <div className="pointer-events-none absolute inset-0">
           {/* Deep space */}
           <div className="absolute inset-0 bg-[#020617]" />
@@ -332,9 +539,9 @@ export function CoursePackageInfo({
           ))}
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-10 pt-16 sm:pt-20">
+        <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-6  py-25 pt-30 lg:pt-45 sm:pt-35">
           <div className="max-w-2xl">
-            <h1 className="text-3xl font-inter mb-4 text-white">
+            <h1 className="lg:text-5xl text-3xl font-inter mb-4 text-white">
               {coursePackage.course_name}
             </h1>
 
@@ -358,16 +565,20 @@ export function CoursePackageInfo({
               </div>
             </div>
 
-            <div className="flex gap-2 text-white/60">
-              <span className="font-bold text-amber-500">Educators: </span>
-              <span className="">{coursePackage.teacher}</span>
-            </div>
+            {coursePackage.teachers && coursePackage.teachers.length > 0 && (
+              <div className="flex gap-2 text-white/60">
+                <span className="font-bold text-amber-500">Educators: </span>
+                <span>
+                  {coursePackage.teachers.map((t) => t.fullname).join(", ")}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* ── Body ── */}
-      <div className="max-w-6xl mx-auto px-6 lg:px-10 relative pb-20">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 lg:px-10 relative pb-20">
         <div className="lg:grid lg:grid-cols-3 lg:gap-8">
           {/*
             Purchase card:
@@ -377,14 +588,18 @@ export function CoursePackageInfo({
               once you scroll past it.
           */}
           <div className="order-1 lg:order-2 lg:col-span-1">
-            <div className="mt-4 lg:-mt-56 lg:sticky lg:top-24">
+            <div className="mt-4 lg:-mt-70 lg:sticky lg:top-32">
               <PurchaseCardPlaceholder coursePackage={coursePackage} />
             </div>
           </div>
 
           {/* Main content column */}
           <div className="order-2 lg:order-1 lg:col-span-2 pt-8 lg:pt-10">
-            <PackageTabs activeTab={activeTab} onChange={setActiveTab} />
+            <PackageTabs
+              activeTab={activeTab}
+              onChange={setActiveTab}
+              category={coursePackage.category}
+            />
 
             {activeTab === "overview" && (
               <div
@@ -413,24 +628,18 @@ export function CoursePackageInfo({
                         onClick={() => toggleSection(section.id)}
                         className={`w-full flex justify-between items-center p-4 cursor-pointer transition-colors ${
                           isSectionOpen
-                            ? "bg-gradient-to-r from-cyan-900 to-cyan-800"
-                            : "bg-white hover:bg-cyan-50/60"
+                            ? "bg-linear-to-r from-cyan-900 to-cyan-800"
+                            : "bg-linear-to-r from-cyan-900 to-cyan-800 hover:bg-cyan-50/60"
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <span
-                            className={`flex items-center justify-center w-7 h-7 rounded-lg text-[12px] font-bold ${
-                              isSectionOpen
-                                ? "bg-amber-500 text-cyan-950"
-                                : "bg-cyan-50 text-cyan-800"
-                            }`}
+                            className={`flex items-center justify-center w-7 h-7 rounded-lg text-[12px] font-bold bg-amber-500 text-cyan-950`}
                           >
                             {sIdx + 1}
                           </span>
                           <span
-                            className={`font-semibold text-sm ${
-                              isSectionOpen ? "text-white" : "text-cyan-950"
-                            }`}
+                            className={`font-semibold text-sm text-white`}
                           >
                             {section.title}
                           </span>
@@ -490,7 +699,6 @@ export function CoursePackageInfo({
                                 {isSubOpen && (
                                   <div className="pl-11 pr-4 pb-4 flex flex-col gap-3">
                                     {sub.topics.map((topic) => {
-                           
                                       return (
                                         <div
                                           key={topic.id}
@@ -501,7 +709,9 @@ export function CoursePackageInfo({
                                               {topic.title}
                                             </span>
                                             <span className="text-amber-700 font-semibold pb-2">
-                                              {topic.weightage === 'NA' ? ' RARE' : topic.weightage}
+                                              {topic.weightage === "NA"
+                                                ? " RARE"
+                                                : topic.weightage}
                                             </span>
                                           </div>
                                         </div>
@@ -521,15 +731,23 @@ export function CoursePackageInfo({
             )}
 
             {activeTab === "instructor" && (
-              <ContentSectionPlaceholder title="Instructor" />
+              <InstructorSection teachers={coursePackage.teachers || []} />
             )}
-
-            {activeTab === "reviews" && (
+            {/* {activeTab === "reviews" && (
               <ContentSectionPlaceholder title="Reviews" />
+            )} */}
+
+            {faqItems.length > 0 && (
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-sm px-5 py-6 sm:px-8 sm:py-8 w-full">
+                <FaqAccordion items={faqItems} />
+              </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* ── Related / recommended packages ── */}
+      <RelatedPackages packages={linkedPackages} />
     </>
   );
 }

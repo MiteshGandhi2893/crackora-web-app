@@ -47,7 +47,7 @@ export default function ToolsClient({ slug }: { slug: ToolKey }) {
           ))}
         </div>
 
-        <div className="relative max-w-6xl mx-auto py-10 px-5 sm:px-8 sm:py-14 z-20">
+        <div className="relative lg:max-w-6xl sm:max-w-3xl mx-auto py-10 px-5 sm:px-8 sm:py-14 z-20">
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="text-amber-600 text-[11px] font-bold tracking-widest uppercase border border-amber-200 bg-amber-50 px-2.5 py-1 rounded-full">
               100% Free
@@ -97,7 +97,7 @@ export default function ToolsClient({ slug }: { slug: ToolKey }) {
 
       {/* Stats */}
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4">
+        <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-5 sm:px-8 py-4">
           <div className="flex flex-wrap gap-x-8 gap-y-2">
             {[
               { v: "6", l: "Tools" },
@@ -116,7 +116,7 @@ export default function ToolsClient({ slug }: { slug: ToolKey }) {
       </div>
 
       {/* Main content */}
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-10">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-5 sm:px-8 py-8 sm:py-10">
 
         {/* Mobile nav — <Link> pills instead of <select>, so URLs are crawlable */}
         <nav className="md:hidden mb-4 flex flex-wrap gap-2" aria-label="MCA tools">

@@ -1,11 +1,16 @@
 import Link from "next/link";
-import { BiLogoInstagram, BiLogoTelegram, BiLogoWhatsapp, BiLogoYoutube } from "react-icons/bi";
+import {
+  BiLogoInstagram,
+  BiLogoTelegram,
+  BiLogoWhatsapp,
+  BiLogoYoutube,
+} from "react-icons/bi";
 
 export function Socials() {
   return (
     <>
       {/* ───────────────── SOCIAL PROOF ───────────────── */}
-      <div className="flex flex-col items-center lg:items-start  w-full">
+      <div className="flex flex-col items-center lg:items-start  w-full gap-1">
         {/* Social Buttons */}
         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-2">
           {/* YouTube */}
@@ -22,13 +27,14 @@ export function Socials() {
           >
             <div
               className="
-          w-8 h-8 rounded-xl
+              lg:w-8 lg:h-8 w-7 h-7
+           rounded-xl
           bg-red-600
           flex items-center justify-center
           shadow-lg shadow-red-500/20
         "
             >
-              <BiLogoYoutube size={24} className="text-white" />
+              <BiLogoYoutube className="text-white lg:w-7 lg:h-7 w-5 h-5" />
             </div>
 
             {/* <div className="text-left">
@@ -56,7 +62,7 @@ export function Socials() {
           >
             <div
               className="
-          w-8 h-8 rounded-xl
+          lg:w-8 lg:h-8 w-7 h-7 rounded-xl
           flex items-center justify-center
           shadow-lg shadow-pink-500/20
           bg-gradient-to-tr
@@ -65,7 +71,7 @@ export function Socials() {
           to-purple-600
         "
             >
-              <BiLogoInstagram size={24} className="text-white" />
+              <BiLogoInstagram className="text-white lg:w-7 lg:h-7 w-5 h-5" />
             </div>
 
             {/* <div className="text-left">
@@ -92,13 +98,13 @@ export function Socials() {
           >
             <div
               className="
-          w-8 h-8 rounded-xl
+          lg:w-8 lg:h-8 w-7 h-7 rounded-xl
           bg-green-600
           flex items-center justify-center
           shadow-lg shadow-green-500/20
         "
             >
-              <BiLogoWhatsapp size={24} className="text-white" />
+              <BiLogoWhatsapp className="text-white lg:w-7 lg:h-7 w-5 h-5" />
             </div>
 
             {/* <div className="text-left">
@@ -112,7 +118,7 @@ export function Socials() {
             </div> */}
           </Link>
 
-            {/* telegram */}
+          {/* telegram */}
           <Link
             href="https://web.telegram.org/a/#-1003741811541"
             target="_blank"
@@ -126,13 +132,13 @@ export function Socials() {
           >
             <div
               className="
-          w-8 h-8 rounded-xl
+          lg:w-8 lg:h-8 w-7 h-7 rounded-xl
           bg-blue-500
           flex items-center justify-center
           shadow-lg shadow-green-500/20
         "
             >
-              <BiLogoTelegram  size={24} className="text-white" />
+              <BiLogoTelegram className="text-white lg:w-7 lg:h-7 w-5 h-5" />
             </div>
 
             {/* <div className="text-left">
@@ -148,31 +154,9 @@ export function Socials() {
         </div>
 
         {/* Trust Line */}
-        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-center lg:text-left">
-          {/* <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="
-              w-7 h-7 rounded-full
-              border-2 border-[#020617]
-              bg-gradient-to-br
-              from-amber-400
-              to-amber-600
-            "
-                />
-              ))}
-            </div>
-
-            <span className="text-sm text-white/75">
-              Trusted by MCA aspirants across India
-            </span>
-          </div> */}
-
+        <div className="flex flex-wrap items-center justify-center lg:justify-start text-center lg:text-left ">
           <div className="hidden sm:block w-1 h-1 rounded-full bg-white/20" />
-
-          <span className="text-sm text-emerald-300 font-medium">
+          <span className="text-sm text-green-800 font-medium">
             Free guidance • Real mentors • No fake promises
           </span>
         </div>

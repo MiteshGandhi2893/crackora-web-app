@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { HeroBanner } from "@/components/Herobanner";
 import { Metadata } from "next";
+import { TopPackages } from "@/components/TopPackages";
 
 // ✅ Keep SSR ON (default) → better LCP + SEO
 const WhyCrackora = dynamic(() =>
@@ -104,7 +105,7 @@ export default function Home() {
     <>
       {/* ✅ Above-the-fold → keep normal */}
       <HeroBanner />
-
+      <TopPackages/>
       {/* ✅ Below-the-fold → dynamically loaded */}
       <WhyCrackora />
       <DemoLectures />

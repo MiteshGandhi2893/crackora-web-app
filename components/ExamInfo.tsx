@@ -95,7 +95,7 @@ function FaqAccordion({ items }: { items: FaqItem[] }) {
                   {item.question}
                 </span>
                 <svg
-                  className={`flex-shrink-0 w-4 h-4 transition-transform duration-200
+                  className={`shrink-0 w-4 h-4 transition-transform duration-200
                     ${isOpen ? "rotate-180 text-amber-500" : "text-gray-400"}`}
                   fill="none"
                   viewBox="0 0 24 24"
@@ -216,7 +216,7 @@ export function ExamInfo({ exam }: { exam: Exam }) {
 
       <div className="w-full bg-[#f8f7f4]">
         {/* ── Hero ─────────────────────────────────────────── */}
-        <section className="relative w-full overflow-hidden bg-gradient-to-b from-cyan-950 via-cyan-900 to-cyan-800">
+        <section className="relative w-full overflow-hidden bg-linear-to-b from-cyan-950 via-cyan-900 to-cyan-800">
           {/* Radial glow */}
 
           <div className="pointer-events-none absolute inset-0">
@@ -252,7 +252,7 @@ export function ExamInfo({ exam }: { exam: Exam }) {
           </div>
 
           <div
-            className="relative z-10 h-full max-w-6xl mx-auto px-6 lg:px-10 py-25 sm:py-20
+            className="relative z-10 h-full lg:max-w-6xl sm:max-w-3xl mx-auto px-6 lg:px-10  sm:py-20 lg:mt-25 py-20
                           flex flex-col sm:flex-row gap-10 items-center sm:items-center"
           >
             {/* Title block */}
@@ -265,7 +265,10 @@ export function ExamInfo({ exam }: { exam: Exam }) {
                   Entrance Exam Information
                 </span>
               </div>
-              <h1 className="text-2xl lg:text-5xl font-bold leading-tight drop-shadow-lg" data-examinfo-title={exam?.meta_title || exam?.title}>
+              <h1
+                className="text-2xl lg:text-5xl font-bold leading-tight drop-shadow-lg"
+                data-examinfo-title={exam?.meta_title || exam?.title}
+              >
                 {exam?.meta_title || exam?.title}
               </h1>
               <div className="h-0.5 w-16 bg-amber-500 mx-auto sm:mx-0" />
@@ -284,20 +287,20 @@ export function ExamInfo({ exam }: { exam: Exam }) {
                 <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
                   Need guidance?
                 </p>
-                <RequestCallback />
+                <RequestCallback sourcePage="exam-info" sourceSlug={exam.slug || ""} />
               </div>
             </div>
           </div>
         </section>
 
         {/* ── Body ─────────────────────────────────────────── */}
-        <div className="max-w-6xl mx-auto px-4 lg:px-10 py-8 lg:py-12 flex gap-6 items-start">
+        <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-4 lg:px-10 py-8 lg:py-12 flex gap-6 items-start">
           {/* ── Desktop TOC sidebar ── */}
           <aside
-  className="hidden lg:flex w-72 shrink-0 flex-col sticky top-16
+            className="hidden lg:flex w-72 shrink-0 flex-col sticky top-16
               bg-white border border-gray-200 rounded-2xl p-5 shadow-sm
               max-h-[calc(100vh-5rem)] overflow-y-auto"
->
+          >
             {/* TOC header */}
             <div className="mb-4">
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
@@ -355,7 +358,6 @@ export function ExamInfo({ exam }: { exam: Exam }) {
             className="fixed bottom-6 right-6 z-50 flex items-center gap-1.5
                        bg-cyan-900 hover:bg-cyan-800 text-white text-xs font-bold
                        px-4 py-2.5 rounded-full shadow-lg transition-colors"
-          
           >
             <svg
               className="w-3.5 h-3.5"

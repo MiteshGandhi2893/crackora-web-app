@@ -111,7 +111,7 @@ export function Footer() {
       </div>
 
       {/* ── Content ── */}
-      <div className="relative z-10 mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
+      <div className="relative z-10 mx-auto px-5 sm:px-6 lg:px-8 lg:max-w-6xl sm:max-w-3xl">
         <div className="py-10 sm:py-12 lg:py-14">
 
           {/* ── Main grid ── */}
@@ -124,7 +124,7 @@ export function Footer() {
               xl:grid-cols-[2fr_1fr_1fr]
               gap-10 lg:gap-14 xl:gap-20
               pb-10
-              border-b border-white/[0.06]
+              border-b border-white/6
             "
           >
             {/* ── Brand column ── */}

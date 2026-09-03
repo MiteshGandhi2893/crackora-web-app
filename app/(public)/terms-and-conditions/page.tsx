@@ -172,15 +172,15 @@ export default function TermsAndConditions() {
   return (
     <section className="bg-[#f8f7f4] min-h-screen">
       {/* ── Page header ─────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 pt-20 pb-10">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 pt-20 pb-10">
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
           Legal
         </p>
-        <h1 className="text-4xl sm:text-5xl font-bold text-cyan-900 leading-tight max-w-6xl">
+        <h1 className="text-4xl sm:text-5xl font-bold text-cyan-900 leading-tight lg:max-w-6xl sm:max-w-3xl">
           Terms of Use / Terms & Conditions – Crackora.com
         </h1>
         <div className="h-0.5 w-16 bg-amber-500 mt-4 mb-6" />
-        <p className="text-gray-600 leading-normal max-w-6xl text-[15px]">
+        <p className="text-gray-600 leading-normal lg:max-w-6xl sm:max-w-3xl text-[15px]">
           Welcome to Crackora.com (“Crackora”, “we”, “us”, or “our”). These
           Terms of Use (“Terms”) govern your access to and use of our website,
           mobile applications, and related services (collectively, the
@@ -219,7 +219,7 @@ export default function TermsAndConditions() {
       </div>
 
       {/* ── Sections ────────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-6">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 py-12 space-y-6">
         {sections.map((section) => (
           <div
             key={section.number}
