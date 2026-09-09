@@ -43,11 +43,11 @@ export function LatestBlogCard({ className = "" }: { className?: string }) {
 
   return (
     <Link
-      className={`w-full h-full flex gap-5 items-center group ${className}`}
+      className={`w-full h-full flex lg:flex-row flex-col gap-5 items-center group ${className}`}
       href={`/blogs/${latestBlog.slug}`}
     >
       {/* Cover */}
-      <div className="relative w-35 h-35 bg-cyan-50 overflow-hidden shrink-0">
+      <div className="relative lg:w-35 w-full h-35 bg-cyan-50 overflow-hidden shrink-0 border border-amber-600 rounded shadow">
         <Image
           src={`${API_BASE_URL}/public/${latestBlog.cover_image}`}
           alt={latestBlog.title}
@@ -57,10 +57,10 @@ export function LatestBlogCard({ className = "" }: { className?: string }) {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-[15px] text-amber-400 font-medium">
+        <span className="text-[15px] text-amber-700 font-semibold">
           {latestBlog.title}
         </span>
-        <span className="text-[15px] text-stone-50/80 font-medium">
+        <span className="text-[13.5px] text-stone-600/80 font-roboto">
           {latestBlog.excerpt}
         </span>
         <span className="items-center gap-1 w-fit px-2 py-1 text-sm font-medium bg-amber-600 group-hover:gap-2 transition-all">

@@ -25,7 +25,6 @@
 // ─────────────────────────────────────────────────────
 
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { Socials } from "./SocialButtons";
 import { PackagesTeaserCard } from "./bento-cards/PackagesTeaserCard";
 import {
@@ -46,11 +45,13 @@ function BentoCard({
   children: ReactNode;
   className?: string;
   href?: string;
-  variant?: "glass" | "solid";
+  variant?: "glass" | "solid" | "solid-cyan";
 }) {
   const base =
     variant === "solid"
       ? "group relative overflow-hidden rounded-3xl border border-amber-50 bg-amber-50 shadow-[0_20px_60px_-15px_rgba(217,119,6,0.45)] transition-transform duration-300 hover:scale-[1.01]"
+      : variant === 'solid-cyan' 
+      ? "group relative overflow-hidden rounded-3xl border border-[rgba(64,139,139,1)] bg-[rgba(64,139,139,1)] shadow-[0_20px_60px_-15px_rgba(64,139,139,1)] transition-transform duration-300 hover:scale-[1.01]" 
       : "group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.04] backdrop-blur-xl transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20";
 
   const classes = `${base} ${className}`;
@@ -103,7 +104,7 @@ export function HeroBanner() {
           that card is the "dawn," this glow is the "aurora" around it. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-56 -right-40 h-[640px] w-[640px] rounded-full opacity-20 blur-3xl animate-[spin_34s_linear_infinite] bg-[conic-gradient(from_0deg,theme(colors.cyan.500),theme(colors.emerald.500),theme(colors.violet.500),theme(colors.cyan.500))]"
+        className="pointer-events-none absolute -bottom-56 -right-40 h-160 w-160 rounded-full opacity-20 blur-3xl animate-[spin_34s_linear_infinite] bg-[conic-gradient(from_0deg,var(--color-cyan-500),var(--color-emerald-500),var(--color-violet-500),var(--color-cyan-500))]"
       />
 
       <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-5 lg:px-0 pt-24  pb-12 lg:py-40 lg:pb-20">
@@ -177,12 +178,13 @@ export function HeroBanner() {
               stretched to match the thesis card's row-span-2 height. */}
           <BentoCard
             href={BLOG_CONTENT.cta.href}
-            className="lg:col-span-2 p-5 flex flex-col gap-1"
+            variant="solid"
+            className="lg:col-span-2 p-5 flex flex-col gap-1 "
           >
             <div>
-              <span className="text-[10px] tracking-[0.14em] uppercase text-amber-500 font-bold">
+              <span className="text-[12px] tracking-[0.14em] uppercase text-amber-700 font-bold">
                 {BLOG_CONTENT.eyebrow}{" "}
-                <span className="text-amber-50"> - BLOG</span>
+                <span className="text-cyan-900"> - BLOG</span>
               </span>
             </div>
 

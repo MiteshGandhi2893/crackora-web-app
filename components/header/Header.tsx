@@ -3,20 +3,28 @@ import { Navbar } from "./Navbar";
 import { LoginStatus } from "../app-buttons/login-button";
 import { useState } from "react";
 import { MegaExamInfoMenu } from "./meg-menus/ExamMegaMenu";
-import { BiAlignRight } from "react-icons/bi";
+import { BiAlignRight, BiDice6 } from "react-icons/bi";
 import { MobileMenu } from "./mobile-menu";
 import { Logo } from "./Logo";
 import { useExamMenu } from "@/providers/MenuUIProvider";
 import { PackageMegaMenu } from "./meg-menus/PackageExamMenu";
 import { PreviousPaperMegaMenu } from "./meg-menus/PreviousPaperMegaMenu";
+import { CourseMobileMenu } from "./course-mobile-menu";
 
 export function Header() {
   const { openExams, setOpenExams, openPackages, setOpenPackage, openPaperSets, setOpenPaperSets } =
     useExamMenu();
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [courseMobileMenu, setCourseMobileMenu] = useState(false);
+
   const toggleMenu = () => {
     const flag = !mobileMenu;
     setMobileMenu(flag);
+  };
+
+  const toggleCourseMobileMenu = () => {
+    const flag = !courseMobileMenu;
+    setCourseMobileMenu(flag);
   };
 
   const examsInfoHandler = () => {
@@ -61,8 +69,13 @@ export function Header() {
           <div className="hidden lg:block">
             <LoginStatus />
           </div>
-          <div onClick={toggleMenu} className="lg:hidden block">
-            <BiAlignRight className="w-8 h-8 text-cyan-950/95 cursor-pointer" />
+          <div className="lg:hidden flex justify-center items-center">
+              <button className="flex bg-amber-600 border border-amber-600 text-white  items-center py-1 px-2 gap-2 rounded shadow" 
+              onClick={toggleCourseMobileMenu}>
+                <BiDice6 className="text-lg"/>
+                <span className="text-[12px]">COURSES</span>
+            </button>
+            <BiAlignRight className="w-8 h-6 text-cyan-950/95 cursor-pointer" onClick={toggleMenu} />
           </div>
         </div>
 
@@ -116,6 +129,8 @@ export function Header() {
         </>
       )}
       <MobileMenu open={mobileMenu} onClose={toggleMenu} />
+      <CourseMobileMenu open={courseMobileMenu} onClose={toggleCourseMobileMenu} />
+
     </>
   );
 }

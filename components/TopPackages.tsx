@@ -111,7 +111,6 @@ export function TopPackages() {
   const [activeEntrance, setActiveEntrance] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     packageService
       .getActiveTopPackages()
@@ -262,7 +261,6 @@ export function TopPackages() {
      p-3 sm:p-5 lg:p-6"
           >
             {" "}
-         
             <div className="flex flex-col md:flex-row gap-4 md:gap-6">
               {/* Content — packages for active entrance + category */}
               <div className="flex-1 min-w-0">
@@ -297,16 +295,16 @@ export function TopPackages() {
 
                     <div className="flex items-center justify-between mt-4">
                       <div className="tp-pag flex gap-1.5 [&_.swiper-pagination-bullet]:!bg-amber-600/50 [&_.swiper-pagination-bullet-active]:!bg-amber-600 justify-center w-full" />
-                         {activePackages.length > 1 && (
-              <div className="hidden sm:flex gap-2 justify-end mb-5">
-                <button className="tp-prev w-8 h-8 rounded-full border border-cyan-800/50 bg-cyan-900 cursor-pointer   hover:bg-cyan-800/80 hover:border-cyan-900 text-white hover:text-white transition-all duration-200 flex items-center justify-center text-sm font-light shadow-sm">
-                  ‹
-                </button>
-                <button className="tp-next w-8 h-8 rounded-full border border-cyan-800/50 bg-cyan-900 cursor-pointer   hover:bg-cyan-800/80 hover:border-cyan-900 text-white hover:text-white transition-all duration-200 flex items-center justify-center text-sm font-light shadow-sm">
-                  ›
-                </button>
-              </div>
-            )}
+                      {activePackages.length > 1 && (
+                        <div className="hidden sm:flex gap-2 justify-end mb-5">
+                          <button className="tp-prev w-8 h-8 rounded-full border border-cyan-800/50 bg-cyan-900 cursor-pointer   hover:bg-cyan-800/80 hover:border-cyan-900 text-white hover:text-white transition-all duration-200 flex items-center justify-center text-sm font-light shadow-sm">
+                            ‹
+                          </button>
+                          <button className="tp-next w-8 h-8 rounded-full border border-cyan-800/50 bg-cyan-900 cursor-pointer   hover:bg-cyan-800/80 hover:border-cyan-900 text-white hover:text-white transition-all duration-200 flex items-center justify-center text-sm font-light shadow-sm">
+                            ›
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (

@@ -104,7 +104,7 @@ export interface CoursePackage {
 
   // bundling — populated on read, editable on write
   linked_package_ids?: string[];
-  linked_packages?: LinkedPackageSummary[];
+  linked_packages?: MenuPackage[];
 
   // teachers (M-M via course_package_teachers) — populated on read
   teacher_usernames?: string[];
@@ -164,4 +164,5 @@ export interface MenuPackage {
   description?: string;
   checkout_link?: string;
   what_you_will_get?: [string];
+  discount_percentage?: number;
 }

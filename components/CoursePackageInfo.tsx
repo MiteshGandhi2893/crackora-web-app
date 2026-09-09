@@ -6,13 +6,15 @@ import { useEffect, useRef, useState } from "react";
 import { STARS } from "@/lib/util";
 import {
   CoursePackage,
+  MenuPackage,
   TeacherSummary,
 } from "@/interfaces/CoursePackage.interface";
-import { BiHeart, BiShareAlt, BiChevronDown } from "react-icons/bi";
+import { BiHeart, BiShareAlt, BiChevronDown, BiRupee } from "react-icons/bi";
 
 import Image from "next/image";
 import { API_BASE_URL } from "@/services/api.service";
 import Link from "next/link";
+import { CoursePackageCard } from "./course-card/CourseCard";
 // ─── FAQ type ─────────────────────────────────────────────────────────────────
 
 export interface FaqItem {
@@ -145,6 +147,7 @@ function FaqAccordion({ items }: { items: FaqItem[] }) {
 
   return (
     <section className="mt-10" id="faq-section">
+      {/* {faqItems.length > 0 && <FaqSchema items={faqItems} />} */}
       <div className="mb-6">
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
           Got questions?
@@ -209,7 +212,7 @@ function FaqAccordion({ items }: { items: FaqItem[] }) {
 
 // ─── Related / Recommended packages ────────────────────────────────────────
 
-function RelatedPackages({ packages }: { packages: LinkedPackage[] }) {
+function RelatedPackages({ packages }: { packages: MenuPackage[] }) {
   if (!packages.length) return null;
   return (
     <section
@@ -225,52 +228,10 @@ function RelatedPackages({ packages }: { packages: LinkedPackage[] }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {packages.map((pkg) => (
-          <Link
-            key={pkg.id}
-            href={pkg.slug ? `/packages/${pkg.slug}` : "#"}
-            className="group border border-[#e8e4dc] rounded-xl overflow-hidden bg-white
-                       shadow-[0_2px_10px_rgba(5,16,31,0.04)] hover:shadow-[0_8px_28px_rgba(5,16,31,0.14)]
-                       transition-shadow"
-          >
-            <div className="relative w-full aspect-video bg-[#e8e4dc]">
-              <Image
-                src={`${API_BASE_URL}/public/${pkg.image || ""}`}
-                alt={pkg.title}
-                fill
-                unoptimized
-                className="object-cover"
-              />
-              <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wide bg-cyan-950/80 text-amber-300 px-2 py-1 rounded-full">
-                {pkg.category?.replace("_", " ")}
-              </span>
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-cyan-900 mb-2 line-clamp-2 group-hover:text-amber-700 transition-colors">
-                {pkg.title}
-              </h3>
-              <h4 className="text-sm  text-cyan-950 mb-2 line-clamp-2  transition-colors">
-                {pkg.description}
-              </h4>
-
-              <div className="flex items-center gap-2">
-                {pkg.discounted_price ? (
-                  <>
-                    <span className="text-md text-[#05101f]/40 line-through">
-                      ₹{pkg.price}
-                    </span>
-                    <span className="text-lg font-bold text-amber-700">
-                      ₹{pkg.discounted_price}
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-sm font-semibold text-amber-700">
-                    ₹{pkg.price}
-                  </span>
-                )}
-              </div>
-            </div>
-          </Link>
+        {packages.map((pkg, i) => (
+          <div key={i}>
+            <CoursePackageCard topPackage={pkg} />
+          </div>
         ))}
       </div>
     </section>
@@ -316,7 +277,7 @@ function PurchaseCardPlaceholder({
   const features = getFeatureList(coursePackage);
 
   return (
-    <div className="bg-white border border-[#e8e4dc] rounded-xl overflow-hidden shadow-[0_8px_28px_rgba(5,16,31,0.14)]">
+    <div className="bg-white border border-[#e8e4dc] rounded-xl overflow-hidden shadow-[0_8px_28px_rgba(5,16,31,0.14)] ">
       {/* Preview image */}
       <div className="relative w-full aspect-video bg-[#e8e4dc] flex items-center justify-center">
         <Image
@@ -330,20 +291,36 @@ function PurchaseCardPlaceholder({
 
       <div className="lg:p-5 p-2">
         {/* Price */}
-        <div className="flex items-center lg:gap-2 mb-4">
-          <div className="w-full flex items-center justify-center gap-2">
-            {Number(coursePackage.discounted_price) > 0 ? (
+        <div className="flex justify-between px-4 my-3">
+          <div className="flex items-center gap-1.5 shrink-0">
+            {coursePackage.discounted_price ? (
               <>
-                <span className="text-sm text-[#05101f]/40 line-through">
-                  ₹{coursePackage.price}
+                <span className="text-cyan-950/50 text-lg flex items-center line-through decoration-green-500">
+                  <BiRupee />
+                  {coursePackage.price}
                 </span>
-                <span className="text-2xl font-bold font-inter text-cyan-900">
-                  ₹{coursePackage.discounted_price}
+                <span className="text-green-700 font-bold text-2xl flex items-center font-sans">
+                  <BiRupee />
+                  {coursePackage.discounted_price}
                 </span>
               </>
             ) : (
-              <span className="text-[13px] font-semibold text-amber-700">
-                ₹{coursePackage.price}
+              <span className="text-[#05101f] font-bold text-sm flex items-center font-sans">
+                <BiRupee />
+                {coursePackage.price}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0 bg-red-100 px-2">
+            {coursePackage.discount_percentage ? (
+              <span className="text-red-700  text-md flex items-center font-sans">
+                {coursePackage.discount_percentage} % off
+              </span>
+            ) : (
+              <span className="text-[#05101f] font-bold text-sm flex items-center font-sans">
+                <BiRupee />
+                {coursePackage.price}
               </span>
             )}
           </div>
@@ -557,7 +534,7 @@ export function CoursePackageInfo({
                     key={item.id}
                     target="_blank"
                     href={`/exam-info/${item.slug}`}
-                    className="border border-cyan-600 rounded shadow cursor-pointer hover:scale-105  text-[11px] p-2 py-1"
+                    className="border border-cyan-600 rounded shadow cursor-pointer hover:scale-105  text-[11px] p-2 py-1 text-white!"
                   >
                     {item.title}
                   </Link>
@@ -603,7 +580,7 @@ export function CoursePackageInfo({
 
             {activeTab === "overview" && (
               <div
-                className="prose prose-sm max-w-none text-[#05101f]/80 mb-10 package-overview"
+                className="package-overview bg-white p-4 px-5 rounded shadow"
                 dangerouslySetInnerHTML={{
                   __html: coursePackage.content || "",
                 }}
@@ -638,9 +615,7 @@ export function CoursePackageInfo({
                           >
                             {sIdx + 1}
                           </span>
-                          <span
-                            className={`font-semibold text-sm text-white`}
-                          >
+                          <span className={`font-semibold text-sm text-white`}>
                             {section.title}
                           </span>
                           <span

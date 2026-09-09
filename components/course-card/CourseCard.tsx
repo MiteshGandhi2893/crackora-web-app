@@ -24,16 +24,17 @@ export function CoursePackageCard({
     <div
       className="group relative bg-white rounded-2xl overflow-hidden shadow shadow-amber-600/20
         border border-amber-600/30 hover:border-amber-300
-        transition-all duration-300 hover:-translate-y-1
+        transition-all duration-300 hover:-translate-y-1 cursor-pointer
         flex flex-col w-full h-full"
     >
+       
       {/* Image */}
-      <div className="relative h-40 w-full shrink-0 bg-[#f0ede6] overflow-hidden">
+      <div className="relative h-50 w-full shrink-0 bg-[#f0ede6] overflow-hidden">
         <Image
           className="object-contain object-center group-hover:scale-105 transition-transform duration-500"
           src={`${API_BASE_URL}/public${topPackage?.image || ""}`}
-          fill
           alt={topPackage.course_name}
+          fill
         />
       </div>
 
@@ -43,25 +44,6 @@ export function CoursePackageCard({
           <span className="shrink-0 text-[11px] font-semibold font-roboto tracking-wide border border-amber-600 text-amber-700 px-1.5 py-1 bg-amber-50 rounded-md">
             {topPackage.entrance_name}
           </span>
-          <div className="flex items-baseline gap-1.5 shrink-0">
-            {topPackage.discounted_price ? (
-              <>
-                <span className="text-cyan-950/50 text-sm flex items-center line-through decoration-amber-500">
-                  <BiRupee />
-                  {topPackage.price}
-                </span>
-                <span className="text-amber-600 font-bold text-lg flex items-center font-sans">
-                  <BiRupee />
-                  {topPackage.discounted_price}
-                </span>
-              </>
-            ) : (
-              <span className="text-[#05101f] font-bold text-sm flex items-center font-sans">
-                <BiRupee />
-                {topPackage.price}
-              </span>
-            )}
-          </div>
         </div>
 
         <h3 className="text-cyan-900 text-[16px] font-semibold  leading-snug  font-roboto text-center mt-5">
@@ -79,6 +61,40 @@ export function CoursePackageCard({
             ))}
           </div>
         ) : null}
+      </div>
+      <div className="flex justify-between px-4 mb-1">
+        <div className="flex items-center gap-1.5 shrink-0">
+          {topPackage.discounted_price ? (
+            <>
+              <span className="text-cyan-950/50 text-sm flex items-center line-through decoration-green-500">
+                <BiRupee />
+                {topPackage.price}
+              </span>
+              <span className="text-green-700 font-bold text-xl flex items-center font-sans">
+                <BiRupee />
+                {topPackage.discounted_price}
+              </span>
+            </>
+          ) : (
+            <span className="text-[#05101f] font-bold text-sm flex items-center font-sans">
+              <BiRupee />
+              {topPackage.price}
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0 bg-red-100 px-2">
+          {topPackage.discount_percentage ? (
+            <span className="text-red-700  text-md flex items-center font-sans">
+              {topPackage.discount_percentage} % off
+            </span>
+          ) : (
+            <span className="text-[#05101f] font-bold text-sm flex items-center font-sans">
+              <BiRupee />
+              {topPackage.price}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Footer */}
