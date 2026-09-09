@@ -43,11 +43,11 @@ export function LatestBlogCard({ className = "" }: { className?: string }) {
 
   return (
     <Link
-      className={`w-full h-full flex lg:flex-row flex-col gap-5 items-center group ${className}`}
+      className={`w-full h-full flex lg:flex-row flex-col gap-5  group ${className}`}
       href={`/blogs/${latestBlog.slug}`}
     >
       {/* Cover */}
-      <div className="relative lg:w-35 w-full h-35 bg-cyan-50 overflow-hidden shrink-0 border border-amber-600 rounded shadow">
+      <div className="relative lg:w-60  w-full lg:h-35 h-45 bg-amber-50 overflow-hidden shrink-0  border-amber-600 ">
         <Image
           src={`${API_BASE_URL}/public/${latestBlog.cover_image}`}
           alt={latestBlog.title}

@@ -50,18 +50,14 @@ function BentoCard({
   const base =
     variant === "solid"
       ? "group relative overflow-hidden rounded-3xl border border-amber-50 bg-amber-50 shadow-[0_20px_60px_-15px_rgba(217,119,6,0.45)] transition-transform duration-300 hover:scale-[1.01]"
-      : variant === 'solid-cyan' 
-      ? "group relative overflow-hidden rounded-3xl border border-[rgba(64,139,139,1)] bg-[rgba(64,139,139,1)] shadow-[0_20px_60px_-15px_rgba(64,139,139,1)] transition-transform duration-300 hover:scale-[1.01]" 
-      : "group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.04] backdrop-blur-xl transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20";
+      : variant === "solid-cyan"
+        ? "group relative overflow-hidden rounded-3xl border border-[rgba(64,139,139,1)] bg-[rgba(64,139,139,1)] shadow-[0_20px_60px_-15px_rgba(64,139,139,1)] transition-transform duration-300 hover:scale-[1.01]"
+        : "group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.04] backdrop-blur-xl transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20";
 
   const classes = `${base} ${className}`;
 
   if (href) {
-    return (
-      <div  className={classes}>
-        {children}
-      </div>
-    );
+    return <div className={classes}>{children}</div>;
   }
   return <div className={classes}>{children}</div>;
 }
@@ -77,25 +73,24 @@ export function HeroBanner() {
         <div className="absolute inset-0 bg-black/30" />
       </div>
 
-
-         <div
-              className="absolute inset-0 overflow-hidden pointer-events-none"
-              aria-hidden="true"
-            >
-              {STARS.map((s) => (
-                <span
-                  key={s.id}
-                  className={`absolute rounded-full ${s.amber ? "bg-amber-300" : "bg-white"}`}
-                  style={{
-                    top: s.top,
-                    left: s.left,
-                    width: s.w,
-                    height: s.w,
-                    opacity: s.opacity,
-                  }}
-                />
-              ))}
-            </div>
+      <div
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        aria-hidden="true"
+      >
+        {STARS.map((s) => (
+          <span
+            key={s.id}
+            className={`absolute rounded-full ${s.amber ? "bg-amber-300" : "bg-white"}`}
+            style={{
+              top: s.top,
+              left: s.left,
+              width: s.w,
+              height: s.w,
+              opacity: s.opacity,
+            }}
+          />
+        ))}
+      </div>
       <div className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
       <div className="pointer-events-none absolute -top-10 right-0 w-[35vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.05),transparent_65%)]" />
 
@@ -119,10 +114,10 @@ export function HeroBanner() {
               no justify-between, so nothing gets stretched apart. */}
           <BentoCard
             variant="solid"
-            className="lg:col-span-2 lg:row-span-2 p-7 lg:p-10 lg:py-5 flex flex-col gap-7"
+            className="lg:col-span-2 lg:row-span-2 lg:self-center p-7 lg:p-10 lg:py-5 flex flex-col gap-8"
           >
-            <div>
-              <span className="inline-block text-[11px] tracking-[0.14em] uppercase text-orange-950/70 font-semibold mb-2">
+            <div className="flex flex-col gap-3">
+              <span className="inline-block text-[11px] tracking-[0.14em] uppercase text-orange-950/70 font-semibold">
                 {THESIS_CONTENT.eyebrow}
               </span>
               <h1 className="font-roboto text-[2rem] sm:text-[2.1rem] lg:text-[2.3rem] font-bold leading-tight text-cyan-950">
@@ -131,7 +126,7 @@ export function HeroBanner() {
                   {THESIS_CONTENT.titleAccent}
                 </span>
               </h1>
-              <p className="mt-5 text-cyan-950/80 font-roboto font-medium leading-relaxed text-[1rem] lg:text-[1rem] max-w-md">
+              <p className="text-cyan-950/80 font-roboto font-medium leading-relaxed text-[1rem] lg:text-[1rem] max-w-md">
                 {THESIS_CONTENT.description}
               </p>
             </div>
@@ -169,7 +164,9 @@ export function HeroBanner() {
             className="p-4 flex flex-col gap-4 "
           >
             <div>
-              <span className="text-[10px] tracking-[0.14em] uppercase text-cyan-100 font-bold">Previous Year Papers</span>
+              <span className="text-[10px] tracking-[0.14em] uppercase text-cyan-100 font-bold">
+                Previous Year Papers
+              </span>
               <PaperListCard />
             </div>
           </BentoCard>

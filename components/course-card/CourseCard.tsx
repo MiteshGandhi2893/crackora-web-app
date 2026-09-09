@@ -12,12 +12,15 @@ import { useRouter } from "next/navigation";
 
 export function CoursePackageCard({
   topPackage,
+ onClose,
 }: {
   topPackage: CoursePackage | MenuPackage;
+    onClose?: () => void;
 }) {
   const router = useRouter();
   const handlePackageClick = (pkg: CoursePackage | MenuPackage) => {
     router.push(`/packages/${pkg.slug}`);
+    onClose?.();
   };
 
   return (
@@ -26,6 +29,7 @@ export function CoursePackageCard({
         border border-amber-600/30 hover:border-amber-300
         transition-all duration-300 hover:-translate-y-1 cursor-pointer
         flex flex-col w-full h-full"
+         onClick={() => handlePackageClick(topPackage)}
     >
        
       {/* Image */}

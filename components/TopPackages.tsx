@@ -13,7 +13,6 @@ import {
 } from "@/interfaces/CoursePackage.interface";
 import { packageService } from "@/services/courses.service";
 import { BiBook, BiBookOpen, BiBroadcast, BiTask } from "react-icons/bi";
-import router from "next/router";
 
 const CATEGORY_META: Record<
   PackageCategory,

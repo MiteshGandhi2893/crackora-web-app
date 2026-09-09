@@ -37,16 +37,24 @@ interface EntranceGroup {
   }[];
 }
 
-// Same grouping logic as your original buildPackageEntrances — just keeps
-// the full MenuPackage objects instead of collapsing to the lightweight
-// Menu shape, since the cards need price/image/discount fields Menu doesn't carry.
+// Same grouping logic as your original buildPackageEntrances — keeps the
+// full MenuPackage objects, and now also dedupes by pkg.id (the API can
+// return the same package more than once, e.g. via a join against
+// multiple exam rows), which is what was producing duplicate React keys.
 const buildPackageEntrances = (pkgs: MenuPackage[]): EntranceGroup[] => {
+  const seenIds = new Set<string>();
+  const deduped = pkgs.filter((p) => {
+    if (seenIds.has(p.id)) return false;
+    seenIds.add(p.id);
+    return true;
+  });
+
   const entranceMap = new Map<
     string,
     { id: string; name: string; items: MenuPackage[] }
   >();
 
-  pkgs.forEach((p) => {
+  deduped.forEach((p) => {
     if (!entranceMap.has(p.entrance_id)) {
       entranceMap.set(p.entrance_id, {
         id: p.entrance_id,
@@ -301,9 +309,7 @@ export function CourseMobileMenu({
                       <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                         {/* Content — packages for active entrance + category */}
                         <div className="flex-1 min-w-0">
-                          <div
-                            className="animate-[tpFadeIn_0.35s_ease]"
-                          >
+                          <div className="animate-[tpFadeIn_0.35s_ease]">
                             <Swiper
                               modules={[Navigation, Pagination]}
                               navigation={{
@@ -324,14 +330,15 @@ export function CourseMobileMenu({
                               }}
                               className="!pb-1 [&_.swiper-wrapper]:items-stretch"
                             >
-                              {items.map((pkg) => (
-                                <SwiperSlide key={pkg.id} className="!h-auto">
-                                  <CoursePackageCard topPackage={pkg} />
+                              {items.map((pkg, idx) => (
+                                <SwiperSlide
+                                  key={`${slug}-${pkg.id}-${idx}`}
+                                  className="!h-auto"
+                                >
+                                  <CoursePackageCard topPackage={pkg} onClose={onClose}/>
                                 </SwiperSlide>
                               ))}
                             </Swiper>
-
-                          
                           </div>
                         </div>
                       </div>
