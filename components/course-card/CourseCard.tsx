@@ -50,7 +50,7 @@ export function CoursePackageCard({
           </span>
         </div>
 
-        <h3 className="text-cyan-900 text-[16px] font-semibold  leading-snug  font-roboto text-center mt-5">
+        <h3 className="text-cyan-900 text-md font-semibold  leading-snug  font-roboto text-center mt-5">
           {topPackage.course_name}
         </h3>
 

@@ -40,7 +40,7 @@ export function PackagesTeaserCard({ className = "" }: { className?: string }) {
   return (
     <div
       id="courses-packages"
-      className={`relative overflow-hidden rounded-3xl border border-white/30 bg-white/4 backdrop-blur-xl p-5 scroll-mt-24 flex flex-col ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-white/30 bg-white/4 backdrop-blur-xl p-5 scroll-mt-24 flex flex-col ${className} `}
     >
       <div className="mb-4">
         {/* <span className="text-[10px] tracking-[0.14em] uppercase text-cyan-300/70 font-medium">
@@ -69,7 +69,7 @@ export function PackagesTeaserCard({ className = "" }: { className?: string }) {
             loop={packages.length > 1}
             pagination={{ clickable: true, el: ".ptc-pag" }}
             slidesPerView={1}
-            className="w-full"
+            className="w-65"
           >
             {packages.map((pkg) => (
               <SwiperSlide key={pkg.id} className="!w-full">
@@ -96,7 +96,7 @@ export function PackagesTeaserCard({ className = "" }: { className?: string }) {
                       {pkg.course_name}
                     </h3>
 
-                    <div className="mt-2 flex items-center justify-between">
+                    <div className="mt-2 flex items-center justify-between mt-2">
                       {pkg.discounted_price ? (
                         <div className="flex items-baseline gap-1.5">
                           <span className="text-cyan-950/40 text-xs flex items-center line-through decoration-green-500">

@@ -280,7 +280,7 @@ export function CourseMobileMenu({
                 return (
                   <div key={category} className="flex flex-col gap-2 ">
                     <div className="flex items-center justify-between">
-                      <span className="text-[15px] font-bold tracking-[0.14em] uppercase text-amber-600">
+                      <span className="text-[20px] font-bold tracking-[0.14em] uppercase text-amber-600">
                         {groupLabel}
                       </span>
                       <div className="flex items-center gap-2">
@@ -302,7 +302,7 @@ export function CourseMobileMenu({
                     <div
                       className="rounded-3xl border border-white/90 bg-white/70 backdrop-blur-xl
                          shadow-[0_2px_8px_-2px_rgba(5,16,31,0.12),0_24px_60px_-16px_rgba(5,16,31,0.25)]
-                         ring-1 ring-black/3
+                         ring-1 ring-black/3 mb-10
                          p-3 sm:p-5 lg:p-6"
                     >
                       {" "}
@@ -311,7 +311,7 @@ export function CourseMobileMenu({
                         <div className="flex-1 min-w-0">
                           <div className="animate-[tpFadeIn_0.35s_ease]">
                             <Swiper
-                              modules={[Navigation, Pagination]}
+                              modules={[Navigation]}
                               navigation={{
                                 prevEl: `.tp-prev-${slug}`,
                                 nextEl: `.tp-next-${slug}`,
