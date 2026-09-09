@@ -70,7 +70,6 @@ export function Footer() {
 
   return (
     <footer className="relative border-t border-white/5 overflow-hidden">
-
       {/* ── Top gradient rule — amber glow line ── */}
       <div
         className="absolute top-0 left-0 right-0 h-px pointer-events-none"
@@ -113,7 +112,6 @@ export function Footer() {
       {/* ── Content ── */}
       <div className="relative z-10 mx-auto px-5 sm:px-6 lg:px-8 lg:max-w-6xl sm:max-w-3xl">
         <div className="py-10 sm:py-12 lg:py-14">
-
           {/* ── Main grid ── */}
           <div
             className="
@@ -129,7 +127,6 @@ export function Footer() {
           >
             {/* ── Brand column ── */}
             <div className="flex flex-col gap-5 sm:col-span-2 lg:col-span-1">
-
               {/* Logo pill */}
               <div className="w-fit rounded-lg overflow-hidden bg-amber-50/90 px-2 py-1 shadow-md shadow-amber-900/30">
                 <Logo />
@@ -153,9 +150,9 @@ export function Footer() {
                   Our Office
                 </p>
                 <p className="text-white/60 text-[13px] font-sans leading-relaxed">
-                  Shop 7, Vaibhav Horizon, Bhayander West,
+                  Mhada Colony, Virar West
                   <br />
-                  Mumbai – 401101
+                  Maharashtra,India-401303
                 </p>
               </div>
 
@@ -175,7 +172,10 @@ export function Footer() {
                   { label: "Disclaimer", href: "/disclaimer" },
                   { label: "Privacy Policy", href: "/privacy-policy" },
                   { label: "Refund Policy", href: "/refund-policy" },
-                  { label: "Terms & Conditions", href: "/terms-and-conditions" },
+                  {
+                    label: "Terms & Conditions",
+                    href: "/terms-and-conditions",
+                  },
                 ]}
               />
 
@@ -227,7 +227,6 @@ export function Footer() {
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </footer>

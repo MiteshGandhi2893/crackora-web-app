@@ -166,18 +166,18 @@ export default async function BlogDetailPage({
 
         {/* ── Cover image hero ──────────────────────────────── */}
         {blog.cover_image && (
-          <div className="h-72 sm:h-96 md:h-[480px] bg-cyan-900 mt-4">
+          <div className="h-100 sm:h-96 md:h-120 bg-cyan-900 mt-4">
             <div className="relative lg:max-w-6xl sm:max-w-3xl h-full m-auto">
-              <Image
+              {/* <Image
                 src={`${API_BASE_URL}/public${blog.cover_image}`}
                 alt={blog.title}
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover opacity-60"
-              />
+              /> */}
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/95 via-cyan-950/70 to-cyan-950/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/95 via-cyan-950/70 to-cyan-950" />
 
               {/* Overlay content */}
               <div className="absolute bottom-0 left-0 right-0 px-6 pb-12 pt-6 max-w-3xl mx-auto w-full">

@@ -156,7 +156,7 @@ export function Socials() {
         {/* Trust Line */}
         <div className="flex flex-wrap items-center justify-center lg:justify-start text-center lg:text-left ">
           <div className="hidden sm:block w-1 h-1 rounded-full bg-white/20" />
-          <span className="text-sm text-green-800 font-medium">
+          <span className="text-sm text-green-600 font-medium">
             Free guidance • Real mentors • No fake promises
           </span>
         </div>

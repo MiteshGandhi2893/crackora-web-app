@@ -47,7 +47,7 @@ export default function ToolsClient({ slug }: { slug: ToolKey }) {
           ))}
         </div>
 
-        <div className="relative lg:max-w-6xl sm:max-w-3xl mx-auto py-10 px-5 sm:px-8 sm:py-14 z-20">
+        <div className="relative lg:max-w-6xl sm:max-w-3xl mx-auto py-20 px-5 sm:px-8 sm:py-40 sm:pb-20 z-20">
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="text-amber-600 text-[11px] font-bold tracking-widest uppercase border border-amber-200 bg-amber-50 px-2.5 py-1 rounded-full">
               100% Free

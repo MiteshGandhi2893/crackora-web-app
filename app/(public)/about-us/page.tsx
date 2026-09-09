@@ -79,7 +79,7 @@ export default function AboutUs() {
     <section className="bg-[#f8f7f4] min-h-screen">
 
       {/* ── Page header ─────────────────────────────────────── */}
-      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 pt-20 pb-10">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 pt-40 pb-10">
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
           Who we are
         </p>

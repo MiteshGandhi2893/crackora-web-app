@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { LuClock, LuEye } from 'react-icons/lu';
-import { formatDistanceToNow } from 'date-fns';
-import {API_BASE_URL} from '@/services/api.service';
-import { BlogCardProps } from '@/interfaces/blog.interface';
-
+import Link from "next/link";
+import Image from "next/image";
+import { LuClock, LuEye } from "react-icons/lu";
+import { formatDistanceToNow } from "date-fns";
+import { API_BASE_URL } from "@/services/api.service";
+import { BlogCardProps } from "@/interfaces/blog.interface";
 
 export default function BlogCard({ blog }: BlogCardProps) {
   // FIX: guard against null/invalid date — published_at may be empty on some records
@@ -31,17 +30,25 @@ export default function BlogCard({ blog }: BlogCardProps) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center
-                          bg-linear-to-br from-cyan-50 to-cyan-100">
+          <div
+            className="w-full h-full flex items-center justify-center
+                          bg-linear-to-br from-cyan-50 to-cyan-100"
+          >
             <svg
               className="w-10 h-10 text-cyan-200"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
                 d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5
                    7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5
                    2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125
-                   1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                   1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+              />
             </svg>
           </div>
         )}
@@ -64,8 +71,10 @@ export default function BlogCard({ blog }: BlogCardProps) {
         )}
 
         {/* Title */}
-        <h3 className="text-cyan-900 font-bold text-base leading-snug mb-2
-                       group-hover:text-amber-600 transition-colors line-clamp-2">
+        <h3
+          className="text-cyan-900 font-bold text-base leading-snug mb-2
+                       group-hover:text-amber-600 transition-colors line-clamp-2"
+        >
           {blog.title}
         </h3>
 
@@ -79,19 +88,18 @@ export default function BlogCard({ blog }: BlogCardProps) {
           {/* Author */}
           <div className="flex items-center gap-2 min-w-0">
             {blog.author_avatar ? (
-              <Image
-                src={blog.author_avatar}
-                alt={blog.author_name}
-                width={22}
-                height={22}
-                className="rounded-full shrink-0"
-              />
+              <div className="relative w-8 h-8  overflow-hidden shrink-0 shadow-xl rounded-full border border-amber-500 ">
+                <Image
+                  src={`${API_BASE_URL}/public/${blog.author_avatar}`}
+                  alt={blog.author_name}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
+              </div>
             ) : (
-              <div className="w-6 h-6 rounded-full bg-cyan-100 flex items-center
-                              justify-center shrink-0">
-                <span className="text-cyan-800 text-xs font-bold">
-                  {blog.author_name?.[0] ?? 'C'}
-                </span>
+              <div className="w-8 h-8 rounded-full bg-cyan-100 text-cyan-800 flex items-center justify-center text-lg font-semibold shrink-0">
+                {blog.author_name.charAt(0).toUpperCase()}
               </div>
             )}
             <span className="text-xs text-gray-500 font-medium truncate">
@@ -107,9 +115,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
             <span className="flex items-center gap-1">
               <LuEye size={11} /> {blog.views}
             </span>
-            {timeAgo && (
-              <span className="hidden sm:block">{timeAgo}</span>
-            )}
+            {timeAgo && <span className="hidden sm:block">{timeAgo}</span>}
           </div>
         </div>
       </div>
