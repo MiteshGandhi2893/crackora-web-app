@@ -145,7 +145,7 @@ export function HeroBanner() {
             <div className="flex flex-col gap-6">
               <a
                 href={THESIS_CONTENT.primaryCta.href}
-                className="inline-flex w-fit items-center gap-2 font-semibold font-roboto px-6 py-3 text-cyan-50 bg-amber-600 text-sm rounded-xl transition-all duration-300 hover:bg-cyan-900 hover:scale-[1.03]"
+                className="inline-flex justify-center lg:w-fit w-full items-center gap-2 font-semibold font-roboto px-6 py-3 text-cyan-50 bg-amber-600 text-sm rounded-xl transition-all duration-300 hover:bg-cyan-900 hover:scale-[1.03]"
               >
                 {THESIS_CONTENT.primaryCta.label}
               </a>

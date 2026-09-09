@@ -72,10 +72,10 @@ export function PackagesTeaserCard({ className = "" }: { className?: string }) {
             className="w-full"
           >
             {packages.map((pkg) => (
-              <SwiperSlide key={pkg.id}>
+              <SwiperSlide key={pkg.id} className="!w-full">
                 <button
                   onClick={() => handlePackageClick(pkg)}
-                  className="group block  bg-amber-50 border border-amber-600/20 overflow-hidden hover:border-amber-400 hover:-translate-y-0.5 transition-all duration-300"
+                  className="group block w-full bg-amber-50 border border-amber-600/20 overflow-hidden hover:border-amber-400 hover:-translate-y-0.5 transition-all duration-300"
                 >
                   {/* Image */}
                   <div className="relative h-45 lg:h-35 w-full bg-[#f0ede6] overflow-hidden">
