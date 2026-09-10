@@ -56,6 +56,7 @@ export function LatestBlogCard({ className = "" }: { className?: string }) {
           className="object-contain group-hover:scale-105 transition-transform duration-300"
         />
       </div>
+      
       <div className="flex flex-col gap-2">
         <span className="text-[15px] text-amber-700 font-semibold">
           {latestBlog.title}

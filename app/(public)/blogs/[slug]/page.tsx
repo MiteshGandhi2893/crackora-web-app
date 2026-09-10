@@ -167,20 +167,20 @@ export default async function BlogDetailPage({
         {/* ── Cover image hero ──────────────────────────────── */}
         {blog.cover_image && (
           <div className="h-100 sm:h-96 md:h-120 bg-cyan-900 mt-4">
-            <div className="relative lg:max-w-6xl sm:max-w-3xl h-full m-auto">
-              {/* <Image
+            <div className="relative lg:max-w-6xl sm:max-w-3xl h-full m-auto ">
+              <Image
                 src={`${API_BASE_URL}/public${blog.cover_image}`}
                 alt={blog.title}
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover opacity-60"
-              /> */}
+                className="object-cover opacity-60 "
+              />
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/95 via-cyan-950/70 to-cyan-950" />
+              <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/95 via-cyan-950/10 to-cyan-950" />
 
               {/* Overlay content */}
-              <div className="absolute bottom-0 left-0 right-0 px-6 pb-12 pt-6 max-w-3xl mx-auto w-full">
+              <div className="absolute flex flex-col justify-center sm:h-auto h-full  lg:-bottom-15 left-0 right-0 px-6 lg:py-5   pt-6 max-w-3xl mx-auto w-full lg:bg-stone-950/90 bg-cyan-950 lg:border  lg:border-black shadow shadow-[rgba(0,0,0,.5)] rounded">
                 <Link
                   href="/blogs"
                   className="inline-flex items-center gap-1.5 text-xs font-semibold mb-6
@@ -204,14 +204,14 @@ export default async function BlogDetailPage({
                   </div>
                 )}
 
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight mb-6">
+                <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-white leading-tight mb-6">
                   {blog.title}
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                   <div className="flex items-center gap-2.5">
                     {blog.author?.avatar ? (
-                      <div className="relative w-20 h-20  overflow-hidden shrink-0 shadow-xl rounded border border-amber-500 ">
+                      <div className="relative w-10 h-10  overflow-hidden shrink-0 shadow-xl rounded-full border border-amber-500 ">
                         <Image
                           src={`${API_BASE_URL}/public/${blog.author?.avatar}`}
                           alt={blog.author.name}

@@ -12,10 +12,10 @@ import { useRouter } from "next/navigation";
 
 export function CoursePackageCard({
   topPackage,
- onClose,
+  onClose,
 }: {
   topPackage: CoursePackage | MenuPackage;
-    onClose?: () => void;
+  onClose?: () => void;
 }) {
   const router = useRouter();
   const handlePackageClick = (pkg: CoursePackage | MenuPackage) => {
@@ -29,16 +29,16 @@ export function CoursePackageCard({
         border border-amber-600/30 hover:border-amber-300
         transition-all duration-300 hover:-translate-y-1 cursor-pointer
         flex flex-col w-full h-full"
-         onClick={() => handlePackageClick(topPackage)}
+      onClick={() => handlePackageClick(topPackage)}
     >
-       
       {/* Image */}
-      <div className="relative h-50 w-full shrink-0 bg-[#f0ede6] overflow-hidden">
+      <div className="relative w-full aspect-video bg-[#f0ede6] overflow-hidden">
         <Image
-          className="object-contain object-center group-hover:scale-105 transition-transform duration-500"
           src={`${API_BASE_URL}/public${topPackage?.image || ""}`}
           alt={topPackage.course_name}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
         />
       </div>
 

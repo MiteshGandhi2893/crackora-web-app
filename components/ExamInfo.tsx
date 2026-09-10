@@ -275,7 +275,7 @@ export function ExamInfo({ exam }: { exam: Exam }) {
             </div>
 
             {/* Callback card */}
-            <div className="relative w-80 sm:w-100 shrink-0">
+            <div className="relative  w-full sm:w-100 shrink-0">
               <div
                 className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-64 h-24
                               bg-amber-400/20 blur-3xl rounded-full pointer-events-none"

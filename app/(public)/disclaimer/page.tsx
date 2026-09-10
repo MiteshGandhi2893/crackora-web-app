@@ -67,7 +67,6 @@ export default function DisclaimerPage() {
           or career outcomes.
           <br />
           <br />
-
           Individual performance depbodys on several factors such as personal
           effort, consistency, prior knowledge, skills, and external conditions
           beyond our control.
@@ -94,7 +93,8 @@ export default function DisclaimerPage() {
     {
       number: "03",
       title: "Educational and Career Guidance",
-      intro: "Crackora provides academic support and career guidance to help users make informed decisions. However:",
+      intro:
+        "Crackora provides academic support and career guidance to help users make informed decisions. However:",
       bullets: [
         "All lectures, materials, strategies, and guidance are general in nature.",
         "They should not be considered as professional, legal, financial, or binding career advice.",
@@ -172,7 +172,7 @@ export default function DisclaimerPage() {
   return (
     <section className="bg-[#f8f7f4] min-h-screen">
       {/* ── Page header ─────────────────────────────────────── */}
-      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 pt-40 pb-10">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 sm:pt-40 pt-20 pb-10">
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
           Legal
         </p>
@@ -217,22 +217,24 @@ export default function DisclaimerPage() {
             key={s.number}
             className="bg-white border border-gray-200 rounded-6xl p-6 sm:p-8 shadow"
           >
-            <div className="flex items-start gap-5">
-              {/* Number badge */}
-              <div
-                className="shrink-0 w-10 h-10 rounded-full bg-cyan-50 border border-cyan-100
+            <div className="flex flex-col items-start gap-5">
+              <div className="flex items-center gap-5">
+                <div
+                  className="shrink-0 w-10 h-10 rounded-full bg-amber-100 border border-amber-200
                               flex items-center justify-center"
-              >
-                <span className="text-[11px] font-black text-amber-500">
-                  {s.number}
-                </span>
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <h2 className="text-base font-bold text-cyan-900 mb-3">
+                >
+                  <span className="text-[12px] font-black text-amber-700">
+                    {s.number}
+                  </span>
+                </div>
+                <h2 className="text-base font-bold text-cyan-900 ">
                   {s.title}
                 </h2>
+              </div>
 
+              {/* Number badge */}
+
+              <div className="flex-1 min-w-0">
                 {s.intro && (
                   <p className="text-gray-600 text-sm leading-relaxed mb-3">
                     {s.intro}
@@ -243,7 +245,7 @@ export default function DisclaimerPage() {
                   <ul className="space-y-2">
                     {s.bullets.map((b) => (
                       <li key={b} className="flex items-start gap-2">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
                         <span className="text-gray-600 text-sm leading-relaxed">
                           {b}
                         </span>
@@ -295,4 +297,3 @@ export default function DisclaimerPage() {
     </section>
   );
 }
-

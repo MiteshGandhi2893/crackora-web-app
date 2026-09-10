@@ -134,7 +134,7 @@ export default function PrivacyPolicy() {
   return (
     <section className="bg-[#f8f7f4] min-h-screen">
       {/* ── Page header ─────────────────────────────────────── */}
-      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 pt-40 pb-10">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 sm:pt-40 pt-20 pb-10">
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
           Legal
         </p>
@@ -188,19 +188,20 @@ export default function PrivacyPolicy() {
             key={section.number}
             className="bg-white border border-gray-200 rounded-6xl p-6 sm:p-8 shadow"
           >
-            <div className="flex items-start gap-5">
-              {/* Number Badge */}
-              <div className="shrink-0 w-10 h-10 rounded-full bg-cyan-50 border border-cyan-100 flex items-center justify-center">
-                <span className="text-[11px] font-black text-amber-500">
-                  {section.number}
-                </span>
-              </div>
-
-              <div className="flex-1 min-w-0 space-y-4">
-                {/* Title */}
-                <h2 className="text-base font-bold text-cyan-900">
+            <div className="flex items-start flex-col gap-5">
+              <div className="flex items-center gap-5">
+                <div className="shrink-0 w-10 h-10 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center">
+                  <span className="text-[11px] font-black text-amber-700">
+                    {section.number}
+                  </span>
+                </div>
+                 <h2 className="text-base font-bold text-cyan-900">
                   {section.title}
                 </h2>
+              </div>{" "}
+              {/* Number Badge */}
+              <div className="flex-1 min-w-0 space-y-4 pl-2">
+                {/* Title */}
 
                 {/* Intro (only if no subSections) */}
                 {section.intro && !section.subSections && (
@@ -214,7 +215,7 @@ export default function PrivacyPolicy() {
                   <ul className="space-y-2">
                     {section.bullets.map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
                         <span className="text-gray-600 text-sm leading-relaxed">
                           {item}
                         </span>
@@ -249,7 +250,7 @@ export default function PrivacyPolicy() {
                           <ul className="space-y-1.5 mb-3">
                             {sub.bullets.map((item, i) => (
                               <li key={i} className="flex items-start gap-2">
-                                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                                <span className="mt-2 w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
                                 <span className="text-gray-600 text-sm leading-relaxed">
                                   {item}
                                 </span>
