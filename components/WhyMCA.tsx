@@ -1,9 +1,21 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 import { h2, p } from "@/data/tailwind-utils";
 import { STARS } from "@/lib/util";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import {
+  BiCheckCircle,
+  BiEditAlt,
+  BiBuildings,
+  BiBookOpen,
+  BiCodeAlt,
+  BiBriefcase,
+  BiChevronLeft,
+  BiChevronRight,
+} from "react-icons/bi";
 
 const stats = [
   { num: "₹4 – 10L", label: "Starting salary after MCA" },
@@ -16,6 +28,7 @@ const steps = [
     label: "Check Eligibility",
     sub: "BCA · BSc · BCom with Maths",
     badge: "Start",
+    icon: BiCheckCircle,
     about:
       "MCA eligibility criteria require a bachelor's degree with Mathematics as a subject, either at the 10+2 level or during graduation, depending on the university. Most colleges accept BCA, BSc (Computer Science, IT, or Maths), and BCom with Maths graduates, making it one of the most accessible postgraduate routes into tech.",
     details: [
@@ -28,6 +41,7 @@ const steps = [
     label: "Prepare for Entrance",
     sub: "NIMCET · MAH CET · CUET PG",
     badge: "Exams",
+    icon: BiEditAlt,
     about:
       "MCA entrance exams like NIMCET, MAH MCA CET, and CUET PG are the gateway to top colleges, and each tests a similar mix of Mathematics, Logical Reasoning, and Computer Fundamentals. Scoring well here matters more than almost any other single factor, since it directly decides which NIT or university you can get into.",
     details: [
@@ -40,6 +54,7 @@ const steps = [
     label: "Choose MCA College",
     sub: "NIT · State · Private",
     badge: "Admission",
+    icon: BiBuildings,
     about:
       "Choosing the best MCA college in India shapes placements more than almost anything else in this journey. Weigh NIRF ranking, fee structure, and location against each college's actual placement record — a lower-ranked college with strong industry tie-ups can outperform a bigger name on paper.",
     details: [
@@ -52,6 +67,7 @@ const steps = [
     label: "Complete MCA (2 years)",
     sub: "Subjects · Projects · Internships",
     badge: "Study",
+    icon: BiBookOpen,
     about:
       "The 2-year MCA syllabus, spread across 4 semesters, builds core computer science fundamentals — Data Structures, DBMS, Operating Systems, and Networks — while leaving room to specialize through electives and hands-on projects. This is where most of the technical foundation for a software career actually gets built.",
     details: [
@@ -64,6 +80,7 @@ const steps = [
     label: "Build Tech Skills",
     sub: "Full Stack · AI · Cloud · Data",
     badge: "Skills",
+    icon: BiCodeAlt,
     about:
       "Coursework alone rarely gets an MCA graduate hired — pairing it with a focused skill track in Full Stack Development, Data Science/AI, or Cloud/DevOps is what makes a resume stand out to recruiters. Employers increasingly screen for real, shippable projects over degree credentials alone.",
     details: [
@@ -76,6 +93,7 @@ const steps = [
     label: "Get Your First Job",
     sub: "Software · Data · IT",
     badge: "Career",
+    icon: BiBriefcase,
     about:
       "MCA graduates in India move into software development, data analysis, and IT services roles, with many landing their first job through campus placements or referrals during the final semester. Starting salaries typically range from ₹4–10L depending on college pedigree, specialization, and project portfolio.",
     details: [
@@ -86,83 +104,22 @@ const steps = [
   },
 ];
 
-const AUTOPLAY_MS = 5000;
-const SLIDE_PX = 28;
-const OUT_MS = 220;
-const IN_MS = 380;
-
 export function McaJourneySection() {
+  // Desktop: which step is selected. Just one useState, no timers/effects.
   const [active, setActive] = useState(0);
-  const [displayed, setDisplayed] = useState(0);
-  // "settled" -> resting in place | "leaving" -> sliding out | "entering" -> about to slide in (pre-transition frame)
-  const [phase, setPhase] = useState<"settled" | "leaving" | "entering">("settled");
-  const [direction, setDirection] = useState(1); // 1 = forward (slides in from right), -1 = backward
-  const [autoplay, setAutoplay] = useState(true);
+  const step = steps[active];
+  const ActiveIcon = step.icon;
 
-  const prevActive = useRef(0);
-  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const rafId = useRef<number | null>(null);
-
-  // Autoplay: advances `active` every 5s while enabled.
-  useEffect(() => {
-    if (!autoplay) return;
-    const id = setInterval(() => {
-      setActive((i) => (i + 1) % steps.length);
-    }, AUTOPLAY_MS);
-    return () => clearInterval(id);
-  }, [autoplay]);
-
-  // Slide transition: leave (slide out + fade) → swap content → enter (slide in + fade),
-  // direction-aware so it reads as a sliding window rather than a plain crossfade.
-  useEffect(() => {
-    const prev = prevActive.current;
-    if (prev === active) return;
-
-    let dir = active > prev ? 1 : -1;
-    if (prev === steps.length - 1 && active === 0) dir = 1; // autoplay wrap-around
-    if (prev === 0 && active === steps.length - 1) dir = -1; // manual wrap backward
-    setDirection(dir);
-
-    setPhase("leaving");
-    if (leaveTimer.current) clearTimeout(leaveTimer.current);
-    if (rafId.current) cancelAnimationFrame(rafId.current);
-
-    leaveTimer.current = setTimeout(() => {
-      setDisplayed(active);
-      setPhase("entering");
-      // Let the "entering" (pre-transition) frame paint, then release to "settled"
-      // so the browser animates from the offset position back to rest.
-      rafId.current = requestAnimationFrame(() => {
-        rafId.current = requestAnimationFrame(() => setPhase("settled"));
-      });
-    }, OUT_MS);
-
-    prevActive.current = active;
-    return () => {
-      if (leaveTimer.current) clearTimeout(leaveTimer.current);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
-  }, [active]);
-
-  const handleStepClick = (i: number) => {
-    if (i === active) return;
-    setActive(i);
-    setAutoplay(false); // manual pick — stop pulling focus away from it
-  };
-
-  const step = steps[displayed];
-
-  const panelStyle =
-    phase === "settled"
-      ? { transform: "translateX(0)", opacity: 1, transition: `transform ${IN_MS}ms cubic-bezier(.22,1,.36,1), opacity ${IN_MS}ms ease-out` }
-      : phase === "leaving"
-        ? { transform: `translateX(${-direction * SLIDE_PX}px)`, opacity: 0, transition: `transform ${OUT_MS}ms cubic-bezier(.4,0,1,1), opacity ${OUT_MS}ms ease-in` }
-        : { transform: `translateX(${direction * SLIDE_PX}px)`, opacity: 0, transition: "none" as const };
+  // Mobile Swiper custom navigation — must be React *state* (not a plain ref) so
+  // Swiper re-renders with real DOM nodes once the buttons mount. This is the
+  // pattern Swiper's own docs recommend for custom nav; using useRef here is
+  // exactly what caused the duplicate default arrows and the broken nav before.
+  const [navPrevEl, setNavPrevEl] = useState<HTMLButtonElement | null>(null);
+  const [navNextEl, setNavNextEl] = useState<HTMLButtonElement | null>(null);
 
   return (
     <section className="relative w-full overflow-hidden isolate py-16 lg:py-24 lg:px-0 px-5">
-      {/* ── background: ink navy + a faint structural grid + one soft brass glow ── */}
-           {/* ── background ── */}
+      {/* ── background ── */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[#020617]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
@@ -181,7 +138,6 @@ export function McaJourneySection() {
         ))}
       </div>
 
-
       {/* ── content ── */}
       <div className="relative z-20 lg:max-w-6xl sm:max-w-3xl mx-auto px-4 sm:px-0">
         {/* header row */}
@@ -190,13 +146,13 @@ export function McaJourneySection() {
             <div className="flex items-center gap-3 mb-4">
               <p className="text-md text-amber-600 font-sans tracking-wider">The MCA journey</p>
             </div>
-            <h2 className={`${h2.default} ${h2.sm} ${h2.lg} font-serif text-cyan-100  leading-tight tracking-tight mb-3`}>
+            <h2 className={`${h2.default} ${h2.sm} ${h2.lg} font-serif text-cyan-100 leading-tight tracking-tight mb-3`}>
               From Eligibility to your <span className="text-amber-500">First Tech Job</span>
-             </h2>
+            </h2>
             <p className={`${p.default} ${p.sm} ${p.lg} text-white/60 leading-relaxed font-sans max-w-xl`}>
               Many students choose MCA after graduation but are unsure about
-              exams, colleges, duration, and career options. Here is the
-              complete path, stage by stage.
+              exams, colleges, duration, and career options. Explore any stage
+              below for the full picture.
             </p>
           </div>
         </div>
@@ -214,67 +170,85 @@ export function McaJourneySection() {
           ))}
         </div>
 
-        {/* 6-step timeline */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-6 lg:gap-x-6">
-          {steps.map((s, i) => {
-            const isActive = active === i;
-            return (
-              <button
-                key={i}
-                onClick={() => handleStepClick(i)}
-                className="relative text-left cursor-pointer group"
-              >
-                <div
-                  className={`relative px-5 pt-4 pb-4 rounded-xl border transition-all duration-300 h-40 flex flex-col justify-center ${
-                    isActive
-                      ? "bg-[#f7f4ec] backdrop-blur-md border-[#b08a4e]/40 shadow-[0_8px_28px_rgba(0,0,0,0.28)] -translate-y-0.5"
-                      : "bg-gray-200/3 border-gray-200/20 group-hover:bg-white/3 group-hover:border-white/10 -translate-y-0.5"
-                  }`}
-                >
-                  <span
-                    className={`block font-serif  mb-3 transition-colors duration-300 ${
-                      isActive ? "text-amber-800 text-lg" : "text-amber-200 text-md"
+        {/* ── DESKTOP: step list + detail panel side by side ── */}
+        <div className="hidden lg:grid grid-cols-12 gap-6 items-start">
+          {/* left: compact step list */}
+          <ol className="lg:col-span-4 relative grid grid-cols-1 gap-2">
+            {steps.map((s, i) => {
+              const isActive = active === i;
+              const Icon = s.icon;
+              return (
+                <li key={s.label}>
+                  <button
+                    type="button"
+                    onClick={() => setActive(i)}
+                    aria-current={isActive}
+                    className={`w-full flex items-center gap-3 rounded-xl border pl-3.5 pr-4 py-3.5 text-left cursor-pointer transition-all duration-200 ${
+                      isActive
+                        ? "bg-[#f7f4ec] border-[#b08a4e]/50 shadow-[0_6px_20px_rgba(0,0,0,0.25)] translate-x-1"
+                        : "bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20"
                     }`}
                   >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p
-                    className={`text-sm lg:text-[15px] font-semibold leading-snug mb-1 font-sans transition-colors duration-300 ${
-                      isActive ? "text-cyan-900" : "text-green-50"
-                    }`}
-                  >
-                    {s.label}
-                  </p>
-                  <p
-                    className={`text-xs lg:text-[13px] leading-relaxed font-sans transition-colors duration-300 ${
-                      isActive ? "text-amber-700/80" : "text-cyan-50/50"
-                    }`}
-                  >
-                    {s.sub}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                    <span
+                      className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center border transition-colors duration-200 ${
+                        isActive
+                          ? "bg-amber-500 border-amber-500 text-[#0b1220]"
+                          : "bg-[#0b1220] border-white/15 text-amber-200"
+                      }`}
+                    >
+                      <Icon className="w-[18px] h-[18px]" />
+                    </span>
+                    <span className="min-w-0">
+                      <span
+                        className={`block text-sm font-semibold font-sans leading-tight truncate ${
+                          isActive ? "text-cyan-900" : "text-green-50"
+                        }`}
+                      >
+                        {s.label}
+                      </span>
+                      <span
+                        className={`block text-xs font-sans truncate mt-0.5 ${
+                          isActive ? "text-amber-700/80" : "text-cyan-50/45"
+                        }`}
+                      >
+                        {s.sub}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
 
-        {/* ── Detail panel ── */}
-        <div className="mt-10 lg:mt-14 overflow-hidden">
-          <div className="max-w-2xl mx-auto w-full will-change-transform" style={panelStyle}>
-            <div className="bg-[#f7f4ec] p-7 lg:p-9 border border-black/5">
-              <div className="flex items-baseline justify-between gap-4 mb-4">
-                <span className="text-amber-600 font-sans tracking-wider font-semibold text-lg">
-                  {String(displayed + 1).padStart(2, "0")}
+          {/* right: detail panel */}
+          <div className="lg:col-span-8">
+            <div className="relative overflow-hidden rounded-2xl border border-black/5 bg-[#f7f4ec] p-8 lg:p-10">
+              <span aria-hidden="true" className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-cyan-800" />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-4 -right-2 font-serif text-[9rem] leading-none text-black/[0.04] select-none"
+              >
+                {String(active + 1).padStart(2, "0")}
+              </span>
+
+              <div className="relative flex items-center gap-4 mb-6">
+                <span className="shrink-0 w-14 h-14 rounded-2xl bg-amber-600/10 border border-amber-600/25 flex items-center justify-center text-amber-700">
+                  <ActiveIcon className="w-7 h-7" />
                 </span>
-                <span className="text-xs text-amber-700 font-sans tracking-wider font-semibold">{step.badge}</span>
+                <div>
+                  <span className="inline-block text-[11px] tracking-wider font-sans font-semibold text-amber-700 bg-amber-600/10 px-2 py-0.5 rounded-full mb-1.5">
+                    {step.badge.toUpperCase()}
+                  </span>
+                  <p className="font-serif text-2xl text-[#0f2b36] leading-snug">{step.label}</p>
+                  <p className="text-sm text-[#164e61]/70 font-sans">{step.sub}</p>
+                </div>
               </div>
-              <p className="font-serif text-lg lg:text-xl text-[#164e61] leading-snug mb-3">
-                {step.sub}
-              </p>
-              <p className="text-sm lg:text-[15px] text-black/65 leading-relaxed font-sans mb-5">
+
+              <p className="relative text-sm lg:text-[15px] text-black/65 leading-relaxed font-sans mb-6 max-w-2xl">
                 {step.about}
               </p>
-              <ul className="space-y-2.5 border-t border-black/8 pt-4">
+
+              <ul className="relative grid sm:grid-cols-2 gap-x-6 gap-y-3 border-t border-black/8 pt-5">
                 {step.details.map((d, idx) => (
                   <li key={idx} className="flex gap-3 text-sm text-black/60 font-sans leading-snug">
                     <span className="mt-2 w-1 h-1 rounded-full bg-[#b08a4e] shrink-0" />
@@ -282,39 +256,104 @@ export function McaJourneySection() {
                   </li>
                 ))}
               </ul>
+
+              <div className="relative flex items-center gap-1.5 mt-7 pt-5 border-t border-black/8">
+                {steps.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-label={`Go to step ${i + 1}`}
+                    onClick={() => setActive(i)}
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      i === active ? "w-6 bg-amber-600" : "w-1.5 bg-black/15 hover:bg-black/25"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* resume autoplay hint after a manual click */}
-        {!autoplay && (
-          <div className="mt-5 flex justify-center">
-            <button
-              onClick={() => setAutoplay(true)}
-              className="text-xs text-white/35 hover:text-amber-400 transition-colors font-sans underline underline-offset-4 cursor-pointer"
-            >
-              Resume auto-play
-            </button>
-          </div>
-        )}
+        {/* ── MOBILE: one card at a time, Swiper carousel ── */}
+        <div className="lg:hidden relative ">
+          <Swiper
+            modules={[Navigation]}
+            slidesPerView={1}
+            spaceBetween={16}
+            navigation={{ prevEl: navPrevEl, nextEl: navNextEl }}
+          >
+            {steps.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <SwiperSlide key={s.label}>
+                  <div className="relative overflow-hidden rounded-2xl border border-black/5 bg-[#f7f4ec] shadow-xl p-6 sm:p-8">
+                    <span aria-hidden="true" className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-cyan-800" />
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -top-3 -right-2 font-serif text-[6.5rem] leading-none text-black/[0.04] select-none"
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+
+                    <div className="relative flex items-center gap-3.5 mb-5">
+                      <span className="shrink-0 w-12 h-12 rounded-xl bg-amber-600/10 border border-amber-600/25 flex items-center justify-center text-amber-700">
+                        <Icon className="w-6 h-6" />
+                      </span>
+                      <div>
+                        <span className="inline-block text-[10px] tracking-wider font-sans font-semibold text-amber-700 bg-amber-600/10 px-2 py-0.5 rounded-full mb-1">
+                          {s.badge.toUpperCase()}
+                        </span>
+                        <p className="font-serif text-lg text-[#0f2b36] leading-snug">{s.label}</p>
+                        <p className="text-xs text-[#164e61]/70 font-sans">{s.sub}</p>
+                      </div>
+                    </div>
+
+                    <p className="relative text-sm text-black/65 leading-relaxed font-sans mb-6">
+                      {s.about}
+                    </p>
+
+                    <ul className="relative space-y-3 border-t border-black/8 pt-5">
+                      {s.details.map((d, idx) => (
+                        <li key={idx} className="flex gap-3 text-sm text-black/60 font-sans leading-snug">
+                          <span className="mt-2 w-1 h-1 rounded-full bg-[#b08a4e] shrink-0" />
+                          {d}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+
+          {/* prev/next — circular, half overlapping the card edge, cyan-900 with white icon */}
+          <button
+            ref={setNavPrevEl}
+            type="button"
+            aria-label="Previous step"
+            className="absolute top-1/2 left-0 z-10 -translate-y-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-cyan-900 text-white flex items-center justify-center shadow-lg cursor-pointer disabled:opacity-30"
+          >
+            <BiChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            ref={setNavNextEl}
+            type="button"
+            aria-label="Next step"
+            className="absolute top-1/2 right-0 z-10 -translate-y-1/2 translate-x-1/2 w-11 h-11 rounded-full bg-cyan-900 text-white flex items-center justify-center shadow-lg cursor-pointer disabled:opacity-30"
+          >
+            <BiChevronRight className="w-6 h-6" />
+          </button>
+        </div>
 
         {/* CTA */}
         <div className="mt-10 lg:mt-14 flex justify-center">
           <Link
             href="/mca-journey"
-            className="group inline-flex items-center gap-2.5 border border-[#b08a4e]/50 hover:border-[#b08a4e] bg-amber-600 rounded shadow 
+            className="group inline-flex items-center gap-2.5 border border-[#b08a4e]/50 hover:border-[#b08a4e] bg-amber-600 rounded shadow
             text-white hover:text-white px-7 py-3 text-sm lg:text-base font-sans font-medium tracking-wide transition-colors duration-300"
           >
             Explore the MCA guide
-            <svg
-              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path d="M3 8h10M9 4l4 4-4 4" />
-            </svg>
+            <BiChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
       </div>
