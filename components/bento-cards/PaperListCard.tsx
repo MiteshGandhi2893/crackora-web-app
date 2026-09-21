@@ -14,9 +14,10 @@ import {
   PaperExamForMenu,
 } from "@/interfaces/papersets.interface";
 import { paperSetService } from "@/services/previouspaperset.service";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export function PaperListCard({ className = "" }: { className?: string }) {
+  const router = useRouter();
   const [paperSets, setPaperSets] = useState<Record<string, PaperExamForMenu>>(
     {},
   );
@@ -45,7 +46,7 @@ export function PaperListCard({ className = "" }: { className?: string }) {
                 return (
                   <div
                     key={index}
-                    className="flex gap-3  text-white/70 items-center hover:bg-amber-100/10 p-1 py-2 "
+                    className="flex gap-3  text-white/70 items-center hover:bg-amber-100/10 p-1 py-2 cursor-pointer"
                     onClick={() => handlePapersetClick(paper)}
                   >
                     <div className="relative w-15 h-15 rounded-lg overflow-hidden border border-[#e8e4dc] bg-[#f8f7f4] shrink-0">

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const API_BASE_URL = "https://api.crackora.com";
-// export const API_BASE_URL = "http://localhost:5000";
+// export const API_BASE_URL = "https://api.crackora.com";
+export const API_BASE_URL = "http://localhost:5000";
 
 // ─── In-memory access token store ────────────────────────────────────────────
 // Intentionally NOT persisted — cleared on every page refresh.
