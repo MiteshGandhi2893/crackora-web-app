@@ -377,3 +377,10 @@ body {
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
 }
+
+
+.related-swiper {
+  --swiper-pagination-color: #d97706;              /* amber-600 */
+  --swiper-pagination-bullet-inactive-color: #0e7490; /* cyan-700 */
+  --swiper-pagination-bullet-inactive-opacity: 0.25;
+}

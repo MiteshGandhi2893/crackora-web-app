@@ -11,7 +11,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { BiRupee } from "react-icons/bi";
 import {
   CoursePackage,

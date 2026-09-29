@@ -4,6 +4,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { STARS } from "@/lib/util";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import {
   CoursePackage,
   MenuPackage,
@@ -214,26 +220,59 @@ function FaqAccordion({ items }: { items: FaqItem[] }) {
 
 function RelatedPackages({ packages }: { packages: MenuPackage[] }) {
   if (!packages.length) return null;
+
   return (
     <section
       className="lg:max-w-6xl sm:max-w-3xl mx-auto px-6 lg:px-10 pb-20"
       id="related-packages"
     >
-      <div className="mb-6">
-        <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
-          Recommended
-        </p>
-        <h2 className="text-2xl font-bold text-cyan-900">Related Packages</h2>
-        <div className="h-0.5 w-12 bg-amber-500 mt-3" />
+      <div className="mb-6 flex items-end justify-between">
+        <div>
+          <p className="text-xs font-bold tracking-[0.2em] uppercase text-amber-600 mb-1">
+            Recommended
+          </p>
+          <h2 className="text-2xl font-bold text-cyan-900">Related Packages</h2>
+          <div className="h-0.5 w-12 bg-amber-500 mt-3" />
+        </div>
+
+        {/* Custom nav buttons */}
+        <div className="flex gap-2">
+          <button
+            className="related-prev w-9 h-9 rounded-full border border-cyan-900/20 text-white bg-cyan-900 flex items-center justify-center hover:bg-cyan-900 hover:text-white transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+            aria-label="Previous"
+          >
+            <BiChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            className="related-next w-9 h-9 rounded-full border border-cyan-900/20 text-white bg-cyan-900 flex items-center justify-center hover:bg-cyan-900 hover:text-white transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+            aria-label="Next"
+          >
+            <BiChevronRight className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <Swiper
+        modules={[Navigation, Pagination]}
+        navigation={{
+          prevEl: ".related-prev",
+          nextEl: ".related-next",
+        }}
+        pagination={{ clickable: true }}
+        spaceBetween={20}
+        slidesPerView={1}
+        breakpoints={{
+          640: { slidesPerView: 2 },
+          768: { slidesPerView: 3 },
+        }}
+        className="related-swiper !pb-10"
+      >
         {packages.map((pkg, i) => (
-          <div key={i}>
+          <SwiperSlide key={pkg.id ?? i} className="!h-auto">
             <CoursePackageCard topPackage={pkg} />
-          </div>
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </section>
   );
 }
@@ -578,51 +617,54 @@ export function CoursePackageInfo({
               category={coursePackage.category}
             />
 
-            {activeTab === "overview" && (
-              <div
-                className="package-overview bg-white p-4 px-5 rounded shadow"
-                dangerouslySetInnerHTML={{
-                  __html: coursePackage.content || "",
-                }}
-              />
-            )}
-            {activeTab === "curriculum" && (
-              <div className="_curriculum flex flex-col gap-4">
-                {coursePackage.curriculum?.map((section, sIdx) => {
-                  const isSectionOpen = openSections.has(section.id);
-                  const topicCount = section.subSections.reduce(
-                    (acc, sub) => acc + sub.topics.length,
-                    0,
-                  );
+            <div
+              hidden={activeTab !== "overview"}
+              className="package-overview bg-white p-4 px-5 rounded shadow"
+              dangerouslySetInnerHTML={{
+                __html: coursePackage.content || "",
+              }}
+            />
 
-                  return (
-                    <div
-                      key={section.id}
-                      className="border border-cyan-100 rounded-xl overflow-hidden bg-white shadow-[0_2px_10px_rgba(5,16,31,0.04)]"
+            <div
+              className="_curriculum flex flex-col gap-4"
+              hidden={activeTab !== "curriculum"}
+            >
+              {coursePackage.curriculum?.map((section, sIdx) => {
+                const isSectionOpen = openSections.has(section.id);
+                const topicCount = section.subSections.reduce(
+                  (acc, sub) => acc + sub.topics.length,
+                  0,
+                );
+
+                return (
+                  <div
+                    key={section.id}
+                    className="border border-cyan-100 rounded-xl overflow-hidden bg-white shadow-[0_2px_10px_rgba(5,16,31,0.04)]"
+                  >
+                    {/* ── Section header ── */}
+                    <button
+                      onClick={() => toggleSection(section.id)}
+                      className={`w-full flex justify-between items-center p-4 cursor-pointer transition-colors ${
+                        isSectionOpen
+                          ? "bg-linear-to-r from-cyan-900 to-cyan-800"
+                          : "bg-white"
+                      }`}
                     >
-                      {/* ── Section header ── */}
-                      <button
-                        onClick={() => toggleSection(section.id)}
-                        className={`w-full flex justify-between items-center p-4 cursor-pointer transition-colors ${
-                          isSectionOpen
-                            ? "bg-linear-to-r from-cyan-900 to-cyan-800"
-                            : "bg-linear-to-r from-cyan-900 to-cyan-800 hover:bg-cyan-50/60"
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`flex items-center justify-center w-7 h-7 rounded-lg text-[12px] font-bold bg-amber-500 text-cyan-950`}
+                        >
+                          {sIdx + 1}
+                        </span>
+                        <div className="flex flex-col items-start">
                           <span
-                            className={`flex items-center justify-center w-7 h-7 rounded-lg text-[12px] font-bold bg-amber-500 text-cyan-950`}
+                            className={`font-semibold text-sm  ${isSectionOpen ? "text-white" : "text-cyan-950"} `}
                           >
-                            {sIdx + 1}
-                          </span>
-                          <span className={`font-semibold text-sm text-white`}>
                             {section.title}
                           </span>
                           <span
-                            className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
-                              isSectionOpen
-                                ? "bg-white/10 text-amber-300"
-                                : "bg-cyan-50 text-cyan-700"
+                            className={`text-[11px]  py-0.5  font-medium ${
+                              isSectionOpen ? "text-amber-300" : " text-amber-700"
                             }`}
                           >
                             {section.subSections.length} sub-section
@@ -630,84 +672,84 @@ export function CoursePackageInfo({
                             {topicCount} topic{topicCount > 1 ? "s" : ""}
                           </span>
                         </div>
+                      </div>
 
-                        <BiChevronDown
-                          className={`w-5 h-5 shrink-0 transition-transform duration-300 ${
-                            isSectionOpen
-                              ? "rotate-180 text-amber-400"
-                              : "text-cyan-700"
-                          }`}
-                        />
-                      </button>
+                      <BiChevronDown
+                        className={`w-5 h-5 shrink-0 transition-transform duration-300 ${
+                          isSectionOpen
+                            ? "rotate-180 text-amber-400"
+                            : "text-cyan-700"
+                        }`}
+                      />
+                    </button>
 
-                      {/* ── Subsections ── */}
-                      {isSectionOpen && (
-                        <div className="divide-y divide-cyan-50 bg-cyan-50/20">
-                          {section.subSections.map((sub) => {
-                            const isSubOpen = openSubSections.has(sub.id);
+                    {/* ── Subsections ── */}
+                    {isSectionOpen && (
+                      <div className="divide-y divide-cyan-50 bg-cyan-50/20">
+                        {section.subSections.map((sub) => {
+                          const isSubOpen = openSubSections.has(sub.id);
 
-                            return (
-                              <div key={sub.id}>
-                                <button
-                                  onClick={() => toggleSubSection(sub.id)}
-                                  className="w-full flex justify-between items-center py-3 pl-6 pr-4 hover:bg-white cursor-pointer transition-colors group"
-                                >
-                                  <div className="flex items-center gap-2.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
-                                    <span className="text-[13px] font-medium text-amber-700 group-hover:text-cyan-900 text-left">
-                                      {sub.title}
-                                    </span>
-                                    <span className="text-[11px] text-gray-400">
-                                      ({sub.topics.length})
-                                    </span>
-                                  </div>
-                                  <BiChevronDown
-                                    className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
-                                      isSubOpen
-                                        ? "rotate-180 text-amber-600"
-                                        : "text-gray-400"
-                                    }`}
-                                  />
-                                </button>
+                          return (
+                            <div key={sub.id}>
+                              <button
+                                onClick={() => toggleSubSection(sub.id)}
+                                className="w-full flex justify-between items-center py-3 pl-6 pr-4 hover:bg-white cursor-pointer transition-colors group"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                                  <span className="text-[13px] lg:text-[15px] font-medium text-amber-700 group-hover:text-cyan-900 text-left">
+                                    {sub.title}
+                                  </span>
+                                  <span className="text-[11px] text-gray-400">
+                                    ({sub.topics.length})
+                                  </span>
+                                </div>
+                                <BiChevronDown
+                                  className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
+                                    isSubOpen
+                                      ? "rotate-180 text-amber-600"
+                                      : "text-gray-400"
+                                  }`}
+                                />
+                              </button>
 
-                                {/* ── Topics ── */}
-                                {isSubOpen && (
-                                  <div className="pl-11 pr-4 pb-4 flex flex-col gap-3">
-                                    {sub.topics.map((topic) => {
-                                      return (
-                                        <div
-                                          key={topic.id}
-                                          className="flex flex-col gap-1"
-                                        >
-                                          <div className="flex justify-between items-center text-[12px] border-b border-b-gray-200">
-                                            <span className="text-gray-600">
-                                              {topic.title}
-                                            </span>
-                                            <span className="text-amber-700 font-semibold pb-2">
-                                              {topic.weightage === "NA"
-                                                ? " RARE"
-                                                : topic.weightage}
-                                            </span>
-                                          </div>
+                              {/* ── Topics ── */}
+                              {isSubOpen && (
+                                <div className="pl-11 pr-4 pb-4 flex flex-col gap-3">
+                                  {sub.topics.map((topic) => {
+                                    return (
+                                      <div
+                                        key={topic.id}
+                                        className="flex flex-col gap-1"
+                                      >
+                                        <div className="flex justify-between items-center text-[12px] border-b border-b-gray-200">
+                                          <span className="text-gray-600">
+                                            {topic.title}
+                                          </span>
+                                          <span className="text-amber-700 font-semibold pb-2">
+                                            {topic.weightage === "NA"
+                                              ? " RARE"
+                                              : topic.weightage}
+                                          </span>
                                         </div>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
-            {activeTab === "instructor" && (
+            <div hidden={activeTab !== "instructor"}>
               <InstructorSection teachers={coursePackage.teachers || []} />
-            )}
+            </div>
             {/* {activeTab === "reviews" && (
               <ContentSectionPlaceholder title="Reviews" />
             )} */}
