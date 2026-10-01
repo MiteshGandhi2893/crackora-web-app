@@ -117,15 +117,7 @@ export function PreviousPaperMegaMenu({ onClose }: { onClose?: () => void }) {
                   <span className="text-[13px] font-semibold">
                     {entrance.name}
                   </span>
-                  <span
-                    className={`text-[10px] rounded-full px-1.5 py-0.5 font-semibold flex-shrink-0 ${
-                      isSelected
-                        ? "bg-white/20 text-white"
-                        : "bg-amber-50 text-amber-600"
-                    }`}
-                  >
-                    {entrance.total_papers}
-                  </span>
+              
                 </button>
               );
             })}
@@ -172,7 +164,7 @@ export function PreviousPaperMegaMenu({ onClose }: { onClose?: () => void }) {
 
                 <div className="flex-1 min-w-0 ">
                   <p
-                    className="text-[12px] font-semibold text-gray-500 transition-colors text-wrap text-center"
+                    className="text-[12px] font-semibold text-green-600 transition-colors text-wrap text-center"
                     data-examcard-title={paperExam.paper_title}
                   >
                     {paperExam.paper_count} Papers

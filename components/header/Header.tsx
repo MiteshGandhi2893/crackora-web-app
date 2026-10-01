@@ -99,7 +99,7 @@ export function Header() {
             className="fixed inset-0 bg-black/70 z-30"
             onClick={() => setOpenExams(false)}
           ></div>
-          <div className="fixed top-32 left-1/2 -translate-x-1/2 z-40 bg-white border border-gray-200 shadow-2xl rounded-b-md transition-all duration-200 w-[70%]">
+          <div className="fixed top-32 left-1/2 -translate-x-1/2 z-40 bg-white border border-gray-200 shadow-2xl rounded-b-md transition-all duration-200 lg:w-[75%]">
             <MegaExamInfoMenu onClose={() => setOpenExams(false)} />
           </div>
         </>
@@ -111,7 +111,7 @@ export function Header() {
             className="fixed inset-0 bg-black/70 z-30"
             onClick={() => setOpenPackage(false)}
           ></div>
-          <div className="fixed top-32 left-1/2 -translate-x-1/2 z-40 bg-white border border-gray-200 shadow-2xl rounded-b-md transition-all duration-200 w-[70%]">
+          <div className="fixed top-32 left-1/2 -translate-x-1/2 z-40 bg-white border border-gray-200 shadow-2xl rounded-b-md transition-all duration-200 lg:w-[75%] ">
             <PackageMegaMenu onClose={() => setOpenPackage(false)} />
           </div>
         </>
@@ -123,7 +123,7 @@ export function Header() {
             className="fixed inset-0 bg-black/70 z-30"
             onClick={() => setOpenPaperSets(false)}
           ></div>
-          <div className="fixed top-32 left-1/2 -translate-x-1/2 z-40 bg-white border border-gray-200 shadow-2xl rounded-b-md transition-all duration-200 w-[70%]">
+          <div className="fixed top-32 left-1/2 -translate-x-1/2 z-40 bg-white border border-gray-200 shadow-2xl rounded-b-md transition-all duration-200 lg:w-[75%] ">
             <PreviousPaperMegaMenu onClose={() => setOpenPaperSets(false)} />
           </div>
         </>

@@ -157,7 +157,7 @@ export function PackageMegaMenu({ onClose }: { onClose?: () => void }) {
       </div>
 
       {/* Body: sidebar + tabbed grid */}
-      <div className="flex flex-col sm:flex-row max-h-[70vh] my-5">
+      <div className="flex flex-col sm:flex-row gap-5 max-h-[70vh] my-5">
         {/* Sidebar: entrances */}
         <div className="sm:w-56 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-300 bg-[#faf9f7]">
           <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-auto sm:max-h-[70vh] p-2 gap-1">
@@ -244,7 +244,7 @@ export function PackageMegaMenu({ onClose }: { onClose?: () => void }) {
             )}
 
             {!loading && items.length > 0 && (
-              <div className="flex flex-wrap gap-5">
+              <div className="flex flex-wrap gap-8 ">
                 {items.map((pkg) => (
                   <button
                     key={pkg.id}

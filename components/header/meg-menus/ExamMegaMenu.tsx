@@ -84,7 +84,6 @@ export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
 
       {/* Body: sidebar + grid */}
       <div className="flex flex-col sm:flex-row max-h-[70vh] my-5">
-        {/* Sidebar */}
         <div className="sm:w-50 shrink-0 border-b sm:border-b-0 sm:border-r border-gray-300 bg-[#faf9f7]">
           <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-auto sm:max-h-[70vh] p-2 gap-1">
             {entrances.map((entrance) => {
@@ -168,7 +167,7 @@ export function MegaExamInfoMenu({ onClose }: { onClose?: () => void }) {
                   {exam.description || "Syllabus, mock tests & analytics"}
                 </p>
               </div>
-              <span className="text-[13px] text-amber-600">View More</span>
+              <span className="text-[13px] bg-amber-600 border px-2 rounded shadow border-amber-400">View More</span>
             </button>
           ))}
         </div>
