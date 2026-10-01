@@ -36,7 +36,7 @@ export function PaperListCard({ className = "" }: { className?: string }) {
   }, []);
 
   return (
-    <div className="flex flex-col mt-5 max-h-60 overflow-y-auto">
+    <div className="flex flex-col mt-5 max-h-70 overflow-y-auto">
       {entrances.map((entrance, index) => {
         return (
           <div key={index} className="text-amber-500 text-[14px]">

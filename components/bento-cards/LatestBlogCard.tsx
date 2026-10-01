@@ -64,7 +64,7 @@ export function LatestBlogCard({ className = "" }: { className?: string }) {
         <span className="text-[13.5px] text-stone-600/80 font-roboto">
           {latestBlog.excerpt}
         </span>
-        <span className="items-center gap-1 w-fit px-2 py-1 text-sm font-medium bg-amber-600 group-hover:gap-2 transition-all">
+        <span className="items-center gap-1 w-fit px-2 py-1 text-sm font-medium bg-amber-600 group-hover:gap-2 transition-all text-white">
           View {latestBlog.schema_type}
         </span>
       </div>

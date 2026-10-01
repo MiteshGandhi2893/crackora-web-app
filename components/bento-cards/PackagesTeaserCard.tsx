@@ -39,13 +39,13 @@ export function PackagesTeaserCard({ className = "" }: { className?: string }) {
   return (
     <div
       id="courses-packages"
-      className={`relative overflow-hidden rounded-3xl border border-white/30 bg-white/4 backdrop-blur-xl p-5 scroll-mt-24 flex flex-col ${className} `}
+      className={`relative overflow-hidden rounded-3xl border px-5 border-white/30 bg-white/4 backdrop-blur-xl 5 scroll-mt-24 flex flex-col ${className} `}
     >
       <div className="mb-4">
         {/* <span className="text-[10px] tracking-[0.14em] uppercase text-cyan-300/70 font-medium">
           What courses we have
         </span> */}
-        <h2 className="mt-1 font-roboto text-base font-bold text-amber-500">
+        <h2 className=" font-roboto text-base font-bold text-amber-500 ml-5 mt-5">
           Top picks from students
         </h2>
       </div>
@@ -68,10 +68,10 @@ export function PackagesTeaserCard({ className = "" }: { className?: string }) {
             loop={packages.length > 1}
             pagination={{ clickable: true, el: ".ptc-pag" }}
             slidesPerView={1}
-            className="w-65"
+            className="w-60"
           >
             {packages.map((pkg) => (
-              <SwiperSlide key={pkg.id} className="!w-full">
+              <SwiperSlide key={pkg.id} className="!w-full shadow rounded">
                 <button
                   onClick={() => handlePackageClick(pkg)}
                   className="group block w-full bg-amber-50 border border-amber-600/20 overflow-hidden hover:border-amber-400 hover:-translate-y-0.5 transition-all duration-300"

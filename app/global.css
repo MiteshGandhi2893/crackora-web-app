@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@400;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
 @import "tailwindcss";
 @source "../components/**/*.{js,ts,jsx,tsx}";
 @source "../app/**/*.{js,ts,jsx,tsx}";
@@ -89,6 +90,8 @@ body {
     margin: 0 0 1rem;
     padding: 0;
     text-align: inherit;
+    font-size: .9rem;
+    font-family: "Poppins", sans-serif;
   }
 
   :is(.exam-content, .blog-content, .package-overview) > :first-child {
@@ -107,8 +110,8 @@ body {
   }
 
   :is(.exam-content, .blog-content, .package-overview) h2 {
-    font-size: 1.65rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 500;
     color: var(--rt-amber-dark);
     padding-bottom: 0.4rem;
     border-bottom: 2px solid rgba(217, 112, 5, 0.35);

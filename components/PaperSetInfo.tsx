@@ -673,7 +673,7 @@ export function PaperSetInfo({ paperSet }: { paperSet: PaperSet }) {
         {/* Exam content + FAQ */}
         <main className="bg-white border border-gray-200 rounded-2xl shadow-sm px-5 py-6 sm:px-8 sm:py-8 w-full">
           <div
-            className="exam-content prose max-w-none prose-headings:text-cyan-900"
+            className="package-overview  bg-white p-4 px-5 rounded shadow"
             dangerouslySetInnerHTML={{ __html: paperSet?.content || "" }}
           />
         </main>
