@@ -6,7 +6,7 @@ export function Logo() {
          <div className="flex items-center">
             <Link href={"/"}>
               <div className="flex  items-center justify-center">
-                <div className="relative w-10 h-10  justify-end">
+                <div className="relative sm:w-10 sm:h-10 w-8 h-8  justify-end">
                   <Image
                     src="/monogram.svg"
                     alt="Crackora logo"
@@ -14,7 +14,7 @@ export function Logo() {
                     priority
                   />
                 </div>
-                <div className="relative sm:w-38 sm:h-15 w-35 h-15">
+                <div className="relative sm:w-38 sm:h-15 w-28 h-10">
                   <Image
                     src="/brand-name-slogan.svg"
                     alt="Crackora logo"

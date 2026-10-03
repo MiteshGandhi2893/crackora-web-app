@@ -1,13 +1,10 @@
 'use client';
 
+import { BlogPaginationProps } from '@/interfaces/blog.interface';
 import { useRouter } from 'next/navigation';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 
-interface BlogPaginationProps {
-  page: number;
-  totalPages: number;
-  searchParams: Record<string, string>;
-}
+
 
 export default function BlogPagination({
   page,

@@ -75,7 +75,7 @@ export default function Page() {
       </div>
 
       {/* CONTENT */}
-      <div className="relative max-w-6xl mx-auto px-4 py-10 min-h-screen flex flex-col">
+      <div className="relative lg:max-w-6xl sm:max-w-3xl mx-auto px-4 py-10 min-h-screen flex flex-col">
         {/* ───────── Banner ───────── */}
 
         {/* Calendar */}

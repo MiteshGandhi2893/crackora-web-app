@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 // ✅ FIXED: MobileMenu updates instantly on logout (Dashboard removed)
+// ✅ ADDED: Packages submenu (entrance -> package type -> package), mirrors Exams
+// ✅ ADDED: Previous Papers submenu (entrance -> papers), mirrors Exams/Courses
 
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -16,6 +18,16 @@ import { useAuth } from "@/providers/AuthProvider";
 import { LoginStatus } from "../app-buttons/login-button";
 import { getCachedExams } from "@/services/EntranceCache";
 
+import { MenuPackage, PackageCategory } from "@/interfaces/CoursePackage.interface";
+import { paperSetService } from "@/services/previouspaperset.service";
+import {
+  Entrance as PaperEntrance,
+  PaperExamForMenu,
+  PaperExam,
+} from "@/interfaces/papersets.interface";
+
+
+
 export function MobileMenu({
   open,
   onClose,
@@ -28,8 +40,18 @@ export function MobileMenu({
 
   const [openLevel1, setOpenLevel1] = useState<string | null>(null);
   const [openLevel2, setOpenLevel2] = useState<string | null>(null);
+
   const [entrances, setEntrances] = useState<any[]>([]);
   const [examsLoaded, setExamsLoaded] = useState(false);
+
+  const [packages, setPackages] = useState<MenuPackage[]>([]);
+  const [packagesLoaded, setPackagesLoaded] = useState(false);
+
+  const [paperSets, setPaperSets] = useState<Record<string, PaperExamForMenu>>(
+    {},
+  );
+  const [paperEntrances, setPaperEntrances] = useState<PaperEntrance[]>([]);
+  const [papersLoaded, setPapersLoaded] = useState(false);
 
   // ✅ reset accordion on close OR logout
   useEffect(() => {
@@ -46,10 +68,31 @@ export function MobileMenu({
     return items;
   }, [user?.username]); // ✅ FIX
 
+ 
+
+  // Groups paper sets into entrance -> [paper leaves], mirrors buildPackageEntrances
+  const buildPaperEntrances = (
+    sets: Record<string, PaperExamForMenu>,
+    ents: PaperEntrance[],
+  ): Menu[] =>
+    ents.map((entrance) => ({
+      id: entrance.id,
+      label: entrance.name,
+      subMenu: (sets[entrance.id]?.paperExams ?? []).map(
+        (paperExam: PaperExam) =>
+          ({
+            id: paperExam.slug,
+            label: paperExam.paper_title,
+            slug: paperExam.slug,
+            imageIcon: paperExam.exam_icon,
+          }) as Menu,
+      ),
+    }) as Menu);
+
   const menu: Menu[] = useMemo(() => {
     const cloned: Menu[] = JSON.parse(JSON.stringify(baseItems));
-    const examsMenu = cloned.find((item) => item.label === "Exams");
 
+    const examsMenu = cloned.find((item) => item.label === "Exams");
     if (examsMenu && entrances.length) {
       examsMenu.subMenu = entrances.map((entrance: any) => ({
         label: entrance.title,
@@ -65,14 +108,32 @@ export function MobileMenu({
       }));
     }
 
+    const papersMenu = cloned.find((item) => item.label === "Previous Papers");
+    if (papersMenu && paperEntrances.length) {
+      papersMenu.subMenu = buildPaperEntrances(paperSets, paperEntrances);
+    }
+
     return cloned;
-  }, [baseItems, entrances]);
+  }, [baseItems, entrances, packages, paperSets, paperEntrances]);
 
   const handleMenuClick = async (item: Menu) => {
     if (item.label === "Exams" && !examsLoaded) {
       const data = await getCachedExams();
       setEntrances(data ?? []);
       setExamsLoaded(true);
+    }
+
+    // if (item.label === "Courses" && !packagesLoaded) {
+    //   const packages = await packageService.getActiveForMenu();
+    //   setPackages(packages);
+    //   setPackagesLoaded(true);
+    // }
+
+    if (item.label === "Previous Papers" && !papersLoaded) {
+      const res = await paperSetService.getAll();
+      setPaperSets(res.paperSets ?? {});
+      setPaperEntrances(res.entrances ?? []);
+      setPapersLoaded(true);
     }
 
     if (item.label === "Dashboard") {
@@ -86,7 +147,10 @@ export function MobileMenu({
     }
 
     const hasSubMenu =
-      !!item.subMenu?.length || item.label === "Exams";
+      !!item.subMenu?.length ||
+      item.label === "Exams" ||
+      item.label === "Courses" ||
+      item.label === "Previous Papers";
 
     if (hasSubMenu) {
       setOpenLevel1((prev) => (prev === item.id ? null : item.id));
@@ -101,77 +165,119 @@ export function MobileMenu({
     onClose();
   };
 
-  const renderMenu = (items: Menu[]) =>
-    items.map((item) => {
-      const hasSubMenu =
-        !!item.subMenu?.length || item.label === "Exams";
-      const isOpen = openLevel1 === item.id;
+  // rootLabel tells Level3 which route/behavior to use ("Exams" vs "Packages" vs "Previous Papers")
+ const renderMenu = (items: Menu[], rootLabel?: string) =>
+  items.map((item) => {
+    const isCourse = item.label === "Courses";
 
-      return (
-        <div key={item.id}>
-          {/* Level 1 */}
-          <div
-            className={`flex justify-between items-center py-3 px-1 cursor-pointer border-b border-[#f0ede6]
-              ${isOpen ? "text-amber-600" : "text-cyan-950/80 hover:text-amber-600"}`}
-            onClick={() => handleMenuClick(item)}
-          >
-            <span className="flex items-center gap-2 text-sm font-semibold">
-              {item.icon && (
-                <item.icon className="w-4 h-4 text-amber-700 opacity-80" />
-              )}
-              <span>{item.label}</span>
-            </span>
+    // Don't render Courses
+    if (isCourse) {
+      return null;
+    }
 
-            {hasSubMenu &&
-              (isOpen ? (
-                <BiCaretDown className="w-4 h-4 text-amber-500" />
-              ) : (
-                <BiCaretRight className="w-4 h-4 text-[#05101f]/30" />
-              ))}
-          </div>
+    const hasSubMenu =
+      !!item.subMenu?.length ||
+      item.label === "Exams" ||
+      item.label === "Previous Papers";
 
-          {/* Level 2 */}
-          {item.subMenu && isOpen &&
-            item.subMenu.map((subItem) => {
-              const hasChild = !!subItem.subMenu?.length;
-              const subOpen = openLevel2 === subItem.id;
+    const isOpen = openLevel1 === item.id;
+    const currentRoot = rootLabel ?? item.label;
 
-              return (
-                <div key={subItem.id}>
-                  <div
-                    className={`flex items-center justify-between pl-5 pr-1 py-2.5 cursor-pointer border-b border-[#f0ede6]
-                      ${subOpen ? "text-cyan-950" : "text-[#05101f]/55 hover:text-amber-600"}`}
-                    onClick={() =>
-                      hasChild && setOpenLevel2(subOpen ? null : subItem.id)
-                    }
-                  >
-                    <span className="text-[13px] font-medium">
-                      {subItem.label}
-                    </span>
+    return (
+      <div key={item.id}>
+        {/* Level 1 */}
+        <div
+          className={`flex justify-between items-center py-3 px-1 cursor-pointer border-b border-[#f0ede6]
+            ${
+              isOpen
+                ? "text-amber-600"
+                : "text-cyan-950/80 hover:text-amber-600"
+            }`}
+          onClick={() => handleMenuClick(item)}
+        >
+          <span className="flex items-center gap-2 text-sm font-semibold">
+            {item.icon && (
+              <item.icon className="w-4 h-4 text-amber-700 opacity-80" />
+            )}
+            <span>{item.label}</span>
+          </span>
 
-                    {hasChild &&
-                      (subOpen ? (
-                        <BiCaretDown className="w-3.5 h-3.5 text-cyan-950" />
-                      ) : (
-                        <BiCaretRight className="w-3.5 h-3.5 text-[#05101f]/30" />
-                      ))}
-                  </div>
+          {hasSubMenu &&
+            (isOpen ? (
+              <BiCaretDown className="w-4 h-4 text-amber-500" />
+            ) : (
+              <BiCaretRight className="w-4 h-4 text-[#05101f]/30" />
+            ))}
+        </div>
 
-                  {/* Level 3 */}
+        {/* Level 2 */}
+        {item.subMenu &&
+          isOpen &&
+          item.subMenu.map((subItem) => {
+            const hasChild = !!subItem.subMenu?.length;
+            const subOpen = openLevel2 === subItem.id;
+
+            return (
+              <div key={subItem.id}>
+                <div
+                  className={`flex items-center justify-between pl-5 pr-1 py-2.5 cursor-pointer border-b border-[#f0ede6]
+                    ${
+                      subOpen
+                        ? "text-cyan-950"
+                        : "text-[#05101f]/55 hover:text-amber-600"
+                    }`}
+                  onClick={() =>
+                    hasChild &&
+                    setOpenLevel2(subOpen ? null : subItem.id)
+                  }
+                >
+                  <span className="text-[13px] font-medium">
+                    {subItem.label}
+                  </span>
+
                   {hasChild &&
-                    subOpen &&
-                    subItem.subMenu!.map((lastItem) => (
+                    (subOpen ? (
+                      <BiCaretDown className="w-3.5 h-3.5 text-cyan-950" />
+                    ) : (
+                      <BiCaretRight className="w-3.5 h-3.5 text-[#05101f]/30" />
+                    ))}
+                </div>
+
+                {/* Level 3 */}
+                {hasChild &&
+                  subOpen &&
+                  subItem.subMenu!.map((lastItem) => (
+                    <div key={lastItem.id}>
+                      {/* Non-clickable divider for package-type groups */}
+                      {(lastItem as any).groupLabel && (
+                        <div className="pl-9 pr-3 pt-3 pb-1 text-[10px] font-bold tracking-[0.14em] uppercase text-cyan-900/50">
+                          {(lastItem as any).groupLabel}
+                        </div>
+                      )}
+
                       <div
-                        key={lastItem.id}
                         onClick={() => {
-                          router.push(`/exam-info/${lastItem.slug}`);
+                          if (currentRoot === "Courses") {
+                            router.push(`/packages/${lastItem.slug}`);
+                          } else if (
+                            currentRoot === "Previous Papers"
+                          ) {
+                            router.push(
+                              `/previous-paperset/${lastItem.slug}`
+                            );
+                          } else {
+                            router.push(`/exam-info/${lastItem.slug}`);
+                          }
+
                           onClose();
                         }}
                         className="flex items-center gap-3 pl-9 pr-3 py-2.5 border-b border-[#f0ede6] hover:bg-amber-50 cursor-pointer"
                       >
                         <div className="relative w-7 h-7 rounded-md overflow-hidden border bg-[#f8f7f4]">
                           <Image
-                            src={apiService.getPublicAsset(lastItem.imageIcon || "")}
+                            src={apiService.getPublicAsset(
+                              lastItem.imageIcon || ""
+                            )}
                             alt={lastItem.label}
                             fill
                             className="object-contain p-0.5"
@@ -182,14 +288,14 @@ export function MobileMenu({
                           {lastItem.label}
                         </span>
                       </div>
-                    ))}
-                </div>
-              );
-            })}
-        </div>
-      );
-    });
-
+                    </div>
+                  ))}
+              </div>
+            );
+          })}
+      </div>
+    );
+  });
   return (
     <div
       className={`
@@ -201,7 +307,7 @@ export function MobileMenu({
       <div className="flex items-center justify-between h-14 px-5 border-b">
         <Logo />
         <button onClick={onClose}>
-          <BiX className="w-5 h-5" />
+          <BiX className="w-8 h-8 text-amber-500 text-xl" />
         </button>
       </div>
 

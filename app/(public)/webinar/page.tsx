@@ -177,7 +177,7 @@ export default function WebinarPage() {
               style={{ top: s.top, left: s.left, width: s.w, height: s.w, opacity: s.opacity }} />
           ))}
         </div>
-        <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 sm:py-30">
+        <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-5 sm:px-8 sm:py-30">
           <div className="flex flex-wrap items-center gap-2 mb-5">
             <span className="text-amber-600 text-[11px] font-bold tracking-widest uppercase border border-amber-200 bg-amber-50 px-2.5 py-1 rounded-full">
               FREE Webinar{upcoming.length > 1 ? "s" : ""}
@@ -201,7 +201,7 @@ export default function WebinarPage() {
 
       {/* Content */}
       <div className="bg-[#f8f7f4] min-h-[calc(100vh-220px)]">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
+        <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
 
           {/* No upcoming */}
           {!hasUpcoming && (

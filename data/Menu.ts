@@ -1,11 +1,17 @@
 import { Menu } from "@/interfaces/menu.interface";
-import { BiSolidSpreadsheet, BiUser } from "react-icons/bi";
+import { BiFile, BiSolidSpreadsheet, BiUser } from "react-icons/bi";
 import { TbToolsOff } from "react-icons/tb";
 import { RiMindMap } from "react-icons/ri";
 import { BsChatLeftText } from "react-icons/bs";
-import { MdOutlineOndemandVideo } from "react-icons/md"; // 👈 new icon
+import { BiDice4 } from "react-icons/bi";
 
 export const baseMenu: Menu[] = [
+  {
+    id: "courses",
+    label: "Courses",
+    href: "#",
+    icon: BiDice4,
+  },
   {
     id: "exams",
     label: "Exams",
@@ -13,17 +19,18 @@ export const baseMenu: Menu[] = [
     icon: BiSolidSpreadsheet,
   },
   {
-    id: "mca-roadmap",
-    label: "MCA Roadmap",
-    href: "/mca-journey",
-    icon: RiMindMap,
+    id: "papers",
+    label: "Previous Papers",
+    href: "#",
+    icon: BiFile,
   },
   {
     id: "free-tools",
-    label: "MCA Tools",
+    label: "Tools",
     href: "/tools/college",
     icon: TbToolsOff,
   },
+  
   // {
   //   id: "webinars",             // 👈 NEW
   //   label: "Webinars",

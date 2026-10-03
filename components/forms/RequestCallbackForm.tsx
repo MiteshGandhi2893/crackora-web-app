@@ -5,7 +5,13 @@ import { emailService } from "@/services/email.service";
 import { useLoader } from "@/providers/LoadingProvider";
 import { useSnackbar } from "@/providers/SnackbarProvider";
 
-export function RequestCallback() {
+
+interface RequestCallbackProps {
+  sourcePage: "exam-info" | "paperset";
+  sourceSlug: string;
+}
+
+export function RequestCallback({ sourcePage, sourceSlug }: RequestCallbackProps) {
   const { showLoader, hideLoader } = useLoader();
   const { showMessage } = useSnackbar();
 
@@ -24,7 +30,7 @@ export function RequestCallback() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -34,7 +40,8 @@ export function RequestCallback() {
     e.preventDefault();
     const newErrors: any = {};
 
-    if (!formData.fullname.trim()) newErrors.fullname = "Full Name is required.";
+    if (!formData.fullname.trim())
+      newErrors.fullname = "Full Name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Enter a valid email address.";
@@ -46,7 +53,12 @@ export function RequestCallback() {
     if (Object.keys(newErrors).length > 0) return;
 
     showLoader();
-    const res = await emailService.sendCallbackEmail(formData);
+    const res = await emailService.sendCallbackEmail({
+      ...formData,
+      sourcePage,
+      sourceSlug,
+      sourceUrl: typeof window !== "undefined" ? window.location.href : "",
+    });
     hideLoader();
 
     if (res.data?.success) {
@@ -98,7 +110,9 @@ export function RequestCallback() {
 
         {/* Phone */}
         <div className="flex flex-col gap-1">
-          <label className="text-cyan-950 text-sm opacity-80">Phone Number</label>
+          <label className="text-cyan-950 text-sm opacity-80">
+            Phone Number
+          </label>
           <div className="flex w-full gap-2 items-center">
             <span className="text-sm text-amber-600 font-medium">+91</span>
             <input
