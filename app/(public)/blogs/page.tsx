@@ -120,12 +120,12 @@ export default async function BlogListPage({ searchParams }: PageProps) {
 
   // FIX: apiService returns { success, data } where data IS the backend response
   // backend sends { blogs, total, page, totalPages } — so read from res.data directly
-  const blogs = res.success ? (res.data?.blogs ?? []) : [];
-  const total = res.success ? (res.data?.total ?? 0) : 0;
-  const totalPages = res.success ? (res.data?.totalPages ?? 1) : 1;
+  const blogs = res.blogs || [];
+  const total = res.total ||  0;
+  const totalPages = res.totalPages || 1;
 
   return (
-    <main className=" min-h-screen bg-white mt-10">
+    <main className=" min-h-screen bg-white my-30">
       {/* Hero */}
       <section className="relative bg-cyan-900 py-14 px-4 text-white text-center">
         <div className="pointer-events-none absolute inset-0">
@@ -174,7 +174,7 @@ export default async function BlogListPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto px-4 py-12">
         {/* Filters — Suspense needed because BlogFilters uses useSearchParams inside */}
         <Suspense fallback={<div className="h-20" />}>
           <BlogFilters currentTag={tag} currentSearch={search} />

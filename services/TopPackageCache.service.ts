@@ -1,16 +1,22 @@
-import { CoursePackage } from "@/interfaces/CoursePackage.interface";
+import { MenuPackage } from "@/interfaces/CoursePackage.interface";
 import { packageService } from "./courses.service";
 
-let cache: CoursePackage[] | null = null;
-let inflight: Promise<CoursePackage[]> | null = null;
+let cache: MenuPackage[] | null = null;
+let inflight: Promise<MenuPackage[]> | null = null;
 
-export async function getCachedPackages(): Promise<CoursePackage[]> {
+export async function getCachedPackages(): Promise<MenuPackage[]> {
   if (cache) return cache;
   if (inflight) return inflight;
-  inflight = packageService.getPackages().then((data) => {
-    cache = data;
-    inflight = null;
-    return data;
-  });
+
+  inflight = packageService
+    .getActiveTopPackages()
+    .then((data) => {
+      cache = data;
+      return data;
+    })
+    .finally(() => {
+      inflight = null;
+    });
+
   return inflight;
 }

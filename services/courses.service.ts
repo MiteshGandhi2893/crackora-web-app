@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { apiService } from "./api.service";
+import { apiService, unwrap } from "./api.service";
 import { Entrance } from "../interfaces/entrance-interface";
 import {
   CoursePackage,
   MenuPackage,
-  PackageType,
 } from "@/interfaces/CoursePackage.interface";
-
-export type { PackageType, MenuPackage };
 
 // ─── Normalizes a raw API package row: flattens metadata JSONB onto
 // the top level so CoursePackage.level / .curriculum / .total_tests
@@ -40,8 +37,8 @@ function normalizePackage(raw: any): CoursePackage {
 // Only the fields relevant to the selected type are sent; switching types
 // on the frontend and saving will replace metadata with the new type's shape.
 function buildMetadata(data: CoursePackage): Record<string, unknown> {
-  switch (data.package_type) {
-    case "course":
+  switch (data.category) {
+    case "self_study":
       return {
         level: data.level,
         language: data.language,
@@ -57,12 +54,13 @@ function buildMetadata(data: CoursePackage): Record<string, unknown> {
         file_format: data.file_format || "PDF",
         sample_link: data.sample_link || "",
       };
-    case "live":
+    case "live_course":
       return {
         batch_start_date: data.batch_start_date ?? null,
         total_sessions: data.total_sessions ?? null,
         session_duration_minutes: data.session_duration_minutes ?? null,
         seats_available: data.seats_available ?? null,
+        what_you_will_get: data.what_you_will_get || [],
         mode: data.mode || "Online",
         schedule_note: data.schedule_note || "",
       };
@@ -78,16 +76,14 @@ function buildMetadata(data: CoursePackage): Record<string, unknown> {
       return {};
   }
 }
-
 // ─── Shared FormData builder for create/update ──────────────────────
 function buildFormData(data: CoursePackage): FormData {
   const formData = new FormData();
 
-  formData.append("package_type", data.package_type);
+  formData.append("package_type", data.category);
   formData.append("title", data.title || data.course_name || "");
   formData.append("entrance_id", data.entrance_id);
   formData.append("entrance_name", String(data.entrance_name ?? ""));
-  formData.append("facility", data.facility || "Online Course");
   formData.append("course_name", data.course_name);
   formData.append("description", data.description || "");
   formData.append(
@@ -119,118 +115,105 @@ function buildFormData(data: CoursePackage): FormData {
 }
 
 // ─── Admin CRUD ───────────────────────────────────────────────────────
+// Every function returns the raw (normalized where relevant) payload and
+// throws on failure — no more { success, data } checking at the call site.
 export const coursePackageService = {
-  getAll: async (entrance_id?: string, page: number = 1, limit: number = 50) => {
+  getAll: async (
+    entrance_id?: string,
+    page: number = 1,
+    limit: number = 50,
+  ) => {
     const params = new URLSearchParams();
     if (entrance_id) params.append("entrance_id", entrance_id);
     params.append("page", page.toString());
     params.append("limit", limit.toString());
 
-    const response = await apiService.get<{
-      packages: CoursePackage[];
-      totalPages: number;
-      totalCount: number;
-      currentPage: number;
-    }>(`/course-packages?${params.toString()}`);
-
-    if (!response.success) return response;
+    const data = await unwrap(
+      apiService.get<{
+        packages: CoursePackage[];
+        totalPages: number;
+        totalCount: number;
+        currentPage: number;
+      }>(`/course-packages?${params.toString()}`),
+    );
 
     return {
-      ...response,
-      data: {
-        ...response.data,
-        packages: (response.data.packages || []).map(normalizePackage),
-      },
+      ...data,
+      packages: (data.packages || []).map(normalizePackage),
     };
   },
 
   getById: async (id: string) => {
-    const response = await apiService.get<CoursePackage>(
-      `/course-packages/${id}`,
+    const data = await unwrap(
+      apiService.get<CoursePackage>(`/course-packages/${id}`),
     );
-    if (!response.success) return response;
-    return { ...response, data: normalizePackage(response.data) };
+    return normalizePackage(data);
   },
 
   getBySlug: async (slug: string) => {
-    const response = await apiService.get<CoursePackage>(
-      `/course-packages/view/${slug}`,
+    const data = await unwrap(
+      apiService.get<CoursePackage>(`/course-packages/view/${slug}`),
     );
-    if (!response.success) return response;
-    return { ...response, data: normalizePackage(response.data) };
+    return normalizePackage(data);
   },
 
-  create: async (data: CoursePackage) =>
-    apiService.post<{ message: string; data: CoursePackage }>(
-      `/course-packages`,
-      buildFormData(data),
+  create: (data: CoursePackage) =>
+    unwrap(
+      apiService.post<{ message: string; data: CoursePackage }>(
+        `/course-packages`,
+        buildFormData(data),
+      ),
     ),
 
-  update: async (id: string, data: CoursePackage) =>
-    apiService.put<{ message: string; data: CoursePackage }>(
-      `/course-packages/${id}`,
-      buildFormData(data),
+  update: (id: string, data: CoursePackage) =>
+    unwrap(
+      apiService.put<{ message: string; data: CoursePackage }>(
+        `/course-packages/${id}`,
+        buildFormData(data),
+      ),
     ),
 
-  copyPackage: async (id: string) =>
-    apiService.post(`/course-packages/${id}/copy`, {}),
+  copyPackage: (id: string) =>
+    unwrap(apiService.post(`/course-packages/${id}/copy`, {})),
 
-  updateStatus: (id: string, isActive: boolean) => {
-    return apiService.put<{ message: string; data: CoursePackage }>(
-      `/course-packages/${id}/status`,
-      { isActive },
-    );
-  },
+  updateStatus: (id: string, isActive: boolean) =>
+    unwrap(
+      apiService.put<{ message: string; data: CoursePackage }>(
+        `/course-packages/${id}/status`,
+        { isActive },
+      ),
+    ),
 };
 
 // ─── Public-facing reads (nav menu, package detail page) ──────────────
 export const packageService = {
-  getCoursesByExam: async () => {
-    const response = await apiService.get("/coursesByExams");
-    if (!response.success) throw new Error(response.error);
-    return response.data as Entrance[];
-  },
+  getCoursesByExam: () => unwrap(apiService.get<Entrance[]>("/coursesByExams")),
 
   getPackages: async () => {
-    const response = await apiService.get("/course-packages");
-    if (!response.success) throw new Error(response.error);
-    if (!response.data?.success) throw new Error("Failed to fetch packages");
-    return (response.data.packages || []).map(normalizePackage);
+    const data = await unwrap<any>(apiService.get("/course-packages"));
+    return (data.packages || []).map(normalizePackage);
   },
 
   // Menu rows are intentionally lightweight (no metadata from the API),
   // so normalization is a no-op here — kept out on purpose for speed.
   getActiveForMenu: async () => {
-    const response = await apiService.get("/course-packages/menu");
-    if (!response.success) {
-      return {
-        success: false,
-        error: response.error,
-        status: response.status,
-      };
-    }
+    const data = await unwrap<{ packages: MenuPackage[] }>(
+      apiService.get("/course-packages/menu"),
+    );
+    return data.packages || [];
+  },
 
-    return {
-      success: true,
-      packages: response.data.packages as MenuPackage[],
-      status: response.status,
-    };
+  getActiveTopPackages: async () => {
+    const data = await unwrap<{ packages: any[] }>(
+      apiService.get("/course-packages/top-packages"),
+    );
+    return data.packages || [];
   },
 
   getPackageBySlug: async (slug: string) => {
-    const response = await apiService.get(`/course-packages/view/${slug}`);
-    if (!response.success) {
-      return {
-        success: false,
-        error: response.error,
-        status: response.status,
-      };
-    }
-
-    return {
-      success: true,
-      package: normalizePackage(response.data),
-      status: response.status,
-    };
+    const data = await unwrap<any>(
+      apiService.get(`/course-packages/view/${slug}`),
+    );
+    return normalizePackage(data);
   },
 };

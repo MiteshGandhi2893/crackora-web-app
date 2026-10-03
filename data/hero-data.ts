@@ -1,63 +1,30 @@
-// hero-data.ts
-// Crackora Hero data — single static hero + right-side image slider
+// data/bento-hero-data.ts
+// Copy + link data for the homepage bento hero. Kept separate from
+// the component so copy / CTAs are a one-file edit.
 
-// ─── Eyebrow ────────────────────────────────────────────────────────────
-export const eyebrow = {
-  label: "1-on-1 College Counselling & Career Mentorship",
-  cls: "border-amber-500/30 text-amber-700 bg-amber-100",
-};
-
-// ─── Static left-hand hero content ─────────────────────────────────────
-export const HERO_CONTENT = {
-  title: "India's Trusted Platform for Law & MCA Entrance",
-  titleAccent: "Law & MCA Entrance",
+export const THESIS_CONTENT = {
+  eyebrow: "MCA Entrance . career mentorship",
+  title: "Crack the exam.",
+  titleAccent: "We'll cover the rest of the journey.",
   description:
-    "Crack CLAT, NIMCET & top MCA entrance exams with expert mock tests, PYQs and 1-on-1 college & career guidance — all under one roof.",
-  secondaryBtn: {
-    label: "Talk to Counsellor Free",
-    href: "https://wa.me/919004782989?text=Hi+Crackora,+I+need+guidance+for+Law/MCA",
-  },
+    "Structured prep for MCA entrance exams, real course packages, and mentorship through college, academics and placement — from someone who's actually worked the roles you're aiming for.",
+  offerBadges: ["MCA Entrance",  "College Counselling", "MCA Academics", "Placement Prep"],
+  // Points at the packages card below, not a page that doesn't exist yet.
+  primaryCta: { label: "Try Free Mock Test", href: "#courses-packages" },
 };
 
-// ─── Exams (for entrance panel elsewhere) ──────────────────────────────
-export const EXAMS = [
-  { label: "NIMCET", color: "#f59e0b", desc: "NIT seats via NIMCET" },
-  { label: "MAH MCA\nCET", color: "#38bdf8", desc: "Maharashtra colleges" },
-  { label: "CUET PG\nMCA", color: "#a78bfa", desc: "Central universities" },
-  { label: "TANCET", color: "#34d399", desc: "Tamil Nadu colleges" },
-  { label: "IPU CET\nMCA", color: "#fb923c", desc: "IP University, Delhi" },
-  { label: "WB JECA", color: "#f472b6", desc: "West Bengal colleges" },
-] as const;
+export const JOURNEY_CONTENT = {
+  eyebrow: "Beyond the exam",
+  title: "The MCA journey",
+  description:
+    "College selection, academics and placement — with mentorship from someone who's worked the roles you're aiming for.",
+  mentor: { initials: "MS", name: "Mitesh Sir" },
+  cta: { label: "See the journey", href: "/mca-journey" },
+};
 
-// ─── Features (entrance panel elsewhere) ───────────────────────────────
-export const FEATURES = [
-  { title: "Mock Tests", icon: "📝" },
-  { title: "PYQ Bank", icon: "📚" },
-  { title: "Study Planner", icon: "📅" },
-  { title: "Doubt Solving", icon: "💡" },
-  { title: "Analytics", icon: "📊" },
-  { title: "Career Guidance", icon: "🎯" },
-] as const;
-
-// ─── Right-side image slider ───────────────────────────────────────────
-export interface RightImage {
-  id: string;
-  src: string;
-  alt: string;
-  href: string;
-}
-
-export const RIGHT_IMAGES: RightImage[] = [
-  {
-    id: "college-mentor",
-    src: "/college-counselling.png",
-    alt: "Azad Sir — MCA College Counselling Expert at Crackora",
-    href: "https://learn.crackora.com/learn/MCA-Counselling-Program--1-1-College-Guidance",
-  },
-  {
-    id: "guidance-mentor",
-    src: "/career-mentorship.png",
-    alt: "Mitesh Sir — MCA Career Mentorship Expert at Crackora",
-    href: "https://learn.crackora.com/learn/MCA-Success-Blueprint--1-to-1-Career-Mentorship-Program",
-  },
-];
+export const BLOG_CONTENT = {
+  eyebrow: "Free resource",
+  title: "Read the blog",
+  description: "Guides on exams, college selection and careers.",
+  cta: { label: "Browse articles", href: "/blog" },
+};

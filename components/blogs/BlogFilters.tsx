@@ -1,21 +1,12 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
+import { BlogFiltersProps, Tags } from '@/interfaces/blog.interface';
 import { tagService } from '@/services/Blog.service';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useState, useEffect } from 'react';
 import { BiSearch, BiWindowClose } from 'react-icons/bi';
 
-interface BlogFiltersProps {
-  currentTag?: string;
-  currentSearch?: string;
-  tags?: { name: string; slug: string }[];
-}
-
-interface Tags {
-  name: string;
-  slug: string;
-}
 
 
 
@@ -37,7 +28,7 @@ export default function   BlogFilters({
   useEffect(() => {
     const getTags = async() => {
         const res = await tagService.getTags();
-        setDefaultTags(res?.data?.tags)
+        setDefaultTags(res?.tags)
     }
     getTags();
 

@@ -381,308 +381,308 @@ const tracks: Track[] = [
       },
     ],
   },
-  {
-    id: "law",
-    label: "Law",
-    icon: "⚖️",
-    categories: [
-      {
-        label: "Legal Reasoning",
-        icon: "⚖️",
-        problems: [
-          {
-            q: "Principle: A person is guilty of theft if they dishonestly take movable property out of the possession of another without consent. Facts: Riya picks up an umbrella left behind by Meera at a café, genuinely believing it was abandoned, and takes it home. Is Riya guilty of theft?",
-            options: [
-              "Yes, she took property without consent",
-              "No, because she lacked dishonest intention",
-              "Yes, because the umbrella belonged to Meera",
-              "No, because it happened in a public place",
-            ],
-            answer: 1,
-            source: "CLAT 2023",
-            topic: "Legal Reasoning — Criminal Law",
-            difficulty: "Tricky",
-            avgTime: "80 sec",
-            crackTime: "20 sec",
-            steps: [
-              {
-                type: "read",
-                label: "Isolate the exact wording of the principle",
-                content:
-                  "The principle requires <strong>dishonest</strong> taking. 'Dishonest' is doing something intending to cause wrongful gain or wrongful loss. This one word is the entire hinge of the question — don't skip past it.",
-              },
-              {
-                type: "trap",
-                label: "The trap: focusing on 'without consent' only",
-                content:
-                  "Options A and C both use the fact that Meera didn't consent and the umbrella was hers — true, but incomplete. CLAT principle questions almost always have <em>two</em> conditions in the rule; missing one condition is the most common way students lose marks.",
-              },
-              {
-                type: "technique",
-                label: "The apply-strictly rule for CLAT legal reasoning",
-                content:
-                  "Never add facts, never drop conditions from the principle. Here: Riya <strong>genuinely believed</strong> the umbrella was abandoned — that directly negates 'dishonest intention'. Since one required element of the principle is missing, the principle cannot apply, regardless of what actually happened to the umbrella.",
-              },
-              {
-                type: "answer",
-                label: "Answer: B — No, because she lacked dishonest intention",
-                content:
-                  "Legal reasoning at CLAT is not about knowing real law — it's about applying the given principle mechanically, exactly as written. State of mind (mens rea) is the recurring theme in criminal law principle questions; always check it separately from the physical act.",
-              },
-            ],
-          },
-          {
-            q: "Principle: An agreement made under coercion is voidable at the option of the party whose consent was so obtained. Facts: X threatens to publicly leak Y's private photos unless Y sells his land to X at a low price. Y agrees. Can Y avoid the contract?",
-            options: [
-              "No, because there was no physical threat",
-              "Yes, because the threat qualifies as coercion",
-              "No, because Y voluntarily signed the agreement",
-              "Yes, but only if X is a stranger to Y",
-            ],
-            answer: 1,
-            source: "CLAT 2022",
-            topic: "Legal Reasoning — Contract Law",
-            difficulty: "Medium",
-            avgTime: "70 sec",
-            crackTime: "20 sec",
-            steps: [
-              {
-                type: "read",
-                label: "What the principle actually covers",
-                content:
-                  "Coercion under the principle isn't defined narrowly — it just requires that consent was obtained by threat. The question doesn't limit it to physical force, so don't import that restriction yourself.",
-              },
-              {
-                type: "trap",
-                label: "Why 'no physical threat' is a false restriction",
-                content:
-                  "Option A tempts you to assume coercion = physical violence. That's a real-world assumption the principle doesn't state. In CLAT reasoning, if the principle doesn't say 'physical,' you cannot narrow it that way, however reasonable it might sound in real life.",
-              },
-              {
-                type: "technique",
-                label: "The 'voluntary signature ≠ free consent' check",
-                content:
-                  "Option C tries to use the act of signing as proof of free will. But coercion by definition <em>produces</em> an outward appearance of agreement — that's exactly what makes it coercion. Signing under threat is still coercion; the physical act of consenting is irrelevant to whether consent was 'free.'",
-              },
-              {
-                type: "answer",
-                label: "Answer: B — Yes, the threat qualifies as coercion",
-                content:
-                  "Threats to reputation, privacy, or unlawful detention all count as coercion in CLAT reasoning questions, not just physical harm. Whenever a threat forces an agreement, check only: was consent obtained by threat? If yes, coercion applies — nothing else matters.",
-              },
-            ],
-          },
-          {
-            q: "Principle: A minor's agreement is void ab initio and cannot be ratified even after attaining majority. Facts: At 17, Aman borrows money and signs a promissory note. At 19, he confirms in writing that he will repay it. Is the promissory note enforceable?",
-            options: [
-              "Yes, because he ratified it as an adult",
-              "No, ratification cannot validate a void agreement",
-              "Yes, because he willingly wrote the confirmation",
-              "No, but only if the amount exceeds ₹10,000",
-            ],
-            answer: 1,
-            source: "AILET 2023",
-            topic: "Legal Reasoning — Contract Law",
-            difficulty: "Hard",
-            avgTime: "60 sec",
-            crackTime: "15 sec",
-            steps: [
-              {
-                type: "read",
-                label: "The keyword that decides everything: 'void ab initio'",
-                content:
-                  "'Void ab initio' means void <strong>from the very beginning</strong> — as if it never legally existed. This is different from a merely 'voidable' agreement, which can be affirmed later. The principle explicitly says it <em>cannot</em> be ratified.",
-              },
-              {
-                type: "trap",
-                label: "Why 'he confirmed it as an adult' feels right but isn't",
-                content:
-                  "In everyday logic, confirming a debt as an adult sounds like it should count. But the principle overrides everyday logic — it explicitly forecloses ratification as an option. CLAT tests whether you'll follow the stated rule even when your intuition disagrees.",
-              },
-              {
-                type: "technique",
-                label: "The literal-override rule",
-                content:
-                  "Whenever a principle uses an absolute word — 'cannot,' 'void ab initio,' 'no exception' — no fact pattern can create an exception unless the principle itself provides one. Scan for these absolute words first; they usually point straight to the answer.",
-              },
-              {
-                type: "answer",
-                label: "Answer: B — No, ratification cannot validate a void agreement",
-                content:
-                  "This is one of the most repeated CLAT principles: minor's agreements are void ab initio, no ratification possible, no exception for later confirmation. Learn this rule once — it appears in some form almost every year.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        label: "English & Comprehension",
-        icon: "📖",
-        problems: [
-          {
-            q: "Choose the option that best completes the sentence: 'The committee's decision, though controversial, was ______ by the majority of stakeholders.'",
-            options: ["accepted reluctantly", "reluctant acceptance", "accept reluctantly", "acceptingly reluctant"],
-            answer: 0,
-            source: "CLAT 2023",
-            topic: "English — Grammar",
-            difficulty: "Medium",
-            avgTime: "40 sec",
-            crackTime: "10 sec",
-            steps: [
-              {
-                type: "read",
-                label: "Identify the grammatical slot first",
-                content:
-                  "The sentence structure is '...was ______ by...'. After 'was', you need a <strong>past participle</strong> (passive voice) — 'was accepted', not a noun phrase or infinitive. This narrows it before you even think about meaning.",
-              },
-              {
-                type: "trap",
-                label: "Why B and D sound plausible but fail structurally",
-                content:
-                  "Option B ('reluctant acceptance') is a noun phrase — grammatically, 'was reluctant acceptance by the majority' doesn't parse as a passive sentence. Option D inverts adjective/adverb order awkwardly. Both fail the passive-voice test, regardless of meaning.",
-              },
-              {
-                type: "technique",
-                label: "The 'was + ___' passive check",
-                content:
-                  "For any CLAT sentence-completion with 'was/were + blank + by', mentally test: does 'was [blank]' form a grammatically complete passive verb phrase? Only past participles pass. 'was accepted reluctantly' ✓. This single check eliminates 3 of 4 options in seconds.",
-              },
-              {
-                type: "answer",
-                label: "Answer: A — accepted reluctantly",
-                content:
-                  "CLAT English often disguises a simple grammar rule (here: passive voice construction) behind sentences about serious-sounding topics. Strip the topic away and test the grammar slot directly — it's faster and more reliable than 'reading for meaning' alone.",
-              },
-            ],
-          },
-          {
-            q: "Passage (paraphrased): A short passage argues that judicial independence is undermined not by overt interference, but by the slow, invisible pressure of public opinion on judges deciding politically sensitive cases. Which of the following best captures the author's main concern?",
-            options: [
-              "Judges are directly pressured by politicians",
-              "Public opinion can subtly erode judicial impartiality over time",
-              "Judicial independence is a myth in modern democracies",
-              "Politically sensitive cases should not be decided by courts",
-            ],
-            answer: 1,
-            source: "CLAT 2022",
-            topic: "English — Reading Comprehension",
-            difficulty: "Hard",
-            avgTime: "90 sec",
-            crackTime: "25 sec",
-            steps: [
-              {
-                type: "read",
-                label: "Separate what the passage says from what it implies",
-                content:
-                  "The passage explicitly contrasts 'overt interference' with 'slow, invisible pressure.' The main concern is the <em>second</em> kind — subtle, not direct. Any option describing direct pressure is answering a claim the author specifically ruled out.",
-              },
-              {
-                type: "trap",
-                label: "Why A is the most common wrong pick",
-                content:
-                  "Option A describes 'direct pressure from politicians' — this is almost the <em>opposite</em> of what the author argues. RC questions often include an option that sounds related to the topic but actually contradicts the author's specific point. Always re-check against the passage's stated contrast, not just its general subject.",
-              },
-              {
-                type: "technique",
-                label: "The 'author's specific claim, not the topic' rule",
-                content:
-                  "For 'main concern' or 'main idea' questions, don't pick the option that's merely about the same topic (judicial independence) — pick the one that matches the author's <strong>specific angle</strong> on that topic (subtle erosion via public opinion, not overt interference or a sweeping claim that independence doesn't exist).",
-              },
-              {
-                type: "answer",
-                label: "Answer: B — Public opinion can subtly erode judicial impartiality over time",
-                content:
-                  "CLAT RC is designed to punish skimming. Options C and D over-extend the passage's claim into something broader and more extreme than what was actually argued — a classic RC trap. Always match the scope of the answer to the scope of the passage.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        label: "GK & Legal Awareness",
-        icon: "🌍",
-        problems: [
-          {
-            q: "Which Article of the Indian Constitution empowers the Supreme Court to issue writs for the enforcement of Fundamental Rights?",
-            options: ["Article 32", "Article 19", "Article 21", "Article 226"],
-            answer: 0,
-            source: "CLAT 2023",
-            topic: "Legal GK — Constitution",
-            difficulty: "Medium",
-            avgTime: "30 sec",
-            crackTime: "8 sec",
-            steps: [
-              {
-                type: "read",
-                label: "Note the exact institution named",
-                content:
-                  "The question specifically says <strong>Supreme Court</strong>. Two Articles deal with writs — 32 (Supreme Court) and 226 (High Courts). Reading the institution correctly is the entire question.",
-              },
-              {
-                type: "trap",
-                label: "The 32 vs 226 mix-up",
-                content:
-                  "This is the single most confused pair in CLAT legal GK. Article 226 also allows writs, but through <strong>High Courts</strong>, and for a broader set of purposes (not limited to Fundamental Rights). Article 21 (right to life) and 19 (freedom rights) are unrelated to writ jurisdiction — they're substantive rights, not enforcement mechanisms.",
-              },
-              {
-                type: "technique",
-                label: "The anchor-word technique",
-                content:
-                  "Memorise pairs by their anchor institution, not just numbers: <strong>32 = Supreme Court's own right to protect Fundamental Rights</strong> (Dr. Ambedkar called it the 'heart and soul' of the Constitution); <strong>226 = High Court, wider power</strong>. Anchor to the institution first, number second — numbers alone are easy to swap under exam pressure.",
-              },
-              {
-                type: "answer",
-                label: "Answer: A — Article 32",
-                content:
-                  "Article 32 vs 226 appears almost every CLAT cycle in some form. Once you anchor '32 = Supreme Court + Fundamental Rights only,' the rest follows by elimination — you don't even need to recall 226's exact wording.",
-              },
-            ],
-          },
-          {
-            q: "In Indian criminal law, what is the key difference between 'bailable' and 'non-bailable' offences?",
-            options: [
-              "Bailable offences are less serious in punishment; bail is a matter of right",
-              "Bailable offences can never lead to imprisonment",
-              "Non-bailable offences never get bail under any circumstance",
-              "The difference is only about which court hears the case",
-            ],
-            answer: 0,
-            source: "AILET 2022",
-            topic: "Legal GK — Criminal Procedure",
-            difficulty: "Medium",
-            avgTime: "35 sec",
-            crackTime: "10 sec",
-            steps: [
-              {
-                type: "read",
-                label: "Focus on 'right' vs 'discretion' — the real distinction",
-                content:
-                  "The core legal distinction isn't about severity alone — it's about <strong>whether bail is a right or a discretionary decision</strong>. In bailable offences, the accused has a right to bail. In non-bailable, it's at the court's discretion.",
-              },
-              {
-                type: "trap",
-                label: "Why C is a common overreach",
-                content:
-                  "Option C claims non-bailable offences 'never' get bail — that's factually wrong and a classic absolute-word trap. Courts routinely grant bail in non-bailable cases too; it's just not an automatic right. Any option with 'never' or 'always' in legal GK deserves extra scrutiny.",
-              },
-              {
-                type: "technique",
-                label: "The right-vs-discretion filter",
-                content:
-                  "Whenever a legal GK question asks about a procedural classification (bailable/non-bailable, cognizable/non-cognizable), ask: <strong>is this about a right the accused has, or a power the authority has?</strong> That framing usually maps directly onto the correct option and exposes absolute-word traps immediately.",
-              },
-              {
-                type: "answer",
-                label: "Answer: A — Bail is a matter of right in bailable offences",
-                content:
-                  "This bailable/non-bailable distinction, along with cognizable/non-cognizable, forms the backbone of CrPC-based GK questions in CLAT and AILET. Learn the right-vs-discretion framing once and it transfers directly to related questions on arrest and investigation.",
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
+  // {
+  //   id: "law",
+  //   label: "Law",
+  //   icon: "⚖️",
+  //   categories: [
+  //     {
+  //       label: "Legal Reasoning",
+  //       icon: "⚖️",
+  //       problems: [
+  //         {
+  //           q: "Principle: A person is guilty of theft if they dishonestly take movable property out of the possession of another without consent. Facts: Riya picks up an umbrella left behind by Meera at a café, genuinely believing it was abandoned, and takes it home. Is Riya guilty of theft?",
+  //           options: [
+  //             "Yes, she took property without consent",
+  //             "No, because she lacked dishonest intention",
+  //             "Yes, because the umbrella belonged to Meera",
+  //             "No, because it happened in a public place",
+  //           ],
+  //           answer: 1,
+  //           source: "CLAT 2023",
+  //           topic: "Legal Reasoning — Criminal Law",
+  //           difficulty: "Tricky",
+  //           avgTime: "80 sec",
+  //           crackTime: "20 sec",
+  //           steps: [
+  //             {
+  //               type: "read",
+  //               label: "Isolate the exact wording of the principle",
+  //               content:
+  //                 "The principle requires <strong>dishonest</strong> taking. 'Dishonest' is doing something intending to cause wrongful gain or wrongful loss. This one word is the entire hinge of the question — don't skip past it.",
+  //             },
+  //             {
+  //               type: "trap",
+  //               label: "The trap: focusing on 'without consent' only",
+  //               content:
+  //                 "Options A and C both use the fact that Meera didn't consent and the umbrella was hers — true, but incomplete. CLAT principle questions almost always have <em>two</em> conditions in the rule; missing one condition is the most common way students lose marks.",
+  //             },
+  //             {
+  //               type: "technique",
+  //               label: "The apply-strictly rule for CLAT legal reasoning",
+  //               content:
+  //                 "Never add facts, never drop conditions from the principle. Here: Riya <strong>genuinely believed</strong> the umbrella was abandoned — that directly negates 'dishonest intention'. Since one required element of the principle is missing, the principle cannot apply, regardless of what actually happened to the umbrella.",
+  //             },
+  //             {
+  //               type: "answer",
+  //               label: "Answer: B — No, because she lacked dishonest intention",
+  //               content:
+  //                 "Legal reasoning at CLAT is not about knowing real law — it's about applying the given principle mechanically, exactly as written. State of mind (mens rea) is the recurring theme in criminal law principle questions; always check it separately from the physical act.",
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           q: "Principle: An agreement made under coercion is voidable at the option of the party whose consent was so obtained. Facts: X threatens to publicly leak Y's private photos unless Y sells his land to X at a low price. Y agrees. Can Y avoid the contract?",
+  //           options: [
+  //             "No, because there was no physical threat",
+  //             "Yes, because the threat qualifies as coercion",
+  //             "No, because Y voluntarily signed the agreement",
+  //             "Yes, but only if X is a stranger to Y",
+  //           ],
+  //           answer: 1,
+  //           source: "CLAT 2022",
+  //           topic: "Legal Reasoning — Contract Law",
+  //           difficulty: "Medium",
+  //           avgTime: "70 sec",
+  //           crackTime: "20 sec",
+  //           steps: [
+  //             {
+  //               type: "read",
+  //               label: "What the principle actually covers",
+  //               content:
+  //                 "Coercion under the principle isn't defined narrowly — it just requires that consent was obtained by threat. The question doesn't limit it to physical force, so don't import that restriction yourself.",
+  //             },
+  //             {
+  //               type: "trap",
+  //               label: "Why 'no physical threat' is a false restriction",
+  //               content:
+  //                 "Option A tempts you to assume coercion = physical violence. That's a real-world assumption the principle doesn't state. In CLAT reasoning, if the principle doesn't say 'physical,' you cannot narrow it that way, however reasonable it might sound in real life.",
+  //             },
+  //             {
+  //               type: "technique",
+  //               label: "The 'voluntary signature ≠ free consent' check",
+  //               content:
+  //                 "Option C tries to use the act of signing as proof of free will. But coercion by definition <em>produces</em> an outward appearance of agreement — that's exactly what makes it coercion. Signing under threat is still coercion; the physical act of consenting is irrelevant to whether consent was 'free.'",
+  //             },
+  //             {
+  //               type: "answer",
+  //               label: "Answer: B — Yes, the threat qualifies as coercion",
+  //               content:
+  //                 "Threats to reputation, privacy, or unlawful detention all count as coercion in CLAT reasoning questions, not just physical harm. Whenever a threat forces an agreement, check only: was consent obtained by threat? If yes, coercion applies — nothing else matters.",
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           q: "Principle: A minor's agreement is void ab initio and cannot be ratified even after attaining majority. Facts: At 17, Aman borrows money and signs a promissory note. At 19, he confirms in writing that he will repay it. Is the promissory note enforceable?",
+  //           options: [
+  //             "Yes, because he ratified it as an adult",
+  //             "No, ratification cannot validate a void agreement",
+  //             "Yes, because he willingly wrote the confirmation",
+  //             "No, but only if the amount exceeds ₹10,000",
+  //           ],
+  //           answer: 1,
+  //           source: "AILET 2023",
+  //           topic: "Legal Reasoning — Contract Law",
+  //           difficulty: "Hard",
+  //           avgTime: "60 sec",
+  //           crackTime: "15 sec",
+  //           steps: [
+  //             {
+  //               type: "read",
+  //               label: "The keyword that decides everything: 'void ab initio'",
+  //               content:
+  //                 "'Void ab initio' means void <strong>from the very beginning</strong> — as if it never legally existed. This is different from a merely 'voidable' agreement, which can be affirmed later. The principle explicitly says it <em>cannot</em> be ratified.",
+  //             },
+  //             {
+  //               type: "trap",
+  //               label: "Why 'he confirmed it as an adult' feels right but isn't",
+  //               content:
+  //                 "In everyday logic, confirming a debt as an adult sounds like it should count. But the principle overrides everyday logic — it explicitly forecloses ratification as an option. CLAT tests whether you'll follow the stated rule even when your intuition disagrees.",
+  //             },
+  //             {
+  //               type: "technique",
+  //               label: "The literal-override rule",
+  //               content:
+  //                 "Whenever a principle uses an absolute word — 'cannot,' 'void ab initio,' 'no exception' — no fact pattern can create an exception unless the principle itself provides one. Scan for these absolute words first; they usually point straight to the answer.",
+  //             },
+  //             {
+  //               type: "answer",
+  //               label: "Answer: B — No, ratification cannot validate a void agreement",
+  //               content:
+  //                 "This is one of the most repeated CLAT principles: minor's agreements are void ab initio, no ratification possible, no exception for later confirmation. Learn this rule once — it appears in some form almost every year.",
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       label: "English & Comprehension",
+  //       icon: "📖",
+  //       problems: [
+  //         {
+  //           q: "Choose the option that best completes the sentence: 'The committee's decision, though controversial, was ______ by the majority of stakeholders.'",
+  //           options: ["accepted reluctantly", "reluctant acceptance", "accept reluctantly", "acceptingly reluctant"],
+  //           answer: 0,
+  //           source: "CLAT 2023",
+  //           topic: "English — Grammar",
+  //           difficulty: "Medium",
+  //           avgTime: "40 sec",
+  //           crackTime: "10 sec",
+  //           steps: [
+  //             {
+  //               type: "read",
+  //               label: "Identify the grammatical slot first",
+  //               content:
+  //                 "The sentence structure is '...was ______ by...'. After 'was', you need a <strong>past participle</strong> (passive voice) — 'was accepted', not a noun phrase or infinitive. This narrows it before you even think about meaning.",
+  //             },
+  //             {
+  //               type: "trap",
+  //               label: "Why B and D sound plausible but fail structurally",
+  //               content:
+  //                 "Option B ('reluctant acceptance') is a noun phrase — grammatically, 'was reluctant acceptance by the majority' doesn't parse as a passive sentence. Option D inverts adjective/adverb order awkwardly. Both fail the passive-voice test, regardless of meaning.",
+  //             },
+  //             {
+  //               type: "technique",
+  //               label: "The 'was + ___' passive check",
+  //               content:
+  //                 "For any CLAT sentence-completion with 'was/were + blank + by', mentally test: does 'was [blank]' form a grammatically complete passive verb phrase? Only past participles pass. 'was accepted reluctantly' ✓. This single check eliminates 3 of 4 options in seconds.",
+  //             },
+  //             {
+  //               type: "answer",
+  //               label: "Answer: A — accepted reluctantly",
+  //               content:
+  //                 "CLAT English often disguises a simple grammar rule (here: passive voice construction) behind sentences about serious-sounding topics. Strip the topic away and test the grammar slot directly — it's faster and more reliable than 'reading for meaning' alone.",
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           q: "Passage (paraphrased): A short passage argues that judicial independence is undermined not by overt interference, but by the slow, invisible pressure of public opinion on judges deciding politically sensitive cases. Which of the following best captures the author's main concern?",
+  //           options: [
+  //             "Judges are directly pressured by politicians",
+  //             "Public opinion can subtly erode judicial impartiality over time",
+  //             "Judicial independence is a myth in modern democracies",
+  //             "Politically sensitive cases should not be decided by courts",
+  //           ],
+  //           answer: 1,
+  //           source: "CLAT 2022",
+  //           topic: "English — Reading Comprehension",
+  //           difficulty: "Hard",
+  //           avgTime: "90 sec",
+  //           crackTime: "25 sec",
+  //           steps: [
+  //             {
+  //               type: "read",
+  //               label: "Separate what the passage says from what it implies",
+  //               content:
+  //                 "The passage explicitly contrasts 'overt interference' with 'slow, invisible pressure.' The main concern is the <em>second</em> kind — subtle, not direct. Any option describing direct pressure is answering a claim the author specifically ruled out.",
+  //             },
+  //             {
+  //               type: "trap",
+  //               label: "Why A is the most common wrong pick",
+  //               content:
+  //                 "Option A describes 'direct pressure from politicians' — this is almost the <em>opposite</em> of what the author argues. RC questions often include an option that sounds related to the topic but actually contradicts the author's specific point. Always re-check against the passage's stated contrast, not just its general subject.",
+  //             },
+  //             {
+  //               type: "technique",
+  //               label: "The 'author's specific claim, not the topic' rule",
+  //               content:
+  //                 "For 'main concern' or 'main idea' questions, don't pick the option that's merely about the same topic (judicial independence) — pick the one that matches the author's <strong>specific angle</strong> on that topic (subtle erosion via public opinion, not overt interference or a sweeping claim that independence doesn't exist).",
+  //             },
+  //             {
+  //               type: "answer",
+  //               label: "Answer: B — Public opinion can subtly erode judicial impartiality over time",
+  //               content:
+  //                 "CLAT RC is designed to punish skimming. Options C and D over-extend the passage's claim into something broader and more extreme than what was actually argued — a classic RC trap. Always match the scope of the answer to the scope of the passage.",
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       label: "GK & Legal Awareness",
+  //       icon: "🌍",
+  //       problems: [
+  //         {
+  //           q: "Which Article of the Indian Constitution empowers the Supreme Court to issue writs for the enforcement of Fundamental Rights?",
+  //           options: ["Article 32", "Article 19", "Article 21", "Article 226"],
+  //           answer: 0,
+  //           source: "CLAT 2023",
+  //           topic: "Legal GK — Constitution",
+  //           difficulty: "Medium",
+  //           avgTime: "30 sec",
+  //           crackTime: "8 sec",
+  //           steps: [
+  //             {
+  //               type: "read",
+  //               label: "Note the exact institution named",
+  //               content:
+  //                 "The question specifically says <strong>Supreme Court</strong>. Two Articles deal with writs — 32 (Supreme Court) and 226 (High Courts). Reading the institution correctly is the entire question.",
+  //             },
+  //             {
+  //               type: "trap",
+  //               label: "The 32 vs 226 mix-up",
+  //               content:
+  //                 "This is the single most confused pair in CLAT legal GK. Article 226 also allows writs, but through <strong>High Courts</strong>, and for a broader set of purposes (not limited to Fundamental Rights). Article 21 (right to life) and 19 (freedom rights) are unrelated to writ jurisdiction — they're substantive rights, not enforcement mechanisms.",
+  //             },
+  //             {
+  //               type: "technique",
+  //               label: "The anchor-word technique",
+  //               content:
+  //                 "Memorise pairs by their anchor institution, not just numbers: <strong>32 = Supreme Court's own right to protect Fundamental Rights</strong> (Dr. Ambedkar called it the 'heart and soul' of the Constitution); <strong>226 = High Court, wider power</strong>. Anchor to the institution first, number second — numbers alone are easy to swap under exam pressure.",
+  //             },
+  //             {
+  //               type: "answer",
+  //               label: "Answer: A — Article 32",
+  //               content:
+  //                 "Article 32 vs 226 appears almost every CLAT cycle in some form. Once you anchor '32 = Supreme Court + Fundamental Rights only,' the rest follows by elimination — you don't even need to recall 226's exact wording.",
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           q: "In Indian criminal law, what is the key difference between 'bailable' and 'non-bailable' offences?",
+  //           options: [
+  //             "Bailable offences are less serious in punishment; bail is a matter of right",
+  //             "Bailable offences can never lead to imprisonment",
+  //             "Non-bailable offences never get bail under any circumstance",
+  //             "The difference is only about which court hears the case",
+  //           ],
+  //           answer: 0,
+  //           source: "AILET 2022",
+  //           topic: "Legal GK — Criminal Procedure",
+  //           difficulty: "Medium",
+  //           avgTime: "35 sec",
+  //           crackTime: "10 sec",
+  //           steps: [
+  //             {
+  //               type: "read",
+  //               label: "Focus on 'right' vs 'discretion' — the real distinction",
+  //               content:
+  //                 "The core legal distinction isn't about severity alone — it's about <strong>whether bail is a right or a discretionary decision</strong>. In bailable offences, the accused has a right to bail. In non-bailable, it's at the court's discretion.",
+  //             },
+  //             {
+  //               type: "trap",
+  //               label: "Why C is a common overreach",
+  //               content:
+  //                 "Option C claims non-bailable offences 'never' get bail — that's factually wrong and a classic absolute-word trap. Courts routinely grant bail in non-bailable cases too; it's just not an automatic right. Any option with 'never' or 'always' in legal GK deserves extra scrutiny.",
+  //             },
+  //             {
+  //               type: "technique",
+  //               label: "The right-vs-discretion filter",
+  //               content:
+  //                 "Whenever a legal GK question asks about a procedural classification (bailable/non-bailable, cognizable/non-cognizable), ask: <strong>is this about a right the accused has, or a power the authority has?</strong> That framing usually maps directly onto the correct option and exposes absolute-word traps immediately.",
+  //             },
+  //             {
+  //               type: "answer",
+  //               label: "Answer: A — Bail is a matter of right in bailable offences",
+  //               content:
+  //                 "This bailable/non-bailable distinction, along with cognizable/non-cognizable, forms the backbone of CrPC-based GK questions in CLAT and AILET. Learn the right-vs-discretion framing once and it transfers directly to related questions on arrest and investigation.",
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 ];
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -811,7 +811,7 @@ function StepItem({
           {index + 1}
         </div>
         {!isLast && (
-          <div className="w-px flex-1 min-h-[20px] bg-[#e8e4dc] mt-1" />
+          <div className="w-px flex-1 min-h-5 bg-[#e8e4dc] mt-1" />
         )}
       </div>
       <div className="pb-5 flex-1 min-w-0">
@@ -1077,8 +1077,8 @@ export function DemoLectures() {
   const category = track.categories[activeCat];
 
   return (
-    <section className="w-full bg-[#f8f7f4] px-5 sm:px-12 lg:px-24 pb-16 lg:pb-24 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto">
+    <section className="w-full bg-[#f8f7f4] py-16 lg:py-24 lg:px-0 px-7 relative overflow-hidden">
+      <div className="lg:max-w-6xl sm:max-w-3xl mx-auto">
         <div className="pointer-events-none absolute top-0 right-0 w-[40vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
 
         {/* Header */}
@@ -1098,7 +1098,7 @@ export function DemoLectures() {
         </div>
 
         {/* ── Level 1: Track tabs (Law / MCA) — horizontal, always on top, works fine on mobile since only 2-3 items ── */}
-        <div className="flex gap-2 mb-4 bg-white border border-[#e8e4dc] p-1.5 rounded-2xl w-full cursor-pointer">
+        {/* <div className="flex gap-2 mb-4 bg-white border border-[#e8e4dc] p-1.5 rounded-2xl w-full cursor-pointer">
           {tracks.map((t, i) => (
             <button
               key={t.id}
@@ -1113,7 +1113,7 @@ export function DemoLectures() {
               {t.icon} {t.label} Entrance
             </button>
           ))}
-        </div>
+        </div> */}
 
         {/* ── Level 2 (submenu) + content ──
             Desktop (lg+): submenu is a vertical sidebar on the left, content grid on the right.

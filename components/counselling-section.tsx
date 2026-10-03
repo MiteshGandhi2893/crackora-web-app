@@ -24,7 +24,7 @@ const benefits = [
 
 export function CounsellingSection() {
   return (
-    <section className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 lg:px-0 sm:px-10">
+    <section className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 lg:px-0 px-5">
       {/* ── background ── */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[#020617]" />
@@ -44,7 +44,7 @@ export function CounsellingSection() {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 ">
+      <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-4 ">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 xl:gap-20">
 
           {/* Left — copy */}
@@ -84,7 +84,8 @@ export function CounsellingSection() {
           {/* Right — form */}
           <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
             <div className="w-full max-w-md">
-              <CounsellingForm />
+             <CounsellingForm sourcePage="home" sourceSlug="/home" />
+
             </div>
           </div>
 

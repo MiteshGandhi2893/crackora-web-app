@@ -32,7 +32,7 @@
 //       </div>
 
 //       {/* ================= CONTENT LAYER ================= */}
-//       <div className="relative z-20 max-w-6xl mx-auto px-6 py-16 md:py-20 grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+//       <div className="relative z-20 lg:max-w-6xl sm:max-w-3xl mx-auto px-6 py-16 md:py-20 grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
 //         {/* ================= LEFT SIDE ================= */}
 //         <div>

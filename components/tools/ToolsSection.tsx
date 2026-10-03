@@ -15,7 +15,7 @@ const tools = [
 
 export function ToolsSection() {
   return (
-    <section className="relative w-full overflow-hidden bg-[#f8f7f4] py-14 sm:py-18 lg:py-24 lg:px-0 sm:px-10">
+    <section className="relative w-full overflow-hidden bg-[#f8f7f4] py-14 sm:py-18 lg:py-24 lg:px-0 px-5">
       {/* noise texture */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
@@ -35,7 +35,7 @@ export function ToolsSection() {
         }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-0">
+      <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-4 sm:px-0">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 xl:gap-20 items-center">
 
           {/* LEFT */}
@@ -50,7 +50,7 @@ export function ToolsSection() {
               <div className="h-0.5 w-24 bg-amber-500 rounded-full" />
             </div>
 
-            <p className={`text-[#05101f]/70 ${p.default} leading-relaxed`}>
+            <p className={`text-[#05101f]/70 lg:${p.default} text-[15.5px] leading-[1.75] max-w-lg font-roboto text-lg`}>
               Use Crackora`s free tools for NIMCET, MAH MCA CET, TANCET, IPU
               CET, WB JECA and CUET PG. Predict colleges, estimate rank, analyse
               cutoffs, plan your study schedule, check eligibility, and
@@ -73,7 +73,7 @@ export function ToolsSection() {
             <div>
               <Link
                 href="/tools/college"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-600 text-white font-semibold text-md lg:text-lg hover:bg-amber-700 transition"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-600 text-white font-semibold text-sm lg:text-md lg:text-lg hover:bg-amber-700 transition"
               >
                 Open All Tools →
               </Link>
