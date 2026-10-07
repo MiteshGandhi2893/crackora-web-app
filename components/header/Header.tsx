@@ -52,7 +52,7 @@ export function Header() {
     <>
       <header className="fixed top-0 left-0 w-full bg-white border-b shadow z-50 lg:px-24 md:px-10 px-5">
         {/* Row 1: Logo · paid nav (Courses etc.) · login/profile */}
-        <div className="h-16 flex items-center justify-between lg:max-w-6xl sm:max-w-3xl mx-auto border-b border-b-amber-600/20">
+        <div className="h-16 flex items-center justify-between lg:max-w-7xl sm:max-w-3xl mx-auto border-b border-b-amber-600/20">
           <div className="flex justify-center items-center gap-5">
             <Logo />
             <div className="lg:block hidden">
@@ -80,7 +80,7 @@ export function Header() {
         </div>
 
         {/* Row 2: free resources (Exams, Papers etc.) */}
-        <div className="hidden lg:flex lg:flex-col items-start  lg:max-w-6xl sm:max-w-3xl mx-auto pb-2 mt-2">
+        <div className="hidden lg:flex lg:flex-col items-start  lg:max-w-7xl sm:max-w-3xl mx-auto pb-2 mt-2">
           <span className="text-[8px] font-bold tracking-[0.14em] uppercase text-amber-900/50 whitespace-nowrap">
             Free Resources
           </span>

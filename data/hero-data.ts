@@ -3,16 +3,35 @@
 // the component so copy / CTAs are a one-file edit.
 
 export const THESIS_CONTENT = {
-  eyebrow: "MCA Entrance . career mentorship",
-  title: "Crack the exam.",
-  titleAccent: "We'll cover the rest of the journey.",
-  description:
-    "Structured prep for MCA entrance exams, real course packages, and mentorship through college, academics and placement — from someone who's actually worked the roles you're aiming for.",
-  offerBadges: ["MCA Entrance",  "College Counselling", "MCA Academics", "Placement Prep"],
-  // Points at the packages card below, not a page that doesn't exist yet.
-  primaryCta: { label: "Try Free Mock Test", href: "#courses-packages" },
-};
+  eyebrow: "MCA ENTRANCE · COLLEGE · CAREER",
 
+  title: "Crack the exam.",
+
+  titleAccent: "We'll cover the rest of the journey.",
+
+  description:
+    "Prepare for your MCA entrance, understand your college options, and make better decisions at every step — with practical guidance built around the journey from entrance to career.",
+
+  offerBadges: [
+    "Entrance Preparation",
+    "Free Mock Tests",
+    "College Guidance",
+    "Career Direction",
+  ],
+
+  primaryCta: {
+    label: "Try Free Mock Test",
+    href:
+      "https://learn.crackora.com/learn/NIMCET-2026-FREE-Mock-Test-with-Detailed-Solutions",
+  },
+
+    secondaryCta: {
+    label: "Explore Courses",
+    href:
+      "/about-us",
+  },
+  
+};
 export const JOURNEY_CONTENT = {
   eyebrow: "Beyond the exam",
   title: "The MCA journey",

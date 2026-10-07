@@ -1,6 +1,7 @@
 "use client";
 // LatestBlogCard.tsx — CLIENT COMPONENT
-// The "what's new on the blog" bento cell.
+// Mini card: image frame, title, link.
+// Phone: vertical (image on top). Laptop: horizontal (image left).
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -27,15 +28,22 @@ export function LatestBlogCard({ className = "" }: { className?: string }) {
     getLatestBlog();
   }, []);
 
+  const shell = `
+    flex h-full w-full min-w-0 flex-col gap-3 lg:flex-row
+    rounded-2xl border border-stone-200 bg-cyan-900 p-4
+    ${className}
+  `;
+
   // Don't render a link to "/blogs/undefined" or an image with a broken
   // src while the fetch is in flight (or if it comes back empty).
   if (loading || !latestBlog) {
     return (
-      <div className={`w-full h-full flex gap-5 items-center ${className}`}>
-        <div className="relative w-35 h-35 bg-cyan-50/10 rounded-lg shrink-0 animate-pulse" />
-        <div className="flex flex-col gap-2 w-full">
-          <div className="h-4 w-3/4 bg-cyan-50/10 rounded animate-pulse" />
-          <div className="h-4 w-full bg-cyan-50/10 rounded animate-pulse" />
+      <div className={shell}>
+        <div className="aspect-video w-full shrink-0 animate-pulse rounded-xl bg-stone-200/70 lg:w-36" />
+        <div className="flex min-w-0 flex-1 flex-col gap-2 lg:justify-center">
+          <div className="h-2.5 w-20 animate-pulse rounded bg-stone-200/70" />
+          <div className="h-3.5 w-full animate-pulse rounded bg-stone-200/70" />
+          <div className="h-3.5 w-2/3 animate-pulse rounded bg-stone-200/70" />
         </div>
       </div>
     );
@@ -43,29 +51,32 @@ export function LatestBlogCard({ className = "" }: { className?: string }) {
 
   return (
     <Link
-      className={`w-full h-full flex lg:flex-row items-center flex-col gap-5  group ${className}`}
       href={`/blogs/${latestBlog.slug}`}
+      className={`group transition-all duration-300 hover:border-amber-300 hover:shadow-md ${shell}`}
     >
-      {/* Cover */}
-      <div className="relative lg:w-60  w-full lg:h-45 h-45 bg-amber-50 overflow-hidden shrink-0  border-amber-600 ">
+      {/* Image frame */}
+      <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-xl lg:w-50">
         <Image
           src={`${API_BASE_URL}/public/${latestBlog.cover_image}`}
           alt={latestBlog.title}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-contain group-hover:scale-105 transition-transform duration-300"
+          sizes="(max-width: 1024px) 50vw, 144px"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
-      
-      <div className="flex flex-col gap-2">
-        <span className="text-[15px] text-amber-700 font-semibold">
+
+      {/* Content */}
+      <div className="flex min-w-0 flex-1 flex-col lg:justify-center">
+        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400">
+          Latest on the blog
+        </span>
+
+        <h3 className="mt-0.5 line-clamp-2 min-w-0 wrap-break-word text-[13px] font-semibold leading-snug text-cyan-50 sm:text-sm">
           {latestBlog.title}
-        </span>
-        <span className="text-[13.5px] text-stone-600/80 font-roboto">
-          {latestBlog.excerpt}
-        </span>
-        <span className="items-center gap-1 w-fit px-2 py-1 text-sm font-medium bg-amber-600 group-hover:gap-2 transition-all text-white">
-          View {latestBlog.schema_type}
+        </h3>
+
+        <span className="mt-auto inline-flex w-fit items-center gap-1 pt-1.5 text-xs font-semibold text-amber-500 transition-all group-hover:gap-2 group-hover:text-amber-400 group-hover:underline lg:mt-1.5 lg:pt-0">
+          View {latestBlog.schema_type} →
         </span>
       </div>
     </Link>

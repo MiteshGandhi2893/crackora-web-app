@@ -1,82 +1,30 @@
-// ─────────────────────────────────────────────────────
 // HeroBanner.tsx — SERVER COMPONENT (no "use client")
 //
-// Bento grid, built around one idea: the thesis card is a warm
-// solid "crack of dawn" panel — the breakthrough moment — sitting
-// inside a grid of dark glass "aurora" cards — the longer journey
-// around it. That contrast is the one deliberate flourish; every
-// other cell stays quiet glass so the starfield reads through it.
-//
-// Cells:
-//   - Thesis (solid, contrasting)  → who we are + what we offer
-//   - Courses (glass, slim)        → what courses we have (real data)
-//   - Journey (glass, slim)        → the differentiator
-//   - Blog (glass, wide)           → free resources, a real page
-//
-// Rows are content-sized (no forced equal-fr height) so a short
-// card like Blog doesn't get stretched to match the thesis card's
-// full two-row height — each card's height now comes from its own
-// content plus consistent internal spacing, not from the grid
-// forcing it taller.
-//
-// Only two things need the browser: <StarField/> (canvas) and
-// <PackagesTeaserCard/> (fetches + auto-slides real packages).
-// Everything else is plain server-rendered markup.
-// ─────────────────────────────────────────────────────
+// Dark starfield hero → ONE wide cream card.
+//   Laptop: text + CTAs + socials on the left, two mini cards
+//           (latest blog + latest YouTube) stacked at the bottom right.
+//   Phone:  text first, then the two mini cards side by side.
+// Height follows the content (no min-h), so the hero stays compact.
 
-import type { ReactNode } from "react";
 import { Socials } from "./SocialButtons";
-import { PackagesTeaserCard } from "./bento-cards/PackagesTeaserCard";
-import {
-  THESIS_CONTENT,
-  JOURNEY_CONTENT,
-  BLOG_CONTENT,
-} from "../data/hero-data";
-import { LatestBlogCard } from "./bento-cards/LatestBlogCard";
-import { PaperListCard } from "./bento-cards/PaperListCard";
+import { THESIS_CONTENT } from "../data/hero-data";
 import { STARS } from "@/lib/util";
+import { BsBookHalf, BsFillRocketTakeoffFill } from "react-icons/bs";
+import { RiGraduationCapFill } from "react-icons/ri";
+import { GrPersonalComputer } from "react-icons/gr";
+import { LatestBlogCard } from "./bento-cards/LatestBlogCard";
+import { LatestYoutubeCard } from "./LatestYoutubeCard";
 
-function BentoCard({
-  children,
-  className = "",
-  href,
-  variant = "glass",
-}: {
-  children: ReactNode;
-  className?: string;
-  href?: string;
-  variant?: "glass" | "solid" | "solid-cyan";
-}) {
-  const base =
-    variant === "solid"
-      ? "group relative overflow-hidden rounded-3xl border border-amber-50 bg-amber-50 shadow-[0_20px_60px_-15px_rgba(217,119,6,0.45)] transition-transform duration-300 hover:scale-[1.01]"
-      : variant === "solid-cyan"
-        ? "group relative overflow-hidden rounded-3xl border border-[rgba(64,139,139,1)] bg-[rgba(64,139,139,1)] shadow-[0_20px_60px_-15px_rgba(64,139,139,1)] transition-transform duration-300 hover:scale-[1.01]"
-        : "group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.04] backdrop-blur-xl transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20";
-
-  const classes = `${base} ${className}`;
-
-  if (href) {
-    return <div className={classes}>{children}</div>;
-  }
-  return <div className={classes}>{children}</div>;
-}
-
-export function HeroBanner() {
+export function HeroBanner({ className = "" }: { className?: string }) {
   return (
-    <div className="relative w-full overflow-hidden mt-5 bg-[#020817]">
-      {/* Background layers — pure CSS, server-rendered */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[#020617]" />
+    <section
+      className={`relative isolate flex w-full items-center overflow-hidden bg-[#020617] py-30 lg:py-50 lg:pb-25 ${className}`}
+    >
+      {/* ── Background (decorative) ── */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(8,51,80,1),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_4600%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(20,83,45,0.22),transparent_60%)]" />
         <div className="absolute inset-0 bg-black/30" />
-      </div>
-
-      <div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        aria-hidden="true"
-      >
         {STARS.map((s) => (
           <span
             key={s.id}
@@ -90,105 +38,67 @@ export function HeroBanner() {
             }}
           />
         ))}
+        <div className="absolute bottom-0 left-0 h-[50vh] w-[50vw] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
+        <div className="absolute -top-10 right-0 h-[40vh] w-[35vw] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.05),transparent_65%)]" />
+
+        {/* Soft floating icons: desktop only, so they never collide on phones */}
+        <div className="hidden lg:block">
+          <BsFillRocketTakeoffFill className="absolute left-[18%] top-[28%] h-14 w-14 text-white opacity-10" />
+          <RiGraduationCapFill className="absolute right-[20%] top-[22%] h-14 w-14 text-white opacity-10" />
+          <GrPersonalComputer className="absolute bottom-[20%] left-[19%] h-14 w-14 text-white opacity-10" />
+          <BsBookHalf className="absolute bottom-[16%] right-[17%] h-14 w-14 text-white opacity-10" />
+        </div>
       </div>
-      <div className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(ellipse,rgba(8,60,100,0.05),transparent_65%)]" />
-      <div className="pointer-events-none absolute -top-10 right-0 w-[35vw] h-[40vh] rounded-full bg-[radial-gradient(ellipse,rgba(217,119,6,0.05),transparent_65%)]" />
 
-      {/* Aurora signature: slow-rotating conic gradient behind the grid.
-          Deliberately absent from directly behind the thesis card —
-          that card is the "dawn," this glow is the "aurora" around it. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-56 -right-40 h-160 w-160 rounded-full opacity-20 blur-3xl animate-[spin_34s_linear_infinite] bg-[conic-gradient(from_0deg,var(--color-cyan-500),var(--color-emerald-500),var(--color-violet-500),var(--color-cyan-500))]"
-      />
-
-      <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-5 lg:px-0 pt-24  pb-12 lg:py-40 lg:pb-20">
-        {/* auto-rows (not a forced 1fr) — each row sizes to its own
-            content, so Blog isn't inflated to match the thesis card's
-            full height. Default align-items (stretch) is left alone,
-            so Courses and Journey — which DO share a row — still
-            match each other's height, same as any normal grid row. */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-5">
-          {/* Thesis — solid contrasting card: who we are + what we offer.
-              Single flex column with one consistent gap between blocks —
-              no justify-between, so nothing gets stretched apart. */}
-          <BentoCard
-            variant="solid"
-            className="lg:col-span-2 lg:row-span-2 lg:self-center p-7 lg:p-10 lg:py-5 flex flex-col gap-8"
-          >
+      {/* ── Content ── */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-5">
+        <div className="flex w-full flex-col gap-6 rounded-3xl bg-[#f8f7f4] p-5 shadow-2xl sm:p-8 lg:flex-row lg:gap-10 lg:p-10">
+          {/* Left: thesis */}
+          <div className="flex min-w-0 flex-1 flex-col justify-center gap-5">
             <div className="flex flex-col gap-3">
-              <span className="inline-block text-[11px] tracking-[0.14em] uppercase text-orange-950/70 font-semibold">
+              <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-700">
                 {THESIS_CONTENT.eyebrow}
               </span>
-              <h1 className="font-roboto text-[2rem] sm:text-[2.1rem] lg:text-[2.3rem] font-bold leading-tight text-cyan-950">
+              <h1 className="font-roboto text-[1.8rem] font-bold leading-tight text-cyan-900 sm:text-[2.1rem] lg:text-[2.4rem]">
                 {THESIS_CONTENT.title}{" "}
-                <span className="font-display italic text-amber-700">
+                <span className="font-display italic text-amber-600">
                   {THESIS_CONTENT.titleAccent}
                 </span>
               </h1>
-              <p className="text-cyan-950/80 font-roboto font-medium leading-relaxed text-[1rem] lg:text-[1rem] max-w-md">
+              <p className="max-w-xl font-roboto text-[.9rem] font-medium leading-relaxed text-stone-600 lg:text-[1rem]">
                 {THESIS_CONTENT.description}
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {THESIS_CONTENT.offerBadges.map((badge) => (
-                <span
-                  key={badge}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-full bg-cyan-950/10 text-cyan-950 border border-cyan-950/10"
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+                <a
+                  href={THESIS_CONTENT.primaryCta.href}
+                  target="_blank"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded bg-amber-600 px-5 py-2.5 font-roboto text-sm font-semibold text-cyan-50 transition-all duration-300 hover:scale-[1.03] hover:bg-cyan-900 sm:w-fit"
                 >
-                  {badge}
-                </span>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-6">
-              <a
-                href={THESIS_CONTENT.primaryCta.href}
-                className="inline-flex justify-center lg:w-fit w-full items-center gap-2 font-semibold font-roboto px-6 py-3 text-cyan-50 bg-amber-600 text-sm rounded-xl transition-all duration-300 hover:bg-cyan-900 hover:scale-[1.03]"
-              >
-                {THESIS_CONTENT.primaryCta.label}
-              </a>
-
+                  {THESIS_CONTENT.primaryCta.label}
+                </a>
+                <a
+                  href={THESIS_CONTENT.secondaryCta.href}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded bg-cyan-700 px-5 py-2.5 font-roboto text-sm font-semibold tracking-wider text-cyan-50 transition-all duration-300 hover:scale-[1.03] hover:bg-cyan-900 sm:w-fit"
+                >
+                  {THESIS_CONTENT.secondaryCta.label}
+                </a>
+              </div>
               <Socials />
             </div>
-          </BentoCard>
+          </div>
 
-          {/* Courses — real top packages, auto-sliding, each slide
-              links to its own real checkout page */}
-          <PackagesTeaserCard className="lg:col-span-1" />
-
-          {/* Journey */}
-          <BentoCard
-            href={JOURNEY_CONTENT.cta.href}
-            className="p-4 flex flex-col gap-4 "
-          >
-            <div>
-              <span className="text-[10px] tracking-[0.14em] uppercase text-cyan-100 font-bold">
-                Previous Year Papers
-              </span>
-              <PaperListCard />
+          {/* Right: two mini cards (bottom right on laptop) */}
+          <div className="w-full shrink-0 border-t border-stone-200 pt-5 lg:w-[360px] lg:self-end lg:border-t-0 lg:pt-0 xl:w-[400px]">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-4">
+              <LatestBlogCard />
+              <LatestYoutubeCard />
             </div>
-          </BentoCard>
-
-          {/* Blog — a real, already-built page. Content-sized now, not
-              stretched to match the thesis card's row-span-2 height. */}
-          <BentoCard
-            href={BLOG_CONTENT.cta.href}
-            variant="solid"
-            className="lg:col-span-2 p-5 flex flex-col gap-1 "
-          >
-            <div>
-              <span className="text-[12px] tracking-[0.14em] uppercase text-amber-700 font-bold">
-                {BLOG_CONTENT.eyebrow}{" "}
-                <span className="text-cyan-900"> - BLOG</span>
-              </span>
-            </div>
-
-            <LatestBlogCard />
-          </BentoCard>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

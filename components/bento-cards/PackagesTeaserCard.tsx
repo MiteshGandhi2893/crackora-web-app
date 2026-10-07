@@ -39,7 +39,7 @@ export function PackagesTeaserCard({ className = "" }: { className?: string }) {
   return (
     <div
       id="courses-packages"
-      className={`relative overflow-hidden rounded-3xl border px-5 border-white/30 bg-white/4 backdrop-blur-xl 5 scroll-mt-24 flex flex-col ${className} `}
+      className={`relative overflow-hidden rounded-3xl border  border-white/30 bg-cyan-50/10 backdrop-blur-xl 5 scroll-mt-24 flex flex-col ${className} `}
     >
       <div className="mb-4">
         {/* <span className="text-[10px] tracking-[0.14em] uppercase text-cyan-300/70 font-medium">
