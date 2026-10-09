@@ -79,12 +79,12 @@ export function HeroBanner({ className = "" }: { className?: string }) {
                 >
                   {THESIS_CONTENT.primaryCta.label}
                 </a>
-                {/* <a
+                <a
                   href={THESIS_CONTENT.secondaryCta.href}
                   className="inline-flex w-full items-center justify-center gap-2 rounded bg-cyan-700 px-5 py-2.5 font-roboto text-sm font-semibold tracking-wider text-cyan-50 transition-all duration-300 hover:scale-[1.03] hover:bg-cyan-900 sm:w-fit"
                 >
                   {THESIS_CONTENT.secondaryCta.label}
-                </a> */}
+                </a>
               </div>
               <Socials />
             </div>

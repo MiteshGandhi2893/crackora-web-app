@@ -28,7 +28,7 @@ export const THESIS_CONTENT = {
     secondaryCta: {
     label: "Explore Courses",
     href:
-      "/about-us",
+      "/courses",
   },
   
 };

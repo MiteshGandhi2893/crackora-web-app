@@ -58,8 +58,8 @@ export function CoursePackageCard({
 
         {topPackage.what_you_will_get?.length ? (
           <div className="pt-3 border-t border-[#f0ede6] grid grid-cols-2 gap-x-2 gap-y-1 text-gray-500 text-[12.5px]">
-            {topPackage.what_you_will_get.map((item) => (
-              <span key={item} className="truncate">
+            {topPackage.what_you_will_get.map((item, i) => (
+             <span key={`${item}-${i}`} className="truncate">
                 {item}
               </span>
             ))}

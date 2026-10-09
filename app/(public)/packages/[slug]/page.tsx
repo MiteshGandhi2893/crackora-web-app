@@ -1,3 +1,4 @@
+// src/app/packages/[slug]/page.tsx  (adjust the folder to wherever your details route lives)
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -27,6 +28,10 @@ function toMetaDescription(text: string | undefined, max = 155): string {
   if (clean.length <= max) return clean;
   return clean.slice(0, max).replace(/\s+\S*$/, "") + "…";
 }
+
+// Escaping "<" prevents content from ever closing the script tag.
+const toJsonLd = (data: unknown) =>
+  JSON.stringify(data).replace(/</g, "\\u003c");
 
 export async function generateMetadata({
   params,
@@ -98,16 +103,38 @@ export default async function PackageInfoPage({
 
   const coursePackageSchema = getPackageSchema(coursePackage);
 
+  // Home > Courses > this package. This is what Google can show in the search
+  // result instead of a raw URL, and it matches the "Back to catalog" link on the page.
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Courses",
+        item: `${SITE_URL}/courses`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: coursePackage.course_name,
+        item: `${SITE_URL}/packages/${slug}`,
+      },
+    ],
+  };
+
   return (
     <>
-      {/* Plain <script> is the recommended way for JSON-LD in the App Router.
-          next/script + beforeInteractive is meant for global scripts, not this.
-          Escaping "<" prevents content from ever closing the script tag. */}
+      {/* Plain <script> is the recommended way for JSON-LD in the App Router. */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(coursePackageSchema).replace(/</g, "\\u003c"),
-        }}
+        dangerouslySetInnerHTML={{ __html: toJsonLd(coursePackageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(breadcrumbSchema) }}
       />
 
       <CoursePackageInfo coursePackage={coursePackage} />

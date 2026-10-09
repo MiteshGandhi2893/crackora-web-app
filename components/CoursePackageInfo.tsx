@@ -21,6 +21,7 @@ import Image from "next/image";
 import { API_BASE_URL } from "@/services/api.service";
 import Link from "next/link";
 import { CoursePackageCard } from "./course-card/CourseCard";
+import { BackToCatalog } from "./BackToCatalog";
 // ─── FAQ type ─────────────────────────────────────────────────────────────────
 
 export interface FaqItem {
@@ -555,7 +556,11 @@ export function CoursePackageInfo({
           ))}
         </div>
 
-        <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-6  py-25 pt-30 lg:pt-45 sm:pt-35">
+        <div className="relative z-10 lg:max-w-6xl sm:max-w-3xl mx-auto px-6  py-12 pt-30 lg:pt-45 sm:pt-35">
+          {/* Always leads to the catalog, whether the student came from a
+              catalog card, the header menu, Google or a shared link. */}
+          <BackToCatalog />
+
           <div className="max-w-2xl">
             <h1 className="lg:text-5xl text-3xl font-inter mb-4 text-white">
               {coursePackage.course_name}
