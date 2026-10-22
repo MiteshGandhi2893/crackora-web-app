@@ -54,16 +54,16 @@ function buildMetadata(data: CoursePackage): Record<string, unknown> {
         file_format: data.file_format || "PDF",
         sample_link: data.sample_link || "",
       };
-    case "live_course":
-      return {
-        batch_start_date: data.batch_start_date ?? null,
-        total_sessions: data.total_sessions ?? null,
-        session_duration_minutes: data.session_duration_minutes ?? null,
-        seats_available: data.seats_available ?? null,
-        what_you_will_get: data.what_you_will_get || [],
-        mode: data.mode || "Online",
-        schedule_note: data.schedule_note || "",
-      };
+    // case "live_course":
+    //   return {
+    //     batch_start_date: data.batch_start_date ?? null,
+    //     total_sessions: data.total_sessions ?? null,
+    //     session_duration_minutes: data.session_duration_minutes ?? null,
+    //     seats_available: data.seats_available ?? null,
+    //     what_you_will_get: data.what_you_will_get || [],
+    //     mode: data.mode || "Online",
+    //     schedule_note: data.schedule_note || "",
+    //   };
     case "mock_test":
       return {
         total_tests: data.total_tests ?? null,

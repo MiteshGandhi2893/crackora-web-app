@@ -256,7 +256,7 @@ export const TOOL_LIST: ToolDef[] = [
     title: "Eligibility Checker",
     tagline: "Use before registering for exams",
     description:
-      "Enter your stream and percentage. Instantly know which of the 6 MCA entrance exams you're eligible for — covering all official 2026 criteria.",
+      "Enter your stream and percentage. Instantly know which of the 6 MCA entrance exams you're eligible for — covering all official 2027 criteria.",
     when: "Before registration",
     component: <EligibilityCheckerTool />,
   },

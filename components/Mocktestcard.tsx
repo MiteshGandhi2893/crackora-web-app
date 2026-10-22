@@ -46,7 +46,7 @@ export const MockTestCard = function MockTestCard() {
 
           {/* Title */}
           <h3 className="text-white font-extrabold text-[15px] sm:text-[16px] leading-snug uppercase tracking-wide mb-1">
-            NIMCET-2026{" "}
+            NIMCET-2027{" "}
             <span style={{ color: "#fbbf24" }}>FREE MOCK TEST</span>
           </h3>
           <p className="text-[12px] text-cyan-300/80">

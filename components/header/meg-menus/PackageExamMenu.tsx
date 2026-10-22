@@ -12,7 +12,7 @@ import { BiRupee } from "react-icons/bi";
 
 const PACKAGE_TYPE_LABELS: Record<PackageCategory, string> = {
   self_study: "Self Study Courses",
-  live_course: "Live Batches",
+  // live_course: "Live Batches",
   mock_test: "Mock Tests",
   ebook: "E-books",
 };
@@ -20,7 +20,7 @@ const PACKAGE_TYPE_LABELS: Record<PackageCategory, string> = {
 // Controls tab order within each entrance — courses first, ebooks last.
 const PACKAGE_TYPE_ORDER: PackageCategory[] = [
   "self_study",
-  "live_course",
+  // "live_course",
   "mock_test",
   "ebook",
 ];
@@ -79,6 +79,7 @@ export function PackageMegaMenu({ onClose }: { onClose?: () => void }) {
   // Keep activeCategory valid whenever the entrance (and its tabs) changes
   useEffect(() => {
     if (categoryTabs.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveCategory(null);
       return;
     }

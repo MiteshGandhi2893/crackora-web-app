@@ -2,7 +2,7 @@
 // course-mobile-menu.tsx
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { FreeMode, Navigation, Pagination } from "swiper/modules";
+import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -37,10 +37,9 @@ interface EntranceGroup {
   }[];
 }
 
-// Same grouping logic as your original buildPackageEntrances — keeps the
-// full MenuPackage objects, and now also dedupes by pkg.id (the API can
-// return the same package more than once, e.g. via a join against
-// multiple exam rows), which is what was producing duplicate React keys.
+// Groups packages by entrance, then by category. Also dedupes by pkg.id
+// (the API can return the same package more than once, e.g. via a join
+// against multiple exam rows), which was producing duplicate React keys.
 const buildPackageEntrances = (pkgs: MenuPackage[]): EntranceGroup[] => {
   const seenIds = new Set<string>();
   const deduped = pkgs.filter((p) => {
@@ -106,6 +105,8 @@ export function CourseMobileMenu({
     null,
   );
   const [hasFetched, setHasFetched] = useState(false);
+  // bumping this re-runs the fetch effect, even when hasFetched is already false
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     if (!open || hasFetched) return;
@@ -133,7 +134,7 @@ export function CourseMobileMenu({
     return () => {
       cancelled = true;
     };
-  }, [open, hasFetched]);
+  }, [open, hasFetched, retryKey]);
 
   // lock body scroll while panel is open
   useEffect(() => {
@@ -161,14 +162,14 @@ export function CourseMobileMenu({
   const singleEntrance = entrances.length === 1;
 
   const handleRetry = () => {
-    setHasFetched(false);
+    setRetryKey((k) => k + 1);
   };
 
   return (
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 ${
+        className={`lg:hidden fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 ${
           open ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
@@ -176,7 +177,7 @@ export function CourseMobileMenu({
 
       {/* Panel — slides right to left */}
       <div
-        className={`fixed top-0 right-0 h-full w-[100%]  bg-white z-50 shadow-2xl
+        className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white z-50 shadow-2xl
           flex flex-col transition-transform duration-300 ease-out
           ${open ? "translate-x-0" : "translate-x-full"}`}
       >
@@ -206,10 +207,10 @@ export function CourseMobileMenu({
               freeMode
               slidesPerView="auto"
               spaceBetween={8}
-              className="!mt-2"
+              className="mt-2!"
             >
               {entrances.map((entrance) => (
-                <SwiperSlide key={entrance.id} className="!w-auto">
+                <SwiperSlide key={entrance.id} className="w-auto!">
                   <button
                     onClick={() => setSelectedEntranceId(entrance.id)}
                     className={`whitespace-nowrap text-[13px] font-semibold px-3 py-1.5 rounded-full border transition-colors cursor-pointer
@@ -243,8 +244,8 @@ export function CourseMobileMenu({
                 <div key={i} className="flex flex-col gap-2">
                   <div className="h-3 w-24 bg-amber-100 rounded" />
                   <div className="flex gap-3">
-                    <div className="h-64 w-[190px] bg-amber-50 rounded-2xl shrink-0" />
-                    <div className="h-64 w-[190px] bg-amber-50 rounded-2xl shrink-0" />
+                    <div className="h-64 w-47.5 bg-amber-50 rounded-2xl shrink-0" />
+                    <div className="h-64 w-47.5 bg-amber-50 rounded-2xl shrink-0" />
                   </div>
                 </div>
               ))}
@@ -265,7 +266,8 @@ export function CourseMobileMenu({
             </div>
           )}
 
-          {!loading && !error && entrances.length === 0 && (
+          {/* Only show after a fetch has actually completed with zero results */}
+          {!loading && !error && hasFetched && entrances.length === 0 && (
             <p className="text-sm text-cyan-950/60 text-center mt-10">
               No courses available right now.
             </p>
@@ -278,7 +280,7 @@ export function CourseMobileMenu({
                 const slug = `${slugForClass(activeEntrance.id)}-${category}`;
 
                 return (
-                  <div key={category} className="flex flex-col gap-2 ">
+                  <div key={category} className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[20px] font-bold tracking-[0.14em] uppercase text-amber-600">
                         {groupLabel}
@@ -291,7 +293,7 @@ export function CourseMobileMenu({
                           <BiChevronLeft className="w-4 h-4" />
                         </button>
                         <button
-                          className={`tp-next-${slug} w-6 h-6 flex items-center justify-center rounded-full border  bg-cyan-900 border border-cyan-900 text-amber-200 disabled:opacity-30 cursor-pointer`}
+                          className={`tp-next-${slug} w-6 h-6 flex items-center justify-center rounded-full bg-cyan-900 border border-cyan-900 text-amber-200 disabled:opacity-30 cursor-pointer`}
                           aria-label="Next"
                         >
                           <BiChevronRight className="w-4 h-4" />
@@ -305,7 +307,6 @@ export function CourseMobileMenu({
                          ring-1 ring-black/3 mb-10
                          p-3 sm:p-5 lg:p-6"
                     >
-                      {" "}
                       <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                         {/* Content — packages for active entrance + category */}
                         <div className="flex-1 min-w-0">
@@ -328,14 +329,17 @@ export function CourseMobileMenu({
                                 1024: { slidesPerView: 2.6, spaceBetween: 20 },
                                 1280: { slidesPerView: 3, spaceBetween: 24 },
                               }}
-                              className="!pb-1 [&_.swiper-wrapper]:items-stretch"
+                              className="pb-1! [&_.swiper-wrapper]:items-stretch"
                             >
                               {items.map((pkg, idx) => (
                                 <SwiperSlide
                                   key={`${slug}-${pkg.id}-${idx}`}
-                                  className="!h-auto"
+                                  className="h-auto!"
                                 >
-                                  <CoursePackageCard topPackage={pkg} onClose={onClose}/>
+                                  <CoursePackageCard
+                                    topPackage={pkg}
+                                    onClose={onClose}
+                                  />
                                 </SwiperSlide>
                               ))}
                             </Swiper>
@@ -345,7 +349,7 @@ export function CourseMobileMenu({
                     </div>
 
                     <div
-                      className={`tp-pag-${slug} !relative !bottom-0 flex justify-center gap-1.5 [&_.swiper-pagination-bullet]:bg-amber-600/30 [&_.swiper-pagination-bullet-active]:bg-amber-600`}
+                      className={`tp-pag-${slug} relative! bottom-0! flex justify-center gap-1.5 [&_.swiper-pagination-bullet]:bg-amber-600/30 [&_.swiper-pagination-bullet-active]:bg-amber-600`}
                     />
                   </div>
                 );
