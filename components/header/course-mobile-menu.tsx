@@ -18,7 +18,7 @@ import { packageService } from "@/services/courses.service"; // TODO: adjust pat
 
 const PACKAGE_TYPE_LABELS: Record<PackageCategory, string> = {
   self_study: "Self Study",
-  live_course: "Live Batches",
+  // live_course: "Live Batches",
   mock_test: "Mock Tests",
   ebook: "E-books",
 };
