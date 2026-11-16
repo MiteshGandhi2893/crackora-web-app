@@ -12,7 +12,7 @@ import { BiRupee } from "react-icons/bi";
 
 const PACKAGE_TYPE_LABELS: Record<PackageCategory, string> = {
   self_study: "Self Study Courses",
-  live_course: "Live Batches",
+  live_course: "Live + Doubt Sessions",
   mock_test: "Mock Tests",
   ebook: "E-books",
 };
