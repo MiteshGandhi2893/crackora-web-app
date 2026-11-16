@@ -28,7 +28,7 @@ const CATEGORY_META: Record<
   }
 > = {
   live_course: {
-    label: "Live Course",
+    label: "Live + Doubt Sessions",
     icon: BiBroadcast,
     accent: "bg-rose-600",
     light: "bg-rose-600/10",

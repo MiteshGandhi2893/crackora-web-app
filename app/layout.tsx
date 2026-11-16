@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./global.css";
 import { Inter } from "next/font/google";
-import { Noto_Sans_Display } from "next/font/google";
 
 import { Roboto } from "next/font/google";
 import { AuthProvider } from "@/providers/AuthProvider";
@@ -26,12 +25,7 @@ const inter = Inter({
 });
 
 
-const notoSansDisplay = Noto_Sans_Display({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-display",
 
-});
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -60,7 +54,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.variable} ${geistMono.variable} ${inter.variable}  ${notoSansDisplay.variable} bg-white  lg:overflow-y-auto`}
+        className={`${roboto.variable} ${geistMono.variable} ${inter.variable}  bg-white  lg:overflow-y-auto`}
       >
         <SnackbarProvider>
           <LoadingProvider>
