@@ -54,16 +54,16 @@ function buildMetadata(data: CoursePackage): Record<string, unknown> {
         file_format: data.file_format || "PDF",
         sample_link: data.sample_link || "",
       };
-    // case "live_course":
-    //   return {
-    //     batch_start_date: data.batch_start_date ?? null,
-    //     total_sessions: data.total_sessions ?? null,
-    //     session_duration_minutes: data.session_duration_minutes ?? null,
-    //     seats_available: data.seats_available ?? null,
-    //     what_you_will_get: data.what_you_will_get || [],
-    //     mode: data.mode || "Online",
-    //     schedule_note: data.schedule_note || "",
-    //   };
+    case "live_course":
+      return {
+        batch_start_date: data.batch_start_date ?? null,
+        total_sessions: data.total_sessions ?? null,
+        session_duration_minutes: data.session_duration_minutes ?? null,
+        seats_available: data.seats_available ?? null,
+        what_you_will_get: data.what_you_will_get || [],
+        mode: data.mode || "Online",
+        schedule_note: data.schedule_note || "",
+      };
     case "mock_test":
       return {
         total_tests: data.total_tests ?? null,
@@ -86,7 +86,7 @@ function buildFormData(data: CoursePackage): FormData {
   formData.append("entrance_name", String(data.entrance_name ?? ""));
   formData.append("course_name", data.course_name);
   formData.append("description", data.description || "");
-  formData.append(
+  formData.append( 
     "expiry_date",
     data.expiry_date ? new Date(data.expiry_date).toISOString() : "",
   );

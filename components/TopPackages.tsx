@@ -27,16 +27,16 @@ const CATEGORY_META: Record<
     glow: string; // rgba used for the ambient background blob
   }
 > = {
-  // live_course: {
-  //   label: "Live Course",
-  //   icon: BiBroadcast,
-  //   accent: "bg-rose-600",
-  //   light: "bg-rose-600/10",
-  //   soft: "bg-rose-50",
-  //   ring: "border-rose-200",
-  //   text: "text-rose-700",
-  //   glow: "rgba(225,29,72,0.20)",
-  // },
+  live_course: {
+    label: "Live Course",
+    icon: BiBroadcast,
+    accent: "bg-rose-600",
+    light: "bg-rose-600/10",
+    soft: "bg-rose-50",
+    ring: "border-rose-200",
+    text: "text-rose-700",
+    glow: "rgba(225,29,72,0.20)",
+  },
   self_study: {
     label: "Self Study",
     icon: BiBookOpen,
@@ -70,7 +70,7 @@ const CATEGORY_META: Record<
 };
 
 const CATEGORY_ORDER: PackageCategory[] = [
-  // "live_course",
+  "live_course",
   "self_study",
   "mock_test",
   "ebook",
@@ -106,27 +106,23 @@ function ComingSoon() {
 export function TopPackages() {
   const [topPackages, setTopPackages] = useState<MenuPackage[]>([]);
   const [activeCategory, setActiveCategory] =
-    useState<PackageCategory>("self_study");
+    useState<PackageCategory>("live_course")
   const [activeEntrance, setActiveEntrance] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    packageService
-      .getActiveTopPackages()
-      .then((packages) => {
-        setTopPackages(packages);
-        if (packages.length > 0) {
-          const firstCategory =
-            CATEGORY_ORDER.find((c) =>
-              packages.some((p: { category: string }) => p.category === c),
-            ) ?? "self_study";
-          setActiveCategory(firstCategory);
-          setActiveEntrance(packages[0].entrance_id);
-        }
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+ useEffect(() => {
+  packageService
+    .getActiveTopPackages()
+    .then((packages) => {
+      setTopPackages(packages);
+
+      if (packages.length > 0) {
+        setActiveEntrance(packages[0].entrance_id);
+      }
+    })
+    .catch(console.error)
+    .finally(() => setLoading(false));
+}, []);
 
   const entrances = useMemo<Entrance[]>(() => {
     const map = new Map<string, Entrance>();

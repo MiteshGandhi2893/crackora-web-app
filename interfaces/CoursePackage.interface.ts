@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type PackageCategory =
+  | "live_course"
   | "self_study"
   | "mock_test"
   | "ebook";
@@ -9,6 +10,7 @@ export const ALLOWED_LINK_TARGETS: Record<PackageCategory, PackageCategory[]> =
     ebook: [],
     mock_test: ["ebook"],
     self_study: ["mock_test", "ebook"],
+    live_course: ["self_study", "mock_test", "ebook"]
   };
 
 export interface LinkedPackageSummary {

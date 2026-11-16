@@ -1,0 +1,153 @@
+@import "tailwindcss";
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+@import "swiper/css/effect-fade";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  font-family: var(--font-roboto), system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+
+  .exam-content {
+    color: rgba(0, 0, 0, 0.65);
+    line-height: 1.6rem;
+    font-size: 0.95rem;
+  }
+
+  .exam-content h2 {
+    font-size: 1.55rem;
+    color: #d97005;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0;
+  }
+
+  /* ✅ Card-style table */
+  .exam-content table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    font-size: 0.9rem;
+
+
+  }
+
+  .exam-content table td,
+  .exam-content table th {
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 0.65rem 0.75rem;
+  }
+
+  /* ✅ Header styling logic */
+
+  .exam-content table:has(th) th {
+    background-color: #164e61;
+    color: white;
+  }
+
+  .exam-content table:not(:has(th)) tr:first-child td {
+    background-color: #164e61;
+    color: white;
+  }
+
+  /* ✅ Zebra striping (data rows only) */
+
+  .exam-content table tr:not(:first-child):nth-child(even) td {
+    background-color: rgba(0, 0, 0, 0.018);
+  }
+
+  /* ✅ Rounded header corners */
+
+
+  /* ✅ Smooth hover effect */
+
+  .exam-content table tr:hover td {
+    background-color: rgba(22, 78, 97, 0.04);
+    transition: background-color 0.15s ease;
+  }
+
+  /* Lists */
+
+  .exam-content ul {
+    list-style: inside;
+    padding: 0.5rem 0;
+    padding-left: 2rem;
+  }
+
+  /* Scroll offset for anchored headings */
+
+  .exam-content h2,
+  .exam-content h3 {
+    scroll-margin-top: 140px;
+  }
+}
+.custom-select .stdropdown-container {
+  width: 100%;
+}
+
+.custom-select .stdropdown-input {
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.custom-select .stdropdown-input:focus {
+  border-color: #f59e0b; /* amber */
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+.custom-select .stdropdown-menu {
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.custom-select .stdropdown-item:hover {
+  background-color: #fef3c7;
+}
+
+/* Hide scrollbar but allow scroll */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari, and Opera (mobile default) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge, and Firefox (mobile default) */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
